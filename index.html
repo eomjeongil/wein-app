@@ -3370,21 +3370,54 @@ async function restoreSessionFromFirebase(code) {
 }
 
 /* ── 재방문 시 세션 목록 배너 표시 (최대 3개) ── */
-function checkPreviousSession() {
+async function checkPreviousSession() {
   const list = loadSessions();
   if (list.length === 0) return;
 
   const banner = document.getElementById('prev-result-banner');
   if (!banner) return;
 
+  /* Firebase 준비 안 됐으면 ready 후 재시도 */
+  if (!db || !fs) {
+    window.addEventListener('firebase-ready', () => checkPreviousSession(), { once: true });
+    return;
+  }
+
   const daysLeft = (s) => {
     const left = SESSION_TTL - (Date.now() - new Date(s.savedAt).getTime());
     return Math.max(1, Math.ceil(left / (24 * 60 * 60 * 1000)));
   };
-
   const pf = (name) => namePostfix ? namePostfix(name) : '이';
 
-  const cards = list.map(s => `
+  /* Firebase에서 각 세션의 완료 응답자 수 확인 */
+  const { collection, getDocs } = fs;
+  const validSessions = [];
+
+  for (const s of list) {
+    try {
+      const snap = await getDocs(collection(db, 'sessions', s.code, 'respondents'));
+      const doneCount = snap.docs.filter(d => d.data().status === 'done').length;
+      const totalCount = snap.docs.length;
+
+      if (doneCount === 0 && totalCount <= 1) {
+        /* 완료자 없고 방장 혼자뿐 → 실질적 액션 없는 세션 → 자동 삭제 */
+        clearSessionFromLocal(s.code);
+        continue;
+      }
+      /* 유효한 세션만 배열에 추가 */
+      validSessions.push({ ...s, doneCount, totalCount });
+    } catch(e) {
+      /* Firebase 조회 실패 시 일단 표시 유지 */
+      validSessions.push({ ...s, doneCount: 0, totalCount: 0 });
+    }
+  }
+
+  if (validSessions.length === 0) {
+    banner.style.display = 'none';
+    return;
+  }
+
+  const cards = validSessions.map(s => `
     <div style="background:rgba(255,255,255,0.10);border:1px solid rgba(255,255,255,0.15);
                 border-radius:10px;padding:12px 14px;margin-bottom:8px;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
@@ -3394,8 +3427,11 @@ function checkPreviousSession() {
         </div>
         <span style="font-size:10px;color:rgba(255,255,255,0.40);font-weight:600;">코드: ${s.code}</span>
       </div>
-      <div style="font-size:11px;color:rgba(255,255,255,0.50);margin-bottom:10px;">
+      <div style="font-size:11px;color:rgba(255,255,255,0.55);margin-bottom:10px;">
         ${s.myName}으로 참여 중
+        <span style="margin-left:6px;color:var(--accent);font-weight:700;">
+          ${s.doneCount > 0 ? `✅ ${s.doneCount}명 완료` : '⏳ 참여 대기 중'}
+        </span>
       </div>
       <div style="display:flex;gap:6px;">
         <button onclick="restoreSessionFromFirebase('${s.code}')"
@@ -3415,7 +3451,7 @@ function checkPreviousSession() {
     <div style="margin-bottom:16px;">
       <div style="font-size:10px;color:rgba(255,255,255,0.50);font-weight:600;
                   letter-spacing:0.4px;margin-bottom:8px;">
-        진행 중인 세션 (${list.length}/${MAX_SESSIONS})
+        진행 중인 세션 (${validSessions.length}/${MAX_SESSIONS})
       </div>
       ${cards}
     </div>`;
@@ -3425,7 +3461,7 @@ function checkPreviousSession() {
 /* 세션 카드 삭제 */
 function deleteSessionCard(code) {
   clearSessionFromLocal(code);
-  checkPreviousSession(); /* 배너 갱신 */
+  checkPreviousSession();
 }
 
 /* 페이지 로드 초기화 */
