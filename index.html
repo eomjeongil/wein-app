@@ -1,0 +1,3217 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>우리 아이는 어떤 위인을 닮았을까요? — wein</title>
+<style>
+/* ══════════════════════════════
+   COLOR SYSTEM
+   친환경 브랜드 × 프리미엄 기업 팔레트 합치
+   Warm Cream + Earth Sand + Classic Navy
+   + Champaign Gold + Forest Green
+══════════════════════════════ */
+:root {
+  /* 베이스 — 친환경 브랜드 */
+  --cream:      #FFF8E7;   /* Warm Cream — 유지 */
+  --cream-dark: #EDE8DF;   /* Earth Sand 계열로 조정 (기존 #F5EDD6) */
+  --sand:       #D2B48C;   /* Earth Sand — 유지 */
+
+  /* 포인트 — 프리미엄 기업 */
+  --navy:       #0A3D62;   /* Classic Navy — 유지 */
+  --navy-mid:   #1A5276;   /* Navy 중간톤 — 유지 */
+  --charcoal:   #2D3436;   /* Rich Charcoal — 유지 */
+  --accent:     #D4AF37;   /* Champaign Gold (기존 #C9A73C → 더 순수한 골드) */
+  --accent-dark:#B8962A;   /* 골드 어두운 버전 (버튼 hover 등) */
+
+  /* 추가 — Forest Green (성장·자연 포인트) */
+  --forest:     #2D5A27;   /* Forest Green */
+  --forest-mid: #4A7C3F;   /* Forest 중간톤 */
+  --sage:       #96AD90;   /* Sage Leaf — 부드러운 중간 강조 */
+
+  /* 텍스트 */
+  --text-main:  #1C1C1C;
+  --text-sub:   #5A5A5A;   /* 살짝 진하게 조정 (기존 #6B6B6B) */
+  --text-light: #9A9A8E;   /* 따뜻한 회색으로 조정 (기존 #A8A8A8) */
+  --border:     rgba(0,0,0,0.07);
+  --white:      #FFFFFF;
+
+  --r-lg: 20px; --r-md: 14px; --r-sm: 10px;
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html, body {
+  font-family: 'Apple SD Gothic Neo','Noto Sans KR',-apple-system,sans-serif;
+  background: var(--cream-dark);
+  min-height: 100vh;
+  color: var(--text-main);
+  line-height: 1.5;
+}
+.phone {
+  max-width: 420px;
+  margin: 0 auto;
+  background: var(--cream);
+  min-height: 100vh;
+  position: relative;
+}
+
+/* ── 화면 공통 ── */
+.screen { display:none; flex-direction:column; min-height:100vh; animation:fadeIn 0.25s ease; }
+.screen.active { display:flex; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+/* ══════════════════════════════
+   화면 1: 시작
+══════════════════════════════ */
+#s-start { background:var(--navy); justify-content:space-between; padding:48px 28px 40px; }
+.start-tag { display:inline-block; padding:5px 12px; background:rgba(255,255,255,0.15); border-radius:20px; font-size:11px; font-weight:600; color:rgba(255,255,255,0.85); margin-bottom:24px; }
+.start-title { font-size:30px; font-weight:900; color:var(--white); line-height:1.25; letter-spacing:-1px; margin-bottom:14px; }
+.start-title em { color:var(--accent); font-style:normal; }
+.start-desc { font-size:13px; color:rgba(255,255,255,0.65); line-height:1.7; }
+.start-card { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); border-radius:var(--r-lg); padding:18px; margin:24px 0; }
+.start-card-title { font-size:12px; font-weight:700; color:rgba(255,255,255,0.90); margin-bottom:12px; }
+.step-list { display:flex; flex-direction:column; gap:10px; }
+.step-item { display:flex; align-items:flex-start; gap:10px; font-size:12px; color:rgba(255,255,255,0.75); }
+.step-hint { font-size:11px; color:rgba(255,255,255,0.50); line-height:1.6; margin-top:5px; padding:7px 10px; background:rgba(255,255,255,0.07); border-left:2px solid rgba(212,175,55,0.5); border-radius:0 6px 6px 0; }
+.step-num { width:22px; height:22px; border-radius:50%; background:var(--accent); color:var(--charcoal); font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.start-time { font-size:11px; color:rgba(255,255,255,0.45); margin-bottom:18px; }
+.btn-start { width:100%; padding:16px; background:var(--accent); color:var(--charcoal); border:none; border-radius:var(--r-md); font-size:15px; font-weight:800; cursor:pointer; transition:all 0.18s; }
+.btn-start:active { transform:scale(0.98); }
+
+/* ══════════════════════════════
+   화면 2: 응답자 선택
+══════════════════════════════ */
+#s-who { padding:32px 24px; }
+.screen-eyebrow { font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.4px; margin-bottom:6px; }
+.screen-title { font-size:22px; font-weight:800; color:var(--charcoal); letter-spacing:-0.5px; line-height:1.3; margin-bottom:6px; }
+.screen-sub { font-size:13px; color:var(--text-sub); line-height:1.6; margin-bottom:24px; }
+.who-list { display:flex; flex-direction:column; gap:10px; flex:1; }
+.who-card { display:flex; align-items:center; gap:14px; padding:15px 16px; background:var(--white); border:2px solid var(--border); border-radius:var(--r-md); cursor:pointer; transition:all 0.18s; }
+.who-card.selected { border-color:var(--navy); background:#F0F5FA; }
+.who-icon { width:48px; height:48px; flex-shrink:0; }
+.who-icon svg { width:48px; height:48px; }
+/* 탭용 아바타 - 작은 크기 */
+.tab-avatar { width:28px; height:28px; }
+.tab-avatar svg { width:28px; height:28px; }
+.who-name { font-size:14px; font-weight:700; color:var(--charcoal); margin-bottom:2px; }
+.who-desc { font-size:11px; color:var(--text-light); }
+.who-check { margin-left:auto; width:20px; height:20px; border-radius:50%; background:var(--navy); color:white; font-size:11px; display:none; align-items:center; justify-content:center; flex-shrink:0; }
+.who-card.selected .who-check { display:flex; }
+.btn-next { width:100%; padding:14px; background:var(--navy); color:var(--white); border:none; border-radius:var(--r-md); font-size:14px; font-weight:700; cursor:pointer; margin-top:20px; transition:all 0.18s; opacity:0.4; pointer-events:none; letter-spacing:-0.2px; }
+.btn-next.on { opacity:1; pointer-events:auto; }
+.btn-next.on:active { transform:scale(0.98); }
+.spacer { flex:1; }
+
+/* ══════════════════════════════
+   화면 3: 아이 정보
+══════════════════════════════ */
+#s-info { padding:32px 24px; }
+.info-label { font-size:13px; font-weight:700; color:var(--charcoal); margin-bottom:10px; margin-top:22px; }
+.info-label:first-of-type { margin-top:4px; }
+.info-input { width:100%; padding:13px 15px; background:var(--white); border:1.5px solid var(--border); border-radius:var(--r-md); font-size:16px; font-weight:600; color:var(--charcoal); outline:none; transition:border-color 0.18s; font-family:inherit; }
+.info-input:focus { border-color:var(--navy); }
+.info-input::placeholder { color:var(--text-light); font-weight:400; }
+.age-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.age-card { padding:14px 12px; background:var(--white); border:2px solid var(--border); border-radius:var(--r-md); cursor:pointer; transition:all 0.18s; text-align:center; }
+.age-card.selected { border-color:var(--navy); background:#F0F5FA; }
+.age-icon { font-size:22px; margin-bottom:5px; }
+.age-range { font-size:12px; font-weight:700; color:var(--charcoal); margin-bottom:2px; }
+.age-desc { font-size:10px; color:var(--text-light); }
+
+/* ══════════════════════════════
+   화면 4: 설문 진행
+══════════════════════════════ */
+#s-survey { display:none; flex-direction:column; min-height:100vh; }
+#s-survey.active { display:flex; }
+.survey-header { position:sticky; top:0; z-index:10; background:rgba(255,248,231,0.96); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding:14px 20px 12px; }
+.progress-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.progress-label { font-size:12px; color:var(--text-sub); font-weight:600; }
+.progress-count { font-size:12px; color:var(--navy); font-weight:800; }
+.progress-bar-wrap { width:100%; height:5px; background:rgba(0,0,0,0.08); border-radius:3px; overflow:hidden; }
+.progress-bar-fill { height:100%; background:var(--navy); border-radius:3px; transition:width 0.4s ease; }
+.survey-body { flex:1; padding:24px 22px; display:flex; flex-direction:column; }
+.q-num-label { font-size:11px; font-weight:700; color:var(--text-light); letter-spacing:0.4px; margin-bottom:10px; }
+.q-text { font-size:21px; font-weight:800; color:var(--charcoal); letter-spacing:-0.4px; line-height:1.4; margin-bottom:6px; flex:1; }
+.q-sub { font-size:12px; color:var(--text-light); margin-bottom:28px; line-height:1.5; }
+/* 이모지 */
+.emoji-row { display:flex; justify-content:space-between; margin-bottom:16px; padding:0 4px; }
+.emoji-item { font-size:24px; text-align:center; flex:1; transition:transform 0.2s, opacity 0.2s; opacity:0.3; pointer-events:none; }
+.emoji-item.on { transform:scale(1.35); opacity:1; }
+/* 슬라이더 */
+.slider-labels { display:flex; justify-content:space-between; margin-bottom:10px; }
+.slider-label { font-size:11px; color:var(--text-light); font-weight:600; }
+input[type=range]#score-range {
+  -webkit-appearance:none; appearance:none; width:100%; height:6px; border-radius:3px; outline:none; cursor:pointer;
+  background:linear-gradient(to right, var(--navy) 0%, var(--navy) var(--fp,0%), #E0D8CC var(--fp,0%), #E0D8CC 100%);
+}
+input[type=range]#score-range::-webkit-slider-thumb { -webkit-appearance:none; width:32px; height:32px; border-radius:50%; background:var(--navy); box-shadow:0 3px 10px rgba(10,61,98,0.30); cursor:grab; border:3px solid white; transition:transform 0.15s; }
+input[type=range]#score-range::-moz-range-thumb { width:32px; height:32px; border-radius:50%; background:var(--navy); box-shadow:0 3px 10px rgba(10,61,98,0.30); cursor:grab; border:3px solid white; }
+input[type=range]#score-range:active::-webkit-slider-thumb { transform:scale(1.15); cursor:grabbing; }
+.tick-row { display:flex; justify-content:space-between; padding:0 2px; margin-top:6px; }
+.tick-num { font-size:13px; font-weight:800; color:var(--text-light); width:20px; text-align:center; transition:color 0.2s, transform 0.2s; }
+.tick-num.on { color:var(--navy); transform:scale(1.2); }
+.score-bubble { text-align:center; margin-top:14px; min-height:30px; }
+.score-bubble-inner { display:inline-flex; align-items:center; gap:6px; padding:5px 16px; background:var(--navy); color:white; border-radius:20px; font-size:12px; font-weight:600; opacity:0; transform:translateY(4px); transition:opacity 0.2s, transform 0.2s; }
+.score-bubble-inner.on { opacity:1; transform:translateY(0); }
+.bubble-num { font-size:15px; font-weight:900; background:white; color:var(--navy); width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+.slider-hint { text-align:center; font-size:11px; color:var(--text-light); margin-top:6px; }
+.survey-footer { padding:14px 22px 32px; display:flex; gap:10px; }
+.btn-prev { padding:14px 18px; background:var(--white); border:1.5px solid var(--border); border-radius:var(--r-md); font-size:13px; font-weight:600; color:var(--text-sub); cursor:pointer; transition:all 0.15s; }
+.btn-prev:active { transform:scale(0.97); }
+.btn-ans { flex:1; padding:14px; background:var(--navy); color:var(--white); border:none; border-radius:var(--r-md); font-size:14px; font-weight:700; cursor:pointer; transition:all 0.15s; letter-spacing:-0.2px; opacity:0.4; pointer-events:none; }
+.btn-ans.on { opacity:1; pointer-events:auto; }
+.btn-ans.on:active { transform:scale(0.98); }
+
+/* ══════════════════════════════
+   화면 4.5: 중간 결과 선택
+══════════════════════════════ */
+#s-mid { padding:32px 24px 40px; }
+.mid-badge { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; background:rgba(45,90,39,0.10); border-radius:20px; font-size:11px; font-weight:700; color:var(--forest); margin-bottom:18px; }
+.mid-preview { background:var(--white); border:1px solid var(--border); border-radius:var(--r-lg); padding:16px; margin-bottom:20px; }
+.mid-preview-title { font-size:11px; color:var(--text-light); font-weight:600; margin-bottom:12px; letter-spacing:0.3px; }
+.mid-top3 { display:flex; flex-direction:column; gap:8px; }
+.mid-rank-item { display:flex; align-items:center; gap:10px; }
+.mid-rank-num { width:22px; height:22px; border-radius:50%; font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.rk1 { background:var(--accent); color:var(--charcoal); }
+.rk2 { background:var(--sage); color:var(--charcoal); }
+.rk3 { background:var(--cream-dark); color:var(--text-sub); }
+.mid-rank-bar { height:5px; border-radius:3px; background:linear-gradient(90deg, var(--forest), var(--forest-mid)); }
+.choice-cards { display:flex; flex-direction:column; gap:10px; }
+.choice-card { padding:16px; border-radius:var(--r-lg); cursor:pointer; transition:all 0.18s; border:2px solid transparent; }
+.choice-card:active { transform:scale(0.98); }
+.choice-result { background:var(--navy); color:var(--white); }
+.c-title { font-size:15px; font-weight:800; margin-bottom:4px; display:flex; align-items:center; gap:7px; letter-spacing:-0.3px; }
+.c-sub { font-size:12px; line-height:1.5; }
+.c-sub-dark { color:rgba(255,255,255,0.65); }
+.c-sub-light { color:var(--text-sub); }
+.choice-more { background:var(--white); border-color:var(--border); }
+.accuracy-pills { display:flex; gap:6px; margin-top:10px; flex-wrap:wrap; }
+.pill { padding:3px 9px; border-radius:20px; font-size:10px; font-weight:700; }
+.pill-now  { background:rgba(212,175,55,0.18);  color:var(--accent-dark); }   /* Champaign Gold 계열 */
+.pill-more { background:rgba(10, 61, 98,0.10);  color:var(--navy); }           /* Classic Navy 계열 */
+.pill-full { background:rgba(45, 90, 39,0.13);  color:var(--forest); }         /* Forest Green 계열 */
+.mid-rank-name { font-size:14px; font-weight:700; color:var(--charcoal); flex:1; }
+.mid-rank-bar { height:5px; border-radius:3px; background:linear-gradient(90deg, var(--navy), var(--navy-mid)); }
+.choice-cards { display:flex; flex-direction:column; gap:10px; }
+.choice-card { padding:16px; border-radius:var(--r-lg); cursor:pointer; transition:all 0.18s; border:2px solid transparent; }
+.choice-card:active { transform:scale(0.98); }
+.choice-result { background:var(--navy); color:var(--white); }
+.c-title { font-size:15px; font-weight:800; margin-bottom:4px; display:flex; align-items:center; gap:7px; letter-spacing:-0.3px; }
+.c-sub { font-size:12px; line-height:1.5; }
+.c-sub-dark { color:rgba(255,255,255,0.65); }
+.c-sub-light { color:var(--text-sub); }
+.choice-more { background:var(--white); border-color:var(--border); }
+.accuracy-pills { display:flex; gap:6px; margin-top:10px; flex-wrap:wrap; }
+.pill { padding:3px 9px; border-radius:20px; font-size:10px; font-weight:700; }
+.pill-now { background:#EDE3D5; color:#6B4C1E; }
+.pill-more { background:#D6E8F7; color:#0A3D62; }
+.pill-full { background:rgba(45,90,39,0.13); color:var(--forest); }         /* Forest Green 계열 */
+
+/* ══════════════════════════════
+   화면 5: 로딩
+══════════════════════════════ */
+#s-loading { background:var(--navy); justify-content:center; align-items:center; gap:20px; }
+.loading-icon { font-size:48px; animation:spin 2s linear infinite; }
+@keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+.loading-text { font-size:16px; font-weight:700; color:rgba(255,255,255,0.85); text-align:center; line-height:1.6; }
+
+/* ══════════════════════════════
+   화면 6: 결과
+══════════════════════════════ */
+#s-result { display:none; flex-direction:column; min-height:100vh; }
+#s-result.active { display:flex; }
+.result-header { position:sticky; top:0; z-index:100; background:rgba(255,248,231,0.96); backdrop-filter:blur(12px); padding:14px 20px 12px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.rh-left {}
+.rh-eyebrow { font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.4px; margin-bottom:2px; }
+.rh-name { font-size:20px; font-weight:800; color:var(--charcoal); letter-spacing:-0.5px; display:flex; align-items:baseline; gap:6px; }
+.rh-grade { font-size:12px; color:var(--text-sub); font-weight:500; }
+.rh-badge { background:var(--navy); color:white; font-size:10px; font-weight:700; padding:4px 10px; border-radius:20px; }
+/* 탭 */
+.tab-section { padding:14px 20px 0; }
+.tab-group { display:flex; gap:6px; padding:4px; background:rgba(0,0,0,0.05); border-radius:var(--r-md); }
+.tab { flex:1; padding:9px 6px; text-align:center; border-radius:10px; cursor:pointer; transition:all 0.2s; display:flex; flex-direction:column; align-items:center; gap:3px; }
+.tab-icon { font-size:16px; line-height:1; width:28px; height:28px; display:flex; align-items:center; justify-content:center; }
+.tab-icon svg { width:28px; height:28px; }
+.tab-lbl { font-size:10px; font-weight:600; color:#888; transition:color 0.2s; }
+.tab.active { background:white; box-shadow:0 2px 10px rgba(0,0,0,0.08); }
+.tab.active .tab-lbl { color:var(--charcoal); }
+/* 위인 카드 */
+.card-wrap { padding:14px 20px 0; }
+.main-card { border-radius:var(--r-lg); padding:26px 22px 22px; position:relative; overflow:hidden; min-height:320px; display:flex; flex-direction:column; justify-content:space-between; transition:background 0.35s ease; }
+.card-symbol { position:absolute; right:-16px; top:-16px; font-size:200px; opacity:0.10; transform:rotate(-12deg); line-height:1; pointer-events:none; user-select:none; }
+.card-top { position:relative; z-index:2; }
+.card-tag { display:inline-flex; align-items:center; gap:5px; padding:5px 11px; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.22); border-radius:20px; font-size:11px; font-weight:600; color:rgba(255,255,255,0.92); backdrop-filter:blur(8px); margin-bottom:14px; }
+.card-name-ko { font-size:28px; font-weight:800; color:#FFF; letter-spacing:-0.8px; line-height:1.15; margin-bottom:4px; }
+.card-name-en { font-size:11px; color:rgba(255,255,255,0.60); margin-bottom:0; }
+.card-bottom { position:relative; z-index:2; }
+.card-quote { font-size:13px; line-height:1.6; color:rgba(255,255,255,0.88); margin-bottom:14px; }
+.trait-row { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px; }
+.trait-chip { padding:4px 11px; background:rgba(255,255,255,0.16); border:1px solid rgba(255,255,255,0.20); border-radius:20px; font-size:11px; font-weight:600; color:rgba(255,255,255,0.90); backdrop-filter:blur(8px); }
+.trait-chip.primary { background:rgba(255,255,255,0.92); color:var(--charcoal); border-color:transparent; }
+.common-banner { display:flex; align-items:center; gap:8px; padding:9px 12px; background:rgba(255,255,255,0.14); border:1px solid rgba(255,255,255,0.18); border-radius:var(--r-sm); font-size:12px; color:rgba(255,255,255,0.88); line-height:1.4; }
+.common-banner.hide { display:none; }
+.common-dot { width:6px; height:6px; border-radius:50%; background:#FFD700; flex-shrink:0; }
+.scroll-hint { text-align:center; padding:14px; font-size:11px; color:var(--text-light); }
+.divider { height:8px; background:rgba(0,0,0,0.04); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+/* 서사형 비교 */
+.narrative-section { padding:22px 20px; }
+.sec-eyebrow { font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.4px; text-transform:uppercase; margin-bottom:5px; }
+.sec-title { font-size:20px; font-weight:800; color:var(--charcoal); letter-spacing:-0.4px; line-height:1.3; margin-bottom:20px; }
+.narr-item { margin-bottom:14px; }
+.narr-label { font-size:12px; color:var(--text-sub); font-weight:600; margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+.small-card { display:flex; align-items:center; gap:12px; padding:13px 14px; background:var(--white); border:1px solid var(--border); border-radius:var(--r-md); }
+.icon-box { width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+.ico-orange { background:linear-gradient(135deg,var(--accent),#E8C547); }     /* Champaign Gold */
+.ico-purple { background:linear-gradient(135deg,var(--forest),var(--forest-mid)); } /* Forest Green */
+.ico-navy   { background:linear-gradient(135deg,var(--navy),var(--navy-mid)); }
+.ico-pink   { background:linear-gradient(135deg,#C0392B,#E74C3C); }
+.sc-text { flex:1; min-width:0; }
+.sc-title { font-size:15px; font-weight:700; color:var(--charcoal); margin-bottom:2px; }
+.sc-sub { font-size:11px; color:var(--text-light); }
+.badge { padding:3px 9px; border-radius:20px; font-size:10px; font-weight:700; white-space:nowrap; flex-shrink:0; }
+.b-gold { background:rgba(212,175,55,0.15); color:var(--accent-dark); }    /* Champaign Gold */
+.b-sand { background:rgba(210,180,140,0.25); color:#6B4C1E; }               /* Earth Sand */
+.b-navy { background:rgba(10, 61, 98,0.10);  color:var(--navy); }           /* Classic Navy */
+.b-pink { background:#FDECEA; color:#922B21; }
+/* 차트 */
+.chart-section { margin:0 20px 20px; background:var(--white); border:1px solid var(--border); border-radius:var(--r-lg); padding:20px 16px 16px; }
+.chart-title { font-size:15px; font-weight:800; color:var(--charcoal); letter-spacing:-0.3px; margin-bottom:3px; }
+.chart-sub { font-size:11px; color:var(--text-light); margin-bottom:16px; }
+.chart-wrap { display:flex; justify-content:center; margin-bottom:12px; }
+.chart-legend { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+.legend-item { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--text-sub); font-weight:500; }
+.legend-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+/* ── 세션 화면 ── */
+#s-session { padding:32px 24px 40px; }
+.session-mode-row { display:flex; gap:10px; margin-bottom:24px; }
+.session-mode-btn { flex:1; padding:13px 10px; border-radius:var(--r-md); border:2px solid var(--border); background:var(--white); font-size:13px; font-weight:700; color:var(--text-sub); cursor:pointer; transition:all 0.18s; text-align:center; }
+.session-mode-btn.active { border-color:var(--navy); background:#EEF4FA; color:var(--navy); }
+.session-panel { display:none; }
+.session-panel.active { display:block; }
+.session-input { width:100%; padding:14px 16px; border:1.5px solid var(--border); border-radius:var(--r-md); font-size:22px; font-weight:800; letter-spacing:3px; text-align:center; color:var(--charcoal); background:var(--white); outline:none; font-family:inherit; transition:border-color 0.18s; text-transform:uppercase; }
+.session-input:focus { border-color:var(--navy); }
+.session-input::placeholder { font-size:14px; letter-spacing:0; font-weight:400; color:var(--text-light); }
+.session-info-box { background:var(--white); border:1px solid var(--border); border-radius:var(--r-md); padding:14px 16px; margin:14px 0; }
+.session-code-display { font-size:28px; font-weight:900; color:var(--navy); letter-spacing:4px; text-align:center; margin:6px 0; }
+.session-share-hint { font-size:12px; color:var(--text-light); text-align:center; }
+.session-waiting { background:var(--navy); border-radius:var(--r-lg); padding:16px; margin:14px 0; }
+.session-waiting-title { font-size:13px; font-weight:700; color:rgba(255,255,255,0.7); margin-bottom:10px; }
+.session-respondent-list { display:flex; flex-direction:column; gap:8px; }
+.session-respondent-item { display:flex; align-items:center; gap:10px; padding:8px 10px; background:rgba(255,255,255,0.1); border-radius:var(--r-sm); }
+.session-respondent-name { font-size:13px; font-weight:600; color:white; flex:1; }
+.session-respondent-status { font-size:11px; color:rgba(255,255,255,0.55); }
+.session-respondent-done { color:var(--forest-mid); font-weight:700; }
+/* 참여자 이름 입력 */
+.joiner-name-row { display:flex; flex-direction:column; gap:8px; margin:14px 0; }
+.joiner-label { font-size:13px; font-weight:700; color:var(--charcoal); }
+.joiner-name-input { width:100%; padding:13px 15px; border:1.5px solid var(--border); border-radius:var(--r-md); font-size:16px; font-weight:600; color:var(--charcoal); background:var(--white); outline:none; font-family:inherit; transition:border-color 0.18s; }
+.joiner-name-input:focus { border-color:var(--navy); }
+
+/* ── 결과 화면 N명 대응 ── */
+.respondent-count-badge { display:inline-flex; align-items:center; gap:5px; padding:4px 10px; background:rgba(45,90,39,0.10); border-radius:20px; font-size:11px; font-weight:700; color:var(--forest); }
+.live-dot { width:6px; height:6px; border-radius:50%; background:var(--forest-mid); animation:pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* ── 성장 나침반 ── */
+.compass-section { padding:22px 20px 10px; }
+.compass-eyebrow { font-size:11px; color:var(--text-light); font-weight:600; letter-spacing:0.4px; text-transform:uppercase; margin-bottom:5px; }
+.compass-title { font-size:20px; font-weight:800; color:var(--charcoal); letter-spacing:-0.4px; line-height:1.3; margin-bottom:6px; }
+.compass-sub { font-size:13px; color:var(--text-sub); line-height:1.6; margin-bottom:18px; }
+
+/* 강점·성장 성향 행 */
+.strength-row { display:flex; flex-direction:column; gap:8px; margin-bottom:20px; }
+.strength-item { display:flex; align-items:center; gap:10px; padding:12px 14px; background:var(--white); border:1px solid var(--border); border-radius:var(--r-md); cursor:pointer; transition:all 0.18s; }
+.strength-item:active { transform:scale(0.98); }
+.strength-item.selected { border-color:var(--navy); background:#EEF4FA; }
+.strength-item.growth-item { border-color:rgba(45,90,39,0.2); background:rgba(45,90,39,0.04); }
+.strength-item.growth-item.selected { border-color:var(--forest); background:rgba(45,90,39,0.10); }
+.strength-rank { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; flex-shrink:0; }
+.rank-gold   { background:var(--accent); color:var(--charcoal); }
+.rank-silver { background:var(--sage); color:var(--charcoal); }
+.rank-bronze { background:var(--cream-dark); color:var(--text-sub); }
+.rank-g1 { background:rgba(45,90,39,0.15); color:var(--forest); }
+.rank-g2 { background:rgba(45,90,39,0.10); color:var(--forest); }
+.rank-g3 { background:rgba(45,90,39,0.07); color:var(--forest-mid); }
+.strength-info { flex:1; min-width:0; }
+.strength-name { font-size:14px; font-weight:700; color:var(--charcoal); margin-bottom:2px; }
+.strength-desc { font-size:11px; color:var(--text-light); line-height:1.4; }
+.strength-arrow { font-size:14px; color:var(--text-light); flex-shrink:0; transition:color 0.18s; }
+.strength-item.selected .strength-arrow { color:var(--navy); }
+.strength-item.growth-item.selected .strength-arrow { color:var(--forest); }
+
+/* 카테고리 탭 */
+.cat-tabs { display:flex; gap:6px; overflow-x:auto; padding-bottom:4px; margin-bottom:14px; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+.cat-tabs::-webkit-scrollbar { display:none; }
+.cat-tab { flex-shrink:0; padding:7px 14px; border-radius:20px; border:1.5px solid var(--border); background:var(--white); font-size:12px; font-weight:600; color:var(--text-sub); cursor:pointer; transition:all 0.18s; white-space:nowrap; }
+.cat-tab.active { background:var(--navy); color:white; border-color:var(--navy); }
+.cat-tab.growth-active { background:var(--forest); color:white; border-color:var(--forest); }
+
+/* 상품 카드 */
+.product-list { display:flex; flex-direction:column; gap:10px; margin-bottom:8px; }
+.product-card { display:flex; gap:12px; padding:14px; background:var(--white); border:1px solid var(--border); border-radius:var(--r-md); text-decoration:none; transition:all 0.18s; cursor:pointer; }
+.product-card:active { transform:scale(0.98); background:#f8f4ee; }
+.product-thumb { width:52px; height:52px; border-radius:10px; object-fit:cover; flex-shrink:0; background:var(--cream-dark); display:flex; align-items:center; justify-content:center; font-size:22px; }
+.product-info { flex:1; min-width:0; }
+.product-name { font-size:13px; font-weight:700; color:var(--charcoal); margin-bottom:3px; line-height:1.4; }
+.product-desc { font-size:11px; color:var(--text-light); line-height:1.4; margin-bottom:5px; }
+.product-cta { display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:700; color:var(--navy); }
+.product-cta-growth { color:var(--forest); }
+.compass-notice { font-size:10px; color:var(--text-light); text-align:center; padding:8px 0 16px; line-height:1.5; }
+
+/* 하단 */
+.bottom-action { padding:14px 20px 36px; display:flex; gap:10px; }
+.btn { flex:1; padding:14px 12px; border-radius:var(--r-md); font-size:13px; font-weight:700; border:none; cursor:pointer; transition:all 0.18s; letter-spacing:-0.2px; }
+.btn:active { transform:scale(0.97); }
+.btn-primary { background:var(--navy); color:var(--white); }
+.btn-secondary { background:var(--white); color:var(--charcoal); border:1.5px solid rgba(0,0,0,0.10); }
+/* 공유 모달 */
+.share-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:200; align-items:flex-end; justify-content:center; }
+.share-overlay.on { display:flex; }
+.share-sheet { background:var(--cream); border-radius:24px 24px 0 0; padding:24px 20px 40px; width:100%; max-width:420px; animation:slideUp 0.28s ease; }
+@keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+.share-sheet-title { font-size:16px; font-weight:800; color:var(--charcoal); margin-bottom:18px; text-align:center; }
+.share-btn-row { display:flex; gap:12px; justify-content:center; margin-bottom:16px; }
+.share-icon-btn { display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer; padding:12px 16px; border-radius:var(--r-md); border:none; background:var(--white); transition:all 0.18s; border:1px solid var(--border); }
+.share-icon-btn:active { transform:scale(0.95); }
+.share-icon { font-size:28px; }
+.share-lbl { font-size:11px; font-weight:600; color:var(--text-sub); }
+.share-copy-row { display:flex; gap:8px; align-items:center; padding:12px 14px; background:var(--white); border-radius:var(--r-md); border:1px solid var(--border); }
+.share-copy-text { flex:1; font-size:12px; color:var(--text-sub); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.share-copy-btn { padding:6px 14px; background:var(--navy); color:white; border:none; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; flex-shrink:0; }
+.share-close { display:block; width:100%; padding:13px; background:transparent; border:none; font-size:13px; font-weight:600; color:var(--text-light); cursor:pointer; margin-top:12px; text-align:center; }
+/* 저장 토스트 */
+.toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--charcoal); color:white; padding:10px 20px; border-radius:20px; font-size:13px; font-weight:600; opacity:0; transition:all 0.3s; z-index:300; white-space:nowrap; pointer-events:none; }
+.toast.on { opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* ── 위인 상세 바텀 시트 ── */
+.detail-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:400; align-items:flex-end; justify-content:center; }
+.detail-overlay.on { display:flex; }
+.detail-sheet { background:var(--cream); border-radius:24px 24px 0 0; width:100%; max-width:420px; max-height:88vh; overflow-y:auto; animation:slideUp 0.3s ease; }
+.detail-handle { width:40px; height:4px; background:rgba(0,0,0,0.15); border-radius:2px; margin:12px auto 0; }
+/* 상세 헤더 (위인 카드 축소판) */
+.detail-hero { height:160px; position:relative; overflow:hidden; }
+.detail-hero-bg { position:absolute; inset:0; display:flex; align-items:flex-end; padding:20px; }
+.detail-hero-overlay { position:absolute; inset:0; background:linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.6) 100%); }
+.detail-hero-content { position:relative; z-index:2; }
+.detail-name-ko { font-size:26px; font-weight:900; color:white; letter-spacing:-0.8px; line-height:1.1; }
+.detail-name-en { font-size:11px; color:rgba(255,255,255,0.65); margin-top:2px; }
+.detail-primary-chip { display:inline-block; padding:3px 10px; background:rgba(255,255,255,0.22); border:1px solid rgba(255,255,255,0.30); border-radius:14px; font-size:10px; font-weight:700; color:rgba(255,255,255,0.92); margin-top:6px; }
+/* 상세 본문 */
+.detail-body { padding:22px 20px 40px; }
+.detail-section { margin-bottom:22px; }
+.detail-section-title { font-size:11px; font-weight:700; color:var(--text-light); letter-spacing:0.5px; text-transform:uppercase; margin-bottom:10px; }
+.detail-story-item { display:flex; gap:10px; margin-bottom:12px; }
+.detail-story-dot { width:6px; height:6px; border-radius:50%; background:var(--accent); flex-shrink:0; margin-top:6px; }
+.detail-story-text { font-size:13px; line-height:1.7; color:var(--text-sub); }
+.detail-message { background:var(--navy); border-radius:var(--r-md); padding:16px 18px; }
+.detail-message-text { font-size:14px; font-weight:600; color:white; line-height:1.6; }
+.detail-tip { background:var(--white); border:1px solid var(--border); border-radius:var(--r-md); padding:14px 16px; }
+.detail-tip-label { font-size:11px; color:var(--accent); font-weight:700; margin-bottom:6px; }
+.detail-tip-text { font-size:13px; line-height:1.65; color:var(--text-sub); }
+.detail-related-row { display:flex; gap:10px; }
+.detail-related-card { flex:1; padding:12px; background:var(--white); border:1px solid var(--border); border-radius:var(--r-md); cursor:pointer; transition:all 0.18s; }
+.detail-related-card:active { background:#f5f0e8; transform:scale(0.97); }
+.detail-related-sym { font-size:20px; margin-bottom:4px; }
+.detail-related-name { font-size:12px; font-weight:700; color:var(--charcoal); margin-bottom:2px; }
+.detail-related-type { font-size:10px; color:var(--text-light); }
+.detail-close { display:block; width:calc(100% - 40px); margin:0 20px; padding:13px; background:rgba(0,0,0,0.06); border:none; border-radius:var(--r-md); font-size:13px; font-weight:600; color:var(--text-sub); cursor:pointer; margin-bottom:20px; }
+</style>
+
+<!-- Firebase SDK (CDN) -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+  import { getFirestore, doc, setDoc, getDoc, getDocs, collection, addDoc, onSnapshot, serverTimestamp, query, where } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDXycCj9ZAABVp3TxtezCQWiFoJN2Ta-o8",
+    authDomain: "wein-app-94f72.firebaseapp.com",
+    projectId: "wein-app-94f72",
+    storageBucket: "wein-app-94f72.firebasestorage.app",
+    messagingSenderId: "859450859016",
+    appId: "1:859450859016:web:b487e170003e472af57bbd",
+    measurementId: "G-89TD19SF5J"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
+
+  /* 전역으로 노출 */
+  window._db = db;
+  window._fsHelpers = { doc, setDoc, getDoc, getDocs, collection, addDoc, onSnapshot, serverTimestamp, query, where };
+  window.dispatchEvent(new Event('firebase-ready'));
+</script>
+</head>
+<body>
+<div class="phone">
+
+<!-- ════════════ 화면 1: 시작 ════════════ -->
+<div id="s-start" class="screen active">
+  <div>
+    <div class="start-tag">✨ 우리 아이 성향 매칭 앱</div>
+    <div class="start-title">우리 아이는<br>어떤 <em>위인</em>을<br>닮았을까요?</div>
+    <div class="start-desc">아이를 아는 모든 사람이 함께 참여해요.<br>각자의 시선이 모일수록<br>아이가 더 선명하게 보여요.</div>
+  </div>
+  <div>
+    <!-- 이전 저장 결과 배너 (있을 때만 표시) -->
+    <div id="prev-result-banner" style="display:none;"></div>
+    <div class="start-card">
+      <div class="start-card-title">⚡ 이렇게 진행돼요</div>
+      <div class="step-list">
+        <div class="step-item"><div class="step-num">1</div>세션 만들고 카톡방에 코드 공유</div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div>
+            12문항씩 3바퀴 — 총 36문항이 완주
+            <div class="step-hint">12문항만 해도 결과를 볼 수 있어요.<br>1바퀴 후 결과를 보고 나중에 다시 하면<br>2바퀴부터 이어서 시작돼요.<br>36문항을 완주할수록 결과가 더 정확해져요.</div>
+          </div>
+        </div>
+        <div class="step-item"><div class="step-num">3</div>닮은 위인과 성향 결과 확인</div>
+        <div class="step-item"><div class="step-num">4</div>여러 시선을 합쳐 함께 비교</div>
+      </div>
+    </div>
+    <div class="start-time">🕐 1바퀴 약 3분 · 완주 약 10분</div>
+    <button class="btn-start" onclick="goTo('s-session')" style="margin-bottom:10px;">새 세션 만들기 →</button>
+    <button class="btn-start" onclick="goTo('s-session'); switchSessionMode('join')" style="background:rgba(255,255,255,0.15); font-weight:600;">코드로 참여하기</button>
+  </div>
+</div>
+
+<!-- ════════════ 화면 1.5: 세션 ════════════ -->
+<div id="s-session" class="screen">
+  <div class="screen-eyebrow">세션 설정</div>
+  <div class="screen-title">함께 참여할<br>방식을 선택해요</div>
+  <div class="screen-sub">각자 폰으로 설문하고 결과를 합칩니다.</div>
+
+  <div class="session-mode-row">
+    <div class="session-mode-btn active" id="btn-mode-create" onclick="switchSessionMode('create')">
+      🏠 새 세션 만들기
+    </div>
+    <div class="session-mode-btn" id="btn-mode-join" onclick="switchSessionMode('join')">
+      🔗 코드로 참여
+    </div>
+  </div>
+
+  <!-- 세션 만들기 패널 -->
+  <div class="session-panel active" id="panel-create">
+    <div class="info-label">👦 아이 이름</div>
+    <input class="info-input" type="text" id="session-child-name" placeholder="예: 민준" maxlength="10" oninput="onSessionNameInput()">
+    <div class="info-label" style="margin-top:16px;">👤 내 이름 (응답자)</div>
+    <input class="joiner-name-input" type="text" id="creator-name" placeholder="예: 엄마, 아빠, 선생님..." maxlength="10" oninput="onSessionNameInput()">
+    <div id="session-code-preview" style="display:none;">
+      <div class="session-info-box" style="margin-top:16px;">
+        <div class="session-share-hint">세션 코드 (카톡방에 공유하세요)</div>
+        <div class="session-code-display" id="preview-code">MINJUN-A3F9</div>
+        <div class="session-share-hint">이 코드를 입력하면 같은 세션에 참여해요</div>
+      </div>
+    </div>
+    <button class="btn-next" id="btn-create-session" onclick="createSession()" style="margin-top:12px;">세션 만들고 설문 시작 →</button>
+  </div>
+
+  <!-- 코드 참여 패널 -->
+  <div class="session-panel" id="panel-join">
+    <div class="info-label">🔑 세션 코드 입력</div>
+    <input class="session-input" type="text" id="join-code-input" placeholder="예: MINJUN-A3F9" maxlength="12" oninput="onJoinCodeInput()" style="margin-bottom:14px;">
+    <div class="info-label">👤 내 이름</div>
+    <input class="joiner-name-input" type="text" id="joiner-name" placeholder="예: 아빠, 할머니, 담임선생님..." maxlength="10" oninput="onJoinCodeInput()">
+    <div id="join-session-info" style="display:none; margin-top:14px;">
+      <div class="session-info-box">
+        <div class="session-share-hint">찾은 세션</div>
+        <div style="font-size:15px; font-weight:800; color:var(--charcoal); margin:4px 0;" id="join-child-name-display"></div>
+        <div class="session-share-hint" id="join-participant-count"></div>
+      </div>
+    </div>
+    <div id="join-error" style="color:#C0392B; font-size:12px; margin-top:8px; display:none;">세션 코드를 찾을 수 없어요. 다시 확인해주세요.</div>
+    <button class="btn-next" id="btn-join-session" onclick="joinSession()" style="margin-top:12px;">참여하고 설문 시작 →</button>
+  </div>
+
+  <div class="spacer"></div>
+  <button class="btn-next" onclick="goTo('s-start')" style="background:transparent; color:var(--text-light); opacity:1; margin-top:10px;">← 뒤로</button>
+</div>
+
+<!-- ════════════ 화면 2: 응답자 선택 ════════════ -->
+<div id="s-who" class="screen">
+  <div class="screen-eyebrow">STEP 1 / 3</div>
+  <div class="screen-title">오늘은 누가<br>응답하시나요?</div>
+  <div class="screen-sub">각자 독립적으로 답해야 가장 솔직한 결과가 나와요.</div>
+  <div class="who-list">
+    <div class="who-card" onclick="selectWho(this,'adult','mom','엄마')">
+      <div class="who-icon" id="avatar-mom"></div>
+      <div><div class="who-name">엄마</div><div class="who-desc">아이를 관찰자 시선으로 답해요</div></div>
+      <div class="who-check">✓</div>
+    </div>
+    <div class="who-card" onclick="selectWho(this,'adult','dad','아빠')">
+      <div class="who-icon" id="avatar-dad"></div>
+      <div><div class="who-name">아빠</div><div class="who-desc">아이를 관찰자 시선으로 답해요</div></div>
+      <div class="who-check">✓</div>
+    </div>
+    <div class="who-card" onclick="selectWho(this,'adult','adult','어른')">
+      <div class="who-icon" id="avatar-adult"></div>
+      <div><div class="who-name">아이와 가장 많이 함께하는 어른</div><div class="who-desc">조부모·새부모·위탁부모 등</div></div>
+      <div class="who-check">✓</div>
+    </div>
+    <div class="who-card" onclick="selectWho(this,'child','child','나')">
+      <div class="who-icon" id="avatar-child"></div>
+      <div><div class="who-name">아이 본인</div><div class="who-desc">내 눈으로 나를 직접 답해요</div></div>
+      <div class="who-check">✓</div>
+    </div>
+  </div>
+  <button id="btn-who" class="btn-next" onclick="goTo('s-info')">다음으로 →</button>
+</div>
+
+<!-- ════════════ 화면 3: 아이 정보 ════════════ -->
+<div id="s-info" class="screen">
+  <div class="screen-eyebrow">STEP 2 / 3</div>
+  <div class="screen-title">아이 정보를<br>알려주세요</div>
+  <div class="screen-sub">이름과 학년으로 질문 방식이 달라져요.</div>
+  <div class="info-label">👦 아이 이름 (또는 별명)</div>
+  <input class="info-input" type="text" placeholder="예: 민준" oninput="checkInfo()" id="child-name" maxlength="10">
+  <div class="info-label">📚 아이 학년</div>
+  <div class="age-grid">
+    <div class="age-card" onclick="selectAge(this,'lower')">
+      <div class="age-icon">🌱</div>
+      <div class="age-range">초등 1~4학년</div>
+      <div class="age-desc">약 7~10세</div>
+    </div>
+    <div class="age-card" onclick="selectAge(this,'upper')">
+      <div class="age-icon">🌿</div>
+      <div class="age-range">초등 5학년~중2</div>
+      <div class="age-desc">약 11~14세</div>
+    </div>
+  </div>
+  <div class="spacer"></div>
+  <button id="btn-info" class="btn-next" onclick="startSurvey()">설문 시작하기 →</button>
+</div>
+
+<!-- ════════════ 화면 4: 설문 진행 ════════════ -->
+<div id="s-survey" class="screen">
+  <div class="survey-header">
+    <div class="progress-row">
+      <div class="progress-label" id="pg-label">1바퀴 · 집에서</div>
+      <div class="progress-count" id="pg-count">1 / 12</div>
+    </div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="pg-fill" style="width:8%"></div></div>
+  </div>
+  <div class="survey-body">
+    <div class="q-num-label" id="q-num-label">Q 1</div>
+    <div class="q-text" id="q-text">새 물건이 집에 오면<br>먼저 달려가서 살펴본다.</div>
+    <div class="q-sub" id="q-sub">평소 자주 보이는 모습을 기준으로 응답해주세요.</div>
+    <div class="emoji-row" id="emoji-row" style="display:none;">
+      <span class="emoji-item" id="em-1">😟</span>
+      <span class="emoji-item" id="em-2">🙁</span>
+      <span class="emoji-item" id="em-3">😐</span>
+      <span class="emoji-item" id="em-4">😀</span>
+      <span class="emoji-item" id="em-5">🤩</span>
+    </div>
+    <div class="slider-labels">
+      <span class="slider-label">전혀 그렇지 않아</span>
+      <span class="slider-label">완전히 그래</span>
+    </div>
+    <input type="range" id="score-range" min="1" max="5" step="1" value="1"
+           style="width:100%;--fp:0%" oninput="onSlide(this.value)" onchange="onSlideEnd(this.value)">
+    <div class="tick-row">
+      <span class="tick-num" id="tk-1">1</span>
+      <span class="tick-num" id="tk-2">2</span>
+      <span class="tick-num" id="tk-3">3</span>
+      <span class="tick-num" id="tk-4">4</span>
+      <span class="tick-num" id="tk-5">5</span>
+    </div>
+    <div class="score-bubble"><div class="score-bubble-inner" id="s-bubble"><div class="bubble-num" id="b-num">3</div><span id="b-txt">조금 그래요</span></div></div>
+    <div class="slider-hint" id="s-hint">막대를 손가락으로 밀어서 선택해주세요</div>
+  </div>
+  <div class="survey-footer">
+    <button class="btn-prev" onclick="prevQ()">← 이전</button>
+    <button class="btn-ans" id="btn-ans" onclick="nextQ()">다음 →</button>
+  </div>
+</div>
+
+<!-- ════════════ 화면 4.5: 중간 선택 ════════════ -->
+<div id="s-mid" class="screen">
+  <div class="mid-badge" id="mid-badge">✅ 1바퀴 완료!</div>
+  <div class="screen-title" id="mid-title">첫 번째 결과가<br>나왔어요</div>
+  <div class="screen-sub" id="mid-sub">1바퀴(12문항) 기준이에요. 3바퀴까지 풀면 더 정확해져요.</div>
+  <div class="mid-preview">
+    <div class="mid-preview-title">현재 TOP 3 성향</div>
+    <div class="mid-top3" id="mid-top3"></div>
+  </div>
+  <div class="choice-cards">
+    <div class="choice-card choice-result" onclick="showResult()">
+      <div class="c-title">🎯 지금 결과 보기</div>
+      <div class="c-sub c-sub-dark">닮은 위인을 바로 확인해요. 나중에 이어서 더 풀 수 있어요.</div>
+    </div>
+    <div class="choice-card choice-more" onclick="continueQ()">
+      <div class="c-title" style="color:var(--charcoal)" id="more-btn-title">➕ 2바퀴 계속하기</div>
+      <div class="c-sub c-sub-light" id="more-btn-sub">12문항 더 풀면 결과가 더 정확해져요.</div>
+      <div class="accuracy-pills">
+        <div class="pill pill-now" id="pill-r1">1/3 바퀴</div>
+        <div class="pill pill-more" id="pill-r2">2/3 바퀴</div>
+        <div class="pill pill-full" id="pill-r3">✅ 완주 3/3</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ 화면 5: 로딩 ════════════ -->
+<div id="s-loading" class="screen">
+  <div class="loading-icon">✨</div>
+  <div class="loading-text" id="loading-text">
+    닮은 위인을<br>찾고 있어요...
+  </div>
+</div>
+
+<!-- ════════════ 화면 6: 결과 ════════════ -->
+<div id="s-result" class="screen">
+  <div class="result-header">
+    <div class="rh-left">
+      <div class="rh-eyebrow">닮은 위인 결과</div>
+      <div class="rh-name" id="rh-name">민준 <span class="rh-grade" id="rh-grade">초5</span></div>
+    </div>
+    <div class="rh-badge" id="rh-badge">
+      <span class="live-dot"></span> <span id="rh-badge-text">1명 참여</span>
+    </div>
+  </div>
+  <div class="tab-section">
+    <div class="tab-group" id="tab-group"></div>
+  </div>
+  <div class="card-wrap" id="card-wrap"></div>
+  <div class="scroll-hint">아래로 스크롤하면 더 볼 수 있어요 ↓</div>
+  <div class="divider"></div>
+  <div class="narrative-section">
+    <div class="sec-eyebrow">세 시선을 모아보면</div>
+    <div class="sec-title" id="narr-title">성향이<br>이렇게 보여요</div>
+    <div id="narr-items"></div>
+  </div>
+  <div class="divider"></div>
+  <div class="chart-section">
+    <div class="chart-title">성향 지도</div>
+    <div class="chart-sub" id="chart-sub">12가지 성향 분포</div>
+    <div class="chart-wrap"><svg id="radar-svg" width="300" height="300" viewBox="0 0 300 300"></svg></div>
+    <div class="chart-legend" id="chart-legend"></div>
+  </div>
+  <div class="divider"></div>
+
+  <!-- 성장 나침반 -->
+  <div class="compass-section">
+    <div class="compass-eyebrow">성장 나침반</div>
+    <div class="compass-title" id="compass-title">강점과 성장 가능성</div>
+    <div class="compass-sub" id="compass-sub">성향을 선택하면 맞춤 추천을 볼 수 있어요</div>
+
+    <!-- 강점 TOP3 + 성장가능성 TOP3 -->
+    <div class="strength-row" id="strength-row"></div>
+
+    <!-- 카테고리 탭 -->
+    <div class="cat-tabs" id="cat-tabs" style="display:none;">
+      <div class="cat-tab active" onclick="selectCat(this,'도서')">📚 도서</div>
+      <div class="cat-tab" onclick="selectCat(this,'활동')">🎮 활동·놀이</div>
+      <div class="cat-tab" onclick="selectCat(this,'학습도구')">✏️ 학습도구</div>
+      <div class="cat-tab" onclick="selectCat(this,'디지털')">💻 디지털</div>
+      <div class="cat-tab" onclick="selectCat(this,'운동')">🏃 운동·헬스</div>
+      <div class="cat-tab" onclick="selectCat(this,'예술')">🎨 예술·창작</div>
+    </div>
+
+    <!-- 상품 목록 -->
+    <div class="product-list" id="product-list" style="display:none;"></div>
+
+    <div class="compass-notice" id="compass-notice" style="display:none;">
+      📌 추천 상품은 쿠팡 파트너스 링크로 연결됩니다.<br>구매 시 소정의 수수료가 발생할 수 있어요.
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="bottom-action" style="flex-direction:column; gap:8px;">
+    <button class="btn btn-primary" onclick="addRespondent()" id="btn-add-respondent">
+      ➕ 다른 사람도 응답하기
+    </button>
+    <div style="display:flex; gap:10px;">
+      <button class="btn btn-secondary" onclick="restartSurvey()" style="flex:1;">처음부터 다시</button>
+      <button class="btn btn-secondary" onclick="openShare()" style="flex:1;">공유하기 ↗</button>
+    </div>
+  </div>
+</div>
+
+<!-- 공유 모달 -->
+<div class="share-overlay" id="share-overlay" onclick="closeShare(event)">
+  <div class="share-sheet">
+    <div class="share-sheet-title">초대 메시지 공유하기</div>
+    <div class="share-btn-row">
+      <button class="share-icon-btn" onclick="shareKakao()">
+        <span class="share-icon">💬</span>
+        <span class="share-lbl">카카오 복사</span>
+      </button>
+      <button class="share-icon-btn" onclick="shareLink()">
+        <span class="share-icon">🔗</span>
+        <span class="share-lbl">링크만 복사</span>
+      </button>
+      <button class="share-icon-btn" onclick="shareText()">
+        <span class="share-icon">📋</span>
+        <span class="share-lbl">전체 복사</span>
+      </button>
+      <button class="share-icon-btn" onclick="shareNative()">
+        <span class="share-icon">📤</span>
+        <span class="share-lbl">공유하기</span>
+      </button>
+    </div>
+    <div class="share-copy-row">
+      <div class="share-copy-text" id="share-url-text">https://wein.kr</div>
+      <button class="share-copy-btn" onclick="shareLink()">복사</button>
+    </div>
+    <button class="share-close" onclick="closeShare()">닫기</button>
+  </div>
+</div>
+
+<!-- 위인 상세 바텀 시트 -->
+<div class="detail-overlay" id="detail-overlay" onclick="closeDetail(event)">
+  <div class="detail-sheet" id="detail-sheet">
+    <div class="detail-handle"></div>
+    <div class="detail-hero" id="detail-hero">
+      <div class="detail-hero-overlay"></div>
+      <div class="detail-hero-bg" id="detail-hero-bg">
+        <div class="detail-hero-content">
+          <div class="detail-name-ko" id="detail-name-ko">위인 이름</div>
+          <div class="detail-name-en" id="detail-name-en"></div>
+          <div class="detail-primary-chip" id="detail-primary-chip"></div>
+        </div>
+      </div>
+    </div>
+    <div class="detail-body">
+      <div class="detail-section">
+        <div class="detail-section-title">📖 이런 사람이에요</div>
+        <div id="detail-stories"></div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-section-title">💬 아이에게 전하는 말</div>
+        <div class="detail-message"><div class="detail-message-text" id="detail-message"></div></div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-section-title">💡 부모님께</div>
+        <div class="detail-tip">
+          <div class="detail-tip-label">이 성향을 가진 아이에게</div>
+          <div class="detail-tip-text" id="detail-tip"></div>
+        </div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-section-title">🔗 비슷한 위인</div>
+        <div class="detail-related-row" id="detail-related"></div>
+      </div>
+    </div>
+    <button class="detail-close" onclick="closeDetail()">닫기</button>
+  </div>
+</div>
+
+<!-- 토스트 메시지 -->
+<div class="toast" id="toast"></div>
+
+</div><!-- /phone -->
+
+<script>
+/* ══════════════════════════════════════════════════════
+   데이터: 30명 위인 태그 + 설문 문항
+══════════════════════════════════════════════════════ */
+  /* img 필드 추가 방법:
+     이미지 준비 후 해당 위인 데이터에 img: 'images/figures/파일명.jpg' 추가
+     img 없으면 color 그라디언트로 자동 폴백
+     예: {id:'1-3', name:'레오나르도 다 빈치', img:'images/figures/1-3_davinci.jpg', ...} */
+const FIGURES = [
+  {id:'1-1',name:'장영실',en:'蔣英實 · c.1390-?',symbol:'⚙️',primary:'호기심',s1:'창의성',s2:'용기',color:'linear-gradient(145deg,#5D4E37 0%,#8B7355 45%,#3D2E18 100%)',quote:'"손으로 만지고 궁리하며\n시대를 앞선 발명을 남긴\n조선의 실험 과학자"',country:'korea'},
+  {id:'1-2',name:'허준',en:'許浚 · 1539-1615',symbol:'🌿',primary:'호기심',s1:'학구열',s2:'사랑과 친절',color:'linear-gradient(145deg,#2D5A27 0%,#4A7C3F 45%,#1A3A18 100%)',quote:'"왕실 의학을 민간으로 넓혀\n모두가 쓸 수 있는\n동의보감을 쓴 어의"',country:'korea'},
+  {id:'1-3',name:'레오나르도 다 빈치',en:'Leonardo da Vinci · 1452-1519',symbol:'🎨',primary:'호기심',s1:'창의성',s2:'학구열',color:'linear-gradient(145deg,#6B4C1E 0%,#A67C3C 40%,#7D5A28 100%)',quote:'"한 가지에 머물지 않고\n모든 것에 질문을 던진\n르네상스의 탐구자"',country:'overseas'},
+  {id:'1-4',name:'마리 퀴리',en:'Marie Curie · 1867-1934',symbol:'⚗️',primary:'호기심',s1:'용기',s2:'사랑과 친절',color:'linear-gradient(145deg,#1a3a52 0%,#2c5f7e 50%,#0d2538 100%)',quote:'"수 톤의 광석을 직접 끓여\n두 번의 노벨상을 받은\n유일한 여성 과학자"',country:'overseas'},
+  {id:'2-1',name:'이황',en:'李滉 · 1501-1570',symbol:'📜',primary:'학구열',s1:'자기조절',s2:'통찰력',color:'linear-gradient(145deg,#3D2B1F 0%,#6B4C3A 45%,#241810 100%)',quote:'"평생 배움을 멈추지 않으며\n후학을 기르고\n성리학을 꽃피운 선비"',country:'korea'},
+  {id:'2-2',name:'정약용',en:'丁若鏞 · 1762-1836',symbol:'🏗️',primary:'학구열',s1:'통찰력',s2:'용기',color:'linear-gradient(145deg,#1B3A4B 0%,#2E5F7A 45%,#0E2230 100%)',quote:'"유배 18년을 학문으로 승화해\n500여 권의 저서를 남긴\n실학의 집대성자"',country:'korea'},
+  {id:'2-3',name:'공자',en:'孔子 · BC 551-479',symbol:'🏛️',primary:'학구열',s1:'통찰력',s2:'사랑과 친절',color:'linear-gradient(145deg,#4A3728 0%,#7A5C42 45%,#2D2018 100%)',quote:'"배우고 때로 익히면\n또한 기쁘지 아니한가 —\n학문의 기쁨을 가르친 스승"',country:'overseas'},
+  {id:'2-4',name:'헬렌 켈러',en:'Helen Keller · 1880-1968',symbol:'✨',primary:'학구열',s1:'용기',s2:'사랑과 친절',color:'linear-gradient(145deg,#2D4A3E 0%,#4A7A6A 45%,#1A2E26 100%)',quote:'"보지도 듣지도 못하는 상황에서\n대학을 졸업하고\n세상을 바꾼 연설가"',country:'overseas'},
+  {id:'3-1',name:'세종대왕',en:'世宗大王 · 1397-1450',symbol:'한',primary:'창의성',s1:'리더십과 공정성',s2:'사랑과 친절',color:'linear-gradient(145deg,#6B3A1F 0%,#A0522D 45%,#4E2808 100%)',quote:'"백성 누구나 글을 쓸 수 있도록\n한글을 창제한\n조선의 성군"',country:'korea'},
+  {id:'3-2',name:'백남준',en:'白南準 · 1932-2006',symbol:'📺',primary:'창의성',s1:'통찰력',s2:'용기',color:'linear-gradient(145deg,#1a1535 0%,#2D1B69 50%,#0d0d2b 100%)',quote:'"텔레비전을 예술로 바꿔\n비디오 아트라는\n새 장르를 만든 예술가"',country:'korea'},
+  {id:'3-3',name:'토머스 에디슨',en:'Thomas Edison · 1847-1931',symbol:'💡',primary:'창의성',s1:'용기',s2:'호기심',color:'linear-gradient(145deg,#4A3520 0%,#7A5C35 45%,#2D2010 100%)',quote:'"천 번의 실패를\n천 번의 배움으로 삼아\n전구를 발명한 발명왕"',country:'overseas'},
+  {id:'3-4',name:'월트 디즈니',en:'Walt Disney · 1901-1966',symbol:'🎬',primary:'창의성',s1:'리더십과 공정성',s2:'용기',color:'linear-gradient(145deg,#2A1F4E 0%,#4A3A8A 45%,#180F35 100%)',quote:'"파산과 실패에도 포기하지 않고\n꿈의 왕국을 만든\n이야기꾼"',country:'overseas'},
+  {id:'4-1',name:'이이',en:'李珥 · 1536-1584',symbol:'🔍',primary:'통찰력',s1:'학구열',s2:'진실성',color:'linear-gradient(145deg,#1F3A2A 0%,#345A3E 45%,#0F2018 100%)',quote:'"나라의 위기를 꿰뚫어 보고\n개혁을 외쳤던\n조선의 철학자"',country:'korea'},
+  {id:'4-2',name:'유성룡',en:'柳成龍 · 1542-1607',symbol:'📖',primary:'통찰력',s1:'진실성',s2:'리더십과 공정성',color:'linear-gradient(145deg,#2A1F1F 0%,#4A3535 45%,#1A0F0F 100%)',quote:'"임진왜란을 기록하고\n이순신을 천거한\n탁월한 재상"',country:'korea'},
+  {id:'4-3',name:'소크라테스',en:'Sokrates · BC 470-399',symbol:'🏛️',primary:'통찰력',s1:'용기',s2:'진실성',color:'linear-gradient(145deg,#3D3520 0%,#6B5C35 45%,#251F10 100%)',quote:'"아는 것이 없음을 아는 것이\n진정한 앎의 시작이라고\n가르친 철학자"',country:'overseas'},
+  {id:'4-4',name:'알베르트 아인슈타인',en:'Albert Einstein · 1879-1955',symbol:'🌌',primary:'통찰력',s1:'창의성',s2:'호기심',color:'linear-gradient(145deg,#1a3a52 0%,#2c5f7e 50%,#0d2538 100%)',quote:'"빛을 타고 달리면\n어떻게 될까라는 상상으로\n상대성이론을 만든 물리학자"',country:'overseas'},
+  {id:'5-1',name:'이순신',en:'李舜臣 · 1545-1598',symbol:'🛡️',primary:'용기',s1:'통찰력',s2:'진실성',color:'linear-gradient(145deg,#0A2744 0%,#0A3D62 45%,#051829 100%)',quote:'"열두 척으로 나라를 지킨\n포기를 모르는\n지혜의 장군"',country:'korea'},
+  {id:'5-2',name:'유관순',en:'柳寬順 · 1902-1920',symbol:'🏴',primary:'용기',s1:'진실성',s2:'영성',color:'linear-gradient(145deg,#5A1A1A 0%,#8B2E2E 45%,#3A0F0F 100%)',quote:'"열여덟 나이로 만세를 외치며\n일제에 맞선\n조선의 딸"',country:'korea'},
+  {id:'5-3',name:'넬슨 만델라',en:'Nelson Mandela · 1918-2013',symbol:'✊',primary:'용기',s1:'자기조절',s2:'리더십과 공정성',color:'linear-gradient(145deg,#3A2800 0%,#6B4A00 45%,#241800 100%)',quote:'"27년 감옥에서도 용서를 품고\n남아공 최초 흑인 대통령이 된\n화해의 지도자"',country:'overseas'},
+  {id:'5-4',name:'어니스트 섀클턴',en:'Ernest Shackleton · 1874-1922',symbol:'🧊',primary:'용기',s1:'리더십과 공정성',s2:'진실성',color:'linear-gradient(145deg,#1A2A3A 0%,#2D4A5F 45%,#0F1A25 100%)',quote:'"남극에서 배가 침몰해도\n대원 28명 모두를\n살려 돌아온 탐험가"',country:'overseas'},
+  {id:'6-1',name:'안중근',en:'安重根 · 1879-1910',symbol:'⚖️',primary:'진실성',s1:'용기',s2:'영성',color:'linear-gradient(145deg,#1A2A1A 0%,#2D4A2D 45%,#0F1A0F 100%)',quote:'"동양 평화를 외치며\n자신의 목숨으로\n신념을 증명한 독립투사"',country:'korea'},
+  {id:'6-2',name:'김구',en:'金九 · 1876-1949',symbol:'🌏',primary:'진실성',s1:'리더십과 공정성',s2:'영성',color:'linear-gradient(145deg,#1A1A2A 0%,#2D2D4A 45%,#0F0F1A 100%)',quote:'"내 소원은 오직 대한 독립 —\n평생을 조국 해방에 바친\n독립운동의 어른"',country:'korea'},
+  {id:'6-3',name:'마하트마 간디',en:'M.K. Gandhi · 1869-1948',symbol:'🕊️',primary:'진실성',s1:'자기조절',s2:'영성',color:'linear-gradient(145deg,#2A1F0A 0%,#4A3A18 45%,#1A1208 100%)',quote:'"소금 행진 390km를 걸으며\n비폭력으로\n인도 독립을 이끈 성인"',country:'overseas'},
+  {id:'6-4',name:'에이브러햄 링컨',en:'Abraham Lincoln · 1809-1865',symbol:'🗽',primary:'진실성',s1:'리더십과 공정성',s2:'학구열',color:'linear-gradient(145deg,#1A1A1A 0%,#3A3A3A 45%,#0A0A0A 100%)',quote:'"가난한 통나무집에서 태어나\n독학으로 대통령이 되어\n노예를 해방한 정치가"',country:'overseas'},
+  {id:'7-1',name:'방정환',en:'方定煥 · 1899-1931',symbol:'🎪',primary:'사랑과 친절',s1:'창의성',s2:'진실성',color:'linear-gradient(145deg,#3A1A2A 0%,#6A3A5A 45%,#250F1A 100%)',quote:'"어린이날을 만들고\n아이들이 존엄한 존재임을\n세상에 외친 선생님"',country:'korea'},
+  {id:'7-2',name:'이태석',en:'李泰錫 · 1962-2010',symbol:'🩺',primary:'사랑과 친절',s1:'영성',s2:'용기',color:'linear-gradient(145deg,#0A2A1A 0%,#1A4A2A 45%,#051A0F 100%)',quote:'"전쟁터 수단에서\n의사이자 선생님이자 아버지가 된\n한국의 슈바이처"',country:'korea'},
+  {id:'7-3',name:'테레사 수녀',en:'Mother Teresa · 1910-1997',symbol:'🤲',primary:'사랑과 친절',s1:'영성',s2:'용기',color:'linear-gradient(145deg,#1A1A2A 0%,#2A2A4A 45%,#0F0F1A 100%)',quote:'"인도의 빈민가에서\n가장 가난한 이들 곁에\n평생을 머문 성인"',country:'overseas'},
+  {id:'7-4',name:'알베르트 슈바이처',en:'A. Schweitzer · 1875-1965',symbol:'🌍',primary:'사랑과 친절',s1:'학구열',s2:'용기',color:'linear-gradient(145deg,#1A2A1A 0%,#2D4A2D 45%,#0F1A0F 100%)',quote:'"신학자이자 음악가이자 의사로\n아프리카 밀림에서\n생명 외경을 실천한 박사"',country:'overseas'},
+  {id:'8-1',name:'황희',en:'黃喜 · 1363-1452',symbol:'⚖️',primary:'사회적 지능',s1:'리더십과 공정성',s2:'통찰력',color:'linear-gradient(145deg,#3A2A1A 0%,#6A4A2A 45%,#251A0F 100%)',quote:'"18년 영의정으로\n세종의 개혁을 곁에서 이끈\n조선 최장수 재상"',country:'korea'},
+  {id:'8-2',name:'김만덕',en:'金萬德 · 1739-1812',symbol:'🌺',primary:'사회적 지능',s1:'사랑과 친절',s2:'용기',color:'linear-gradient(145deg,#3A1A2A 0%,#6A2D4A 45%,#251018 100%)',quote:'"기생에서 제주 최고 거상이 되어\n전 재산을 나눠\n백성을 살린 여인"',country:'korea'},
+  {id:'8-3',name:'앤 설리번',en:'Anne Sullivan · 1866-1936',symbol:'🖐️',primary:'사회적 지능',s1:'용기',s2:'창의성',color:'linear-gradient(145deg,#2A1A3A 0%,#4A2D6A 45%,#1A0F25 100%)',quote:'"자신도 시각장애인이었지만\n헬렌 켈러의 마음을\n49년간 열어준 스승"',country:'overseas'},
+  {id:'8-4',name:'벤저민 프랭클린',en:'Benjamin Franklin · 1706-1790',symbol:'⚡',primary:'사회적 지능',s1:'창의성',s2:'학구열',color:'linear-gradient(145deg,#1A2A3A 0%,#2D4A5F 45%,#0F1A25 100%)',quote:'"인쇄공에서 미국 건국의 아버지로\n번개가 전기임을 증명한\n외교관이자 발명가"',country:'overseas'},
+  {id:'9-2',name:'이회영',en:'李會榮 · 1867-1932',symbol:'🏴',primary:'리더십과 공정성',s1:'용기',s2:'진실성',color:'linear-gradient(145deg,#1A1A2A 0%,#2D2D4A 45%,#0F0F1A 100%)',quote:'"전 재산 600억을 처분해\n만주로 망명한\n노블레스 오블리주의 귀감"',country:'korea'},
+  {id:'9-3',name:'마틴 루서 킹 Jr.',en:'M.L. King Jr. · 1929-1968',symbol:'✊',primary:'리더십과 공정성',s1:'용기',s2:'진실성',color:'linear-gradient(145deg,#1A1A1A 0%,#3A3A3A 45%,#0A0A0A 100%)',quote:'"나에게는 꿈이 있습니다 —\n비폭력으로 미국을 바꾼\n민권운동의 목사"',country:'overseas'},
+  {id:'9-4',name:'페리클레스',en:'Pericles · BC 495-429',symbol:'🏛️',primary:'리더십과 공정성',s1:'창의성',s2:'통찰력',color:'linear-gradient(145deg,#3A3520 0%,#6B5C35 45%,#251F10 100%)',quote:'"파르테논 신전을 세우고\n민주정을 꽃피운\n아테네 황금기의 지도자"',country:'overseas'},
+  {id:'10-1',name:'김수환 추기경',en:'金壽煥 · 1922-2009',symbol:'✝️',primary:'자기조절',s1:'용기',s2:'사랑과 친절',color:'linear-gradient(145deg,#1A1A2A 0%,#2D2D4A 45%,#0F0F1A 100%)',quote:'"나는 바보입니다 라 말하며\n6월 항쟁에서 학생을 지킨\n한국 최초의 추기경"',country:'korea'},
+  {id:'10-2',name:'법정 스님',en:'法頂 · 1932-2010',symbol:'🍃',primary:'자기조절',s1:'통찰력',s2:'영성',color:'linear-gradient(145deg,#1A2A1A 0%,#2D4A2D 45%,#0F1A0F 100%)',quote:'"무소유 두 글자로\n수백만 한국인의 삶을\n돌아보게 한 스님"',country:'korea'},
+  {id:'10-3',name:'달라이 라마 14세',en:'Tenzin Gyatso · 1935-',symbol:'☮️',primary:'자기조절',s1:'사랑과 친절',s2:'용기',color:'linear-gradient(145deg,#2A1F0A 0%,#4A3818 45%,#1A1208 100%)',quote:'"조국을 잃고도 60년간\n내 적을 내 스승으로 삼으며\n비폭력을 지킨 지도자"',country:'overseas'},
+  {id:'10-4',name:'마르쿠스 아우렐리우스',en:'Marcus Aurelius · 121-180',symbol:'📝',primary:'자기조절',s1:'학구열',s2:'진실성',color:'linear-gradient(145deg,#2A2A1A 0%,#4A4A2D 45%,#1A1A0F 100%)',quote:'"로마 황제이면서도\n매일 밤 자신을 꾸짖는\n명상록을 쓴 철인황제"',country:'overseas'},
+  {id:'11-1',name:'윤동주',en:'尹東柱 · 1917-1945',symbol:'⭐',primary:'감사와 희망',s1:'진실성',s2:'영성',color:'linear-gradient(145deg,#1a1535 0%,#2D1B69 50%,#0d0d2b 100%)',quote:'"별을 노래하며\n부끄럽지 않은 길을\n걸으려 했던 시인"',country:'korea'},
+  {id:'11-2',name:'김점동 (박에스더)',en:'金點童 · 1877-1910',symbol:'🩺',primary:'감사와 희망',s1:'용기',s2:'사랑과 친절',color:'linear-gradient(145deg,#2A1A2A 0%,#4A2D4A 45%,#1A0F1A 100%)',quote:'"가난한 집 막내딸이\n한국 최초 여성 의사가 되어\n조선 여성을 치료한 선구자"',country:'korea'},
+  {id:'11-3',name:'안네 프랑크',en:'Anne Frank · 1929-1945',symbol:'📔',primary:'감사와 희망',s1:'학구열',s2:'진실성',color:'linear-gradient(145deg,#1A2A3A 0%,#2D4A5F 45%,#0F1A25 100%)',quote:'"나치를 피해 은신처에서도\n사람들은 본질적으로 선하다고\n일기에 쓴 소녀"',country:'overseas'},
+  {id:'11-4',name:'루이 암스트롱',en:'Louis Armstrong · 1901-1971',symbol:'🎺',primary:'감사와 희망',s1:'창의성',s2:'용기',color:'linear-gradient(145deg,#2A1A0A 0%,#4A3018 45%,#1A1008 100%)',quote:'"뉴올리언스 빈민가에서 태어나\n이 얼마나 멋진 세상인가를\n노래한 재즈의 황제"',country:'overseas'},
+  {id:'12-1',name:'원효',en:'元曉 · 617-686',symbol:'☸️',primary:'영성',s1:'학구열',s2:'창의성',color:'linear-gradient(145deg,#2A1F0A 0%,#4A3818 45%,#1A1208 100%)',quote:'"모든 것은 마음이 만든다 —\n고승의 품을 벗어\n민중 속으로 들어간 대사"',country:'korea'},
+  {id:'12-2',name:'주기철',en:'朱基徹 · 1897-1944',symbol:'✝️',primary:'영성',s1:'용기',s2:'진실성',color:'linear-gradient(145deg,#1A1A2A 0%,#2D2D4A 45%,#0F0F1A 100%)',quote:'"일사각오를 외치며\n신사참배를 끝까지 거부하고\n평양 형무소에서 순교한 목사"',country:'korea'},
+  {id:'12-3',name:'마르틴 루터',en:'Martin Luther · 1483-1546',symbol:'📖',primary:'영성',s1:'용기',s2:'학구열',color:'linear-gradient(145deg,#2A1A1A 0%,#4A2D2D 45%,#1A0F0F 100%)',quote:'"95개조 논제로 교회와 맞서\n성경을 민중의 언어로 번역한\n종교개혁의 시작점"',country:'overseas'},
+  {id:'12-4',name:'디트리히 본회퍼',en:'D. Bonhoeffer · 1906-1945',symbol:'✝️',primary:'영성',s1:'용기',s2:'진실성',color:'linear-gradient(145deg,#1A1A1A 0%,#3A3A3A 45%,#0A0A0A 100%)',quote:'"히틀러 암살을 결행하고\n처형당한\n값비싼 은혜의 신학자"',country:'overseas'},
+];
+
+/* ══════════════════════════════════════════════════════
+   위인 상세 데이터 (카드 탭 시 표시)
+══════════════════════════════════════════════════════ */
+const DETAILS = {
+  '1-1': {
+    story: ['노비 신분으로 태어났지만 세종대왕이 그 재능을 알아보고 관직에 등용했어요. 세종은 "신분이 낮다 해서 재주를 묻어둘 수 없다"며 직접 나섰어요.','자격루는 물의 힘으로 스스로 종을 치는 자동 물시계예요. 장영실이 세상을 떠난 뒤 고장이 나자 고칠 수 있는 사람이 없어 100년 뒤에야 복원됐을 만큼 정교한 발명이었어요.'],
+    message: '"궁금한 게 있으면 끝까지 파고들어봐. 네가 어디서 태어났는지는 중요하지 않아."',
+    parent_tip: '아이가 무언가를 분해하거나 직접 만들려 할 때 말리지 말고 지켜봐 주세요. 그 호기심이 장영실의 시작이었어요.',
+    related: ['1-3','3-3'],
+  },
+  '1-2': {
+    story: ['허준은 임진왜란이 한창이던 중에도 약초를 모아 약을 만들고 기록을 이어갔어요. 유배 중에도 붓을 놓지 않았고, 결국 25년 만에 동의보감을 완성했어요.','동의보감은 왕실 의학서가 아니에요. "가난한 사람도 산과 들에서 쉽게 구할 수 있는 약초로 병을 고치도록" 쓴 책이에요. 그 마음이 2009년 유네스코 세계기록유산으로 인정받았어요.'],
+    message: '"세상을 바꾸는 호기심은 \'모두에게 도움이 되는 방법은 없을까?\'라는 질문에서 시작해."',
+    parent_tip: '아이가 "왜 이 사람은 아프지?" "어떻게 하면 낫지?"를 물으면 같이 찾아봐 주세요. 허준은 그 질문을 평생 놓지 않았어요.',
+    related: ['7-2','7-4'],
+  },
+  '1-3': {
+    story: ['다 빈치의 노트는 7,000쪽이 넘어요. 왼손잡이인 그는 거울 문자로 메모를 남겨 비밀을 지켰는데, 헬리콥터·잠수함·전차를 500년 전에 스케치했어요.','그에게 그림은 예술이 아니라 "관찰 도구"였어요. 꽃잎 하나를 그리려면 먼저 그 구조를 완전히 이해해야 했고, 그 과정에서 식물학자가 됐어요.'],
+    message: '"한 가지만 잘하라는 법은 없어. 모든 것에 질문을 던져도 돼."',
+    parent_tip: '아이가 이것저것 동시에 관심을 보인다고 집중력이 없다고 걱정하지 마세요. 다 빈치가 그랬어요.',
+    related: ['3-3','4-4'],
+  },
+  '1-4': {
+    story: ['퀴리는 폴란드 출신 여성이라 파리 대학에서 강의를 들을 수도 없었어요. 그럼에도 최고 성적으로 졸업하고, 낡은 창고에서 수 톤의 광석을 직접 끓여 라듐을 발견했어요.','1차 세계대전 중에는 직접 이동식 X선 차량을 운전해 전선을 누볐어요. "리틀 퀴리"라 불린 이 차량이 100만 명의 부상병을 살렸다고 해요.'],
+    message: '"호기심은 몸이 고되도 포기하지 않는 마음과 함께 있을 때 세상을 바꿔."',
+    parent_tip: '"여자라서", "어려서"라는 이유로 제한받을 때 퀴리의 이야기를 들려주세요. 그 벽을 뚫은 사람이 있었다고.',
+    related: ['2-4','5-2'],
+  },
+  '2-1': {
+    story: ['이황은 여덟 살에 아버지를 잃고 혼자 공부를 시작했어요. 평생 34번이나 벼슬 제안을 거절하며 오직 책과 제자들 사이에서 살았어요.','도산서원을 세워 교육에 헌신했고, 그가 가르친 제자들이 조선 성리학의 중심이 됐어요. 일본 성리학자들도 그를 "동방의 공자"라 불렀어요.'],
+    message: '"배움에는 끝이 없어. 어제보다 조금 더 알게 됐다면 오늘은 좋은 날이야."',
+    parent_tip: '아이가 같은 책을 여러 번 읽거나 한 주제를 파고들 때 응원해주세요. 이황은 그 반복이 깊이를 만든다는 걸 알았어요.',
+    related: ['2-2','4-1'],
+  },
+  '2-2': {
+    story: ['정약용은 18년의 유배 생활 동안 500여 권의 책을 썼어요. 유배지에서도 제자들을 가르쳤고, 거중기·수원화성 설계에 이르기까지 실학을 삶으로 실천했어요.','그는 아들에게 "책을 읽고 뜻을 세워라, 가난이 부끄러운 것이 아니라 뜻 없이 사는 것이 부끄러운 것"이라는 편지를 남겼어요.'],
+    message: '"어떤 상황에서도 공부할 수 있어. 오히려 어려울 때 더 깊이 배우게 돼."',
+    parent_tip: '힘든 상황을 아이가 불평할 때 정약용 이야기를 해보세요. 유배지에서 가장 많은 걸 이룬 사람이 있었다고.',
+    related: ['4-1','4-2'],
+  },
+  '2-3': {
+    story: ['공자는 14년간 여러 나라를 돌며 자신의 뜻을 펼칠 군주를 찾았어요. 실패의 연속이었지만 포기하지 않고 가르침을 이어갔어요.','그의 제자는 3,000명이었고, 그중 72명이 뛰어난 인재가 됐어요. 공자의 철학은 단순해요. "배우고 또 익히면 기쁘지 않겠느냐."'],
+    message: '"진짜 공부는 학교에서만 하는 게 아니야. 사람을 만나고 세상을 보며 배우는 거야."',
+    parent_tip: '아이와 함께 산책하며 세상에 대해 이야기 나눠보세요. 공자는 걸으면서 가르쳤어요.',
+    related: ['4-3','2-1'],
+  },
+  '2-4': {
+    story: ['헬렌 켈러는 19개월에 열병으로 시각과 청각을 잃었어요. 앤 설리번 선생님이 오기 전까지 7년간 어둠과 침묵 속에 살았어요.','선생님이 물이 흐르는 손 위에 "water"를 써주던 그 순간, 헬렌은 모든 것에 이름이 있다는 것을 깨달았어요. 그 후 그녀는 5개 언어를 익히고 대학을 졸업했어요.'],
+    message: '"볼 수 없어도 느낄 수 있어. 들을 수 없어도 이해할 수 있어. 배움에는 한계가 없어."',
+    parent_tip: '아이가 "난 못해"라고 할 때 헬렌 켈러 이야기를 들려주세요. 어떤 조건도 배움을 막을 수 없다고.',
+    related: ['8-3','5-4'],
+  },
+  '3-1': {
+    story: ['세종은 집현전 학자들과 함께 4년간 비밀리에 연구해 훈민정음을 만들었어요. 반대가 심했지만 "어리석은 백성이 뜻을 펴지 못함이 안타깝다"며 뜻을 굽히지 않았어요.','측우기, 혼천의, 자격루... 세종 재위 32년 동안 나온 발명의 수가 그 이전 500년보다 많았어요. 그는 발명의 왕이었어요.'],
+    message: '"새로운 것을 만드는 건 어렵지만, 그게 누군가의 삶을 바꿀 때 그 가치를 알 수 있어."',
+    parent_tip: '한글이 당연한 세상에서 자란 아이에게 "이게 없었다면?"을 질문해보세요. 창의성의 가치를 느낄 수 있어요.',
+    related: ['3-3','9-2'],
+  },
+  '3-2': {
+    story: ['백남준은 1963년 TV 12대를 일그러진 화면으로 전시했어요. "이게 예술이냐"는 비웃음 속에서 그는 비디오 아트를 세상에 선언했어요.','그는 "예술은 사기다. 하지만 사기도 예술이다"라고 말했어요. 규칙을 깨는 것 자체가 그의 작품이었어요.'],
+    message: '"\'이게 왜 예술이야?\'라는 질문을 받는 것이 진짜 예술가의 시작이야."',
+    parent_tip: '아이가 엉뚱한 방식으로 그림을 그리거나 물건을 만들 때 "이건 왜 이렇게 했어?"라고 물어봐 주세요. 백남준은 그 질문에서 시작했어요.',
+    related: ['1-3','4-4'],
+  },
+  '3-3': {
+    story: ['에디슨은 전구를 발명하기까지 1,000번 이상 실패했어요. 기자가 "1,000번 실패했군요"라 하자 그는 "아니요, 1,000가지 방법이 안 된다는 걸 발견했어요"라고 답했어요.','그는 초등학교 3개월 만에 퇴학당했어요. 선생님이 "이 아이는 너무 산만해서 가르칠 수 없다"고 했거든요. 어머니가 집에서 직접 가르쳤어요.'],
+    message: '"실패는 네가 틀렸다는 게 아니야. 그 방법은 안 된다는 걸 배운 거야."',
+    parent_tip: '아이가 실패했을 때 결과보다 과정에 집중해주세요. 에디슨의 어머니처럼.',
+    related: ['1-1','5-4'],
+  },
+  '3-4': {
+    story: ['디즈니는 첫 번째 캐릭터 오즈월드의 판권을 빼앗겼어요. 전 재산과 직원 모두를 잃은 기차에서 그는 미키 마우스를 스케치했어요.','은행에서 수백 번 거절당하고, 파산을 두 번 겪고, "이런 우스운 생쥐 캐릭터가 성공할 리 없다"는 말을 들었지만 결국 꿈의 왕국을 세웠어요.'],
+    message: '"모든 걸 잃어도 상상력은 빼앗길 수 없어. 꿈은 머릿속에 있으니까."',
+    parent_tip: '아이가 좋아하는 이야기나 캐릭터를 이야기하게 해주세요. 디즈니는 어린 시절 이야기에서 모든 아이디어를 얻었어요.',
+    related: ['3-1','5-3'],
+  },
+  '4-1': {
+    story: ['이이는 23세에 과거 장원을 시작으로 총 9번 장원을 했어요. "구도장원공"이라 불렸죠. 하지만 그는 벼슬보다 나라의 미래를 걱정하는 데 더 많은 시간을 썼어요.','임진왜란 10년 전, 이이는 "10만 양병설"을 주장했어요. 군대를 미리 키워야 한다고 했지만 조정은 무시했어요. 그 후 임진왜란이 일어났어요.'],
+    message: '"지금 아무도 믿지 않더라도 네가 옳다고 생각하면 말할 수 있어야 해."',
+    parent_tip: '아이가 "모두가 그러는데"라며 따라갈 때 "너는 어떻게 생각해?"를 물어봐 주세요. 이이는 혼자였지만 옳았어요.',
+    related: ['4-2','4-3'],
+  },
+  '4-2': {
+    story: ['유성룡은 임진왜란 7년을 곁에서 기록했어요. 전쟁이 끝난 후 그는 벼슬에서 물러나 『징비록』을 썼어요. "다시는 이런 일이 없도록"이라는 마음으로.','그는 이순신을 장군으로 추천한 사람이에요. 아직 무명이던 이순신의 가능성을 알아봤어요.'],
+    message: '"역사를 기록하는 건 그것에서 배우기 위해서야. 실패를 기억하는 용기가 필요해."',
+    parent_tip: '아이와 함께 오늘 있었던 일을 일기로 써보세요. 유성룡은 기록이 가장 강한 힘이라는 걸 알았어요.',
+    related: ['5-1','4-1'],
+  },
+  '4-3': {
+    story: ['소크라테스는 "나는 아무것도 모른다"고 했어요. 가장 현명한 자가 자신이 모른다는 것을 안다는 역설, 그것이 철학의 시작이에요.','그는 아테네 시민들에게 질문을 퍼부었어요. "당신이 옳다고 확신하는 것이 왜 옳은가요?" 결국 그 질문들이 그를 사형으로 이끌었지만 그는 도망치지 않았어요.'],
+    message: '"\'왜?\'라는 질문을 멈추지 마. 그게 철학의 시작이야."',
+    parent_tip: '아이가 "왜요?"라고 끊임없이 물을 때 귀찮아하지 말고 "너는 왜 그런 것 같아?"라고 되물어 보세요.',
+    related: ['4-4','2-3'],
+  },
+  '4-4': {
+    story: ['아인슈타인은 16세에 "빛의 속도로 달리면 어떻게 될까?"라고 상상했어요. 그 질문이 10년 후 상대성이론이 됐어요.','그는 학교 성적이 그리 좋지 않았어요. 대학 입시도 한 번 떨어졌어요. 그러나 스스로 생각하는 능력은 누구보다 뛰어났어요.'],
+    message: '"상상은 지식보다 중요해. 지식에는 한계가 있지만 상상에는 없어."',
+    parent_tip: '아이가 엉뚱한 상상을 할 때 "그건 말도 안 돼"라고 하지 말고 "그러면 어떻게 될까?"라고 이어받아 주세요.',
+    related: ['1-3','3-3'],
+  },
+  '5-1': {
+    story: ['이순신은 열두 척의 배로 133척의 왜군을 막았어요. 수적으로 불가능한 전투였지만 지형과 물살을 철저히 분석한 전략으로 승리했어요.','전투 전날 일기에 "죽고자 하면 살 것이요, 살고자 하면 죽을 것이다"라고 썼어요. 그리고 다음 날 전투에서 승리했어요.'],
+    message: '"두렵더라도 해야 할 일이 있다면 해. 그게 진짜 용기야."',
+    parent_tip: '아이가 발표나 도전을 두려워할 때 이순신처럼 "준비를 철저히 하면 두려움이 줄어든다"고 이야기해 주세요.',
+    related: ['4-2','5-4'],
+  },
+  '5-2': {
+    story: ['유관순은 이화학당 학생이었어요. 3·1운동이 시작되자 학교를 뛰쳐나와 고향 천안 아우내장터에서 만세를 이끌었어요.','일본 재판관이 "왜 이런 짓을 했냐"고 묻자 유관순은 "내 나라를 찾으려 했을 뿐"이라고 답했어요. 열여덟 살이었어요.'],
+    message: '"옳은 일을 위해 목소리를 내는 것은 나이와 상관없어."',
+    parent_tip: '아이가 불공평한 상황에서 침묵할 때 유관순처럼 "이건 옳지 않아"라고 말하는 연습을 함께 해보세요.',
+    related: ['6-1','6-2'],
+  },
+  '5-3': {
+    story: ['만델라는 27년간 감옥에 있었어요. 석방 후 그를 가둔 정부를 용서하고 함께 새 남아프리카를 만들었어요. 세상이 "어떻게 그럴 수 있냐"고 물을 때 그는 "증오를 품고 나오면 나는 아직 감옥에 있는 것"이라고 했어요.'],
+    message: '"용서는 약한 게 아니야. 용서할 수 있는 사람이 가장 강한 사람이야."',
+    parent_tip: '아이가 친구에게 상처를 받았을 때 용서를 강요하지 말고 만델라처럼 "용서는 상대를 위한 게 아니라 나를 위한 것"이라고 이야기해 주세요.',
+    related: ['6-3','9-3'],
+  },
+  '5-4': {
+    story: ['섀클턴의 배 인듀어런스는 남극 빙하에 갇혀 침몰했어요. 그는 대원 28명을 이끌고 20개월 동안 극한의 생존 끝에 전원 귀환했어요.','출발 전 그는 신문에 이런 광고를 냈어요. "위험한 여행. 낮은 급여. 극한의 추위. 몇 달간의 암흑. 안전한 귀환 불확실. 성공 시 명예와 인정." 5,000명이 지원했어요.'],
+    message: '"포기하지 않으면 길이 생겨. 끝까지 버티는 사람에게 기회가 온다."',
+    parent_tip: '아이가 힘든 상황을 포기하려 할 때 섀클턴의 팀처럼 "우리 함께 끝까지 해보자"라고 옆에 있어 주세요.',
+    related: ['5-1','5-3'],
+  },
+  '6-1': {
+    story: ['안중근은 하얼빈 의거 후 재판에서 스스로를 변호했어요. "나는 살인자가 아닌 전쟁 포로"라고, "동양 평화를 위해 행동했다"고. 전 세계가 주목했어요.','사형 집행 전날 밤, 그는 붓을 들어 글씨를 썼어요. "위국헌신 군인본분(나라를 위해 몸을 바치는 것이 군인의 본분)." 마지막까지 흔들림이 없었어요.'],
+    message: '"신념을 지키는 건 쉽지 않아. 하지만 신념을 버리면 남는 게 없어."',
+    parent_tip: '아이에게 "내가 절대 포기하지 않을 것은 무엇이냐"를 물어봐 주세요. 안중근은 그 답이 분명했어요.',
+    related: ['5-2','6-2'],
+  },
+  '6-2': {
+    story: ['김구는 독립운동을 위해 27년간 고국을 떠나 살았어요. 그는 "내 소원을 묻는다면 첫째도 대한 독립, 둘째도 대한 독립, 셋째도 대한 독립"이라고 했어요.','해방 후 단독 정부 수립에 반대하며 통일을 위해 북한을 직접 찾아갔어요. 많은 이들이 만류했지만 그는 "옳은 길이라면 가야 한다"며 걸었어요.'],
+    message: '"작은 이익보다 올바른 길을 선택하는 것, 그게 더 어렵고 더 값진 거야."',
+    parent_tip: '쉬운 길과 옳은 길이 갈릴 때 김구처럼 "어느 쪽이 더 옳은가"를 먼저 생각하는 습관을 길러주세요.',
+    related: ['6-1','9-2'],
+  },
+  '6-3': {
+    story: ['간디는 소금 행진에서 390km를 직접 걸었어요. 영국의 소금 독점에 맞선 이 행진에 수십만 명이 따라 나섰고, 결국 인도 독립의 전환점이 됐어요.','그는 "변화를 원한다면 네가 먼저 그 변화가 되어라"고 했어요. 비폭력과 비협조, 말이 아닌 행동으로 보여준 철학이었어요.'],
+    message: '"세상을 바꾸고 싶다면 먼저 네가 바뀌어야 해."',
+    parent_tip: '아이가 규칙이 불공평하다고 할 때 "그럼 어떻게 바꿀 수 있을까?"를 같이 생각해 보세요. 간디는 폭력 없이도 세상을 바꿨어요.',
+    related: ['5-3','9-3'],
+  },
+  '6-4': {
+    story: ['링컨은 가난한 통나무집에서 태어나 정규 교육을 1년도 받지 못했어요. 독학으로 변호사가 됐고, 7번의 선거 패배 끝에 대통령이 됐어요.','그는 노예해방을 선언할 때 "모든 사람은 평등하게 태어났다"는 말을 신념으로 삼았어요. 그 신념 때문에 암살당했지만 역사가 그를 기억해요.'],
+    message: '"몇 번 지더라도 포기하지 마. 진짜 실패는 더 이상 일어나지 않는 거야."',
+    parent_tip: '아이가 시험이나 경쟁에서 실패했을 때 링컨처럼 "몇 번이나 졌는지를 세지 말고 몇 번 다시 일어났는지를 세자"고 해주세요.',
+    related: ['5-3','9-3'],
+  },
+  '7-1': {
+    story: ['방정환은 1923년 어린이날을 만들었어요. 당시 "애들"로 불리던 어린이를 "인격을 가진 존재"로 선언한 것이었어요. 그는 "어린이는 어른의 소유물이 아니다"라고 했어요.','31세에 세상을 떠나면서 "어린이를 위한 일을 더 하지 못해 미안하다"는 말을 남겼어요. 그의 삶은 짧았지만 어린이를 세상의 중심에 놓았어요.'],
+    message: '"어린이라는 이유로 무시당하지 마. 넌 지금도 충분히 소중한 사람이야."',
+    parent_tip: '오늘 아이에게 "넌 정말 소중한 사람이야"라고 먼저 말해주세요. 방정환이 어린이날에 담은 마음이에요.',
+    related: ['7-2','7-3'],
+  },
+  '7-2': {
+    story: ['이태석 신부는 의대를 졸업하고 전쟁터인 수단으로 갔어요. 그곳에서 병원을 짓고, 학교를 만들고, 악단을 창설했어요. 그의 이름이 톤즈에서는 "존 신부님"이에요.','그는 2010년 암으로 세상을 떠났어요. 장례식에는 수천 명의 수단 아이들이 그의 사진을 들고 울었어요. 그 아이들은 지금 의사가 되어 그의 병원을 이어가고 있어요.'],
+    message: '"진짜 사랑은 말이 아니라 곁에 있어 주는 거야."',
+    parent_tip: '아이에게 가장 필요한 것은 물질이 아닌 존재감이에요. 이태석처럼 "나 여기 있어"라고 옆에 있어 주세요.',
+    related: ['7-3','7-4'],
+  },
+  '7-3': {
+    story: ['테레사 수녀는 캘커타의 빈민가에서 죽어가는 사람들을 직접 씻기고 안아주었어요. "그들이 사랑받으며 죽을 수 있도록"이 그녀의 유일한 목표였어요.','그녀는 일기에 "나는 신을 느끼지 못한다"고 썼어요. 믿음이 흔들리는 내면의 싸움을 하면서도 매일 가난한 이들 곁에 있었어요. 그것이 더 큰 용기예요.'],
+    message: '"사랑은 큰 것을 하는 게 아니야. 작은 것을 큰 마음으로 하는 거야."',
+    parent_tip: '아이가 누군가를 돕고 싶다고 할 때 거창한 방법 말고 "지금 옆에 있어 주는 것"부터 시작하게 해주세요.',
+    related: ['7-1','7-2'],
+  },
+  '7-4': {
+    story: ['슈바이처는 이미 유명한 신학자·음악가였던 30세에 의대에 입학했어요. "아프리카 사람들을 직접 돕겠다"는 결심으로. 부유하고 명예로운 삶을 포기한 거예요.','그는 "생명 외경(生命 畏敬)"이라는 철학을 만들었어요. 벌레 한 마리도 함부로 죽이지 않겠다는 마음. 생명 자체가 경이롭다는 생각이에요.'],
+    message: '"이미 충분히 가진 사람이 더 나눌 수 있어. 나눔은 없어서가 아니라 마음에서 시작해."',
+    parent_tip: '아이가 좋아하는 것을 나눌 때 칭찬해 주세요. 슈바이처는 좋아하는 것을 포기하며 나눴어요.',
+    related: ['7-2','1-2'],
+  },
+  '8-1': {
+    story: ['황희는 "너도 옳고 저도 옳다"는 판결로 유명해요. 갈등하는 양쪽의 마음을 모두 이해했기에 나올 수 있는 말이에요.','그는 87세까지 영의정으로 일했어요. 세종이 "그대가 없으면 나라가 어떻게 될지 모르겠다"고 했을 만큼 믿었어요.'],
+    message: '"내 입장만 맞는 게 아니야. 상대방의 마음도 들어봐. 그래야 진짜 해결이 돼."',
+    parent_tip: '형제자매 싸움에서 누구 편을 들기보다 "두 사람 다 왜 그런 마음이었는지 얘기해볼까?"로 시작해 보세요.',
+    related: ['8-2','8-4'],
+  },
+  '8-2': {
+    story: ['김만덕은 기생의 신분에서 벗어나 제주의 거상이 됐어요. 1795년 흉년으로 수천 명이 굶어 죽을 위기에 처하자 전 재산을 털어 육지에서 쌀을 사왔어요.','정조 임금이 "소원이 무엇이냐"고 묻자 그녀는 "한양 구경과 금강산 구경"을 청했어요. 가장 단순하고 순수한 소원이었어요.'],
+    message: '"가진 것을 나눌 때 진짜 기쁨이 뭔지 알게 돼."',
+    parent_tip: '아이와 함께 가진 것 중 나눌 수 있는 것을 찾아보세요. 김만덕은 전부를 줬지만 작은 것부터 시작해도 돼요.',
+    related: ['7-1','7-3'],
+  },
+  '8-3': {
+    story: ['앤 설리번은 자신도 어린 시절 시각장애를 겪었어요. 그 경험이 헬렌 켈러를 이해하는 힘이 됐어요.','그녀는 헬렌에게 49년간 눈이 되고 귀가 되었어요. "나는 헬렌이 아니었다면 아무것도 아니었을 것"이라고 했는데, 헬렌도 "설리번 선생님이 없었다면 나는 없었을 것"이라고 했어요.'],
+    message: '"누군가의 마음을 진짜로 이해하면 그 사람의 세상을 열 수 있어."',
+    parent_tip: '아이가 친구가 힘들어 보일 때 "네가 무슨 마음인지 알아"라고 먼저 말하도록 가르쳐 주세요.',
+    related: ['2-4','7-1'],
+  },
+  '8-4': {
+    story: ['프랭클린은 인쇄공에서 시작해 과학자·외교관·작가·발명가가 됐어요. 번개가 전기임을 연날리기 실험으로 증명했고, 피뢰침을 발명했어요.','그는 미국 건국의 아버지 중 유일하게 대통령이 되지 않은 사람이에요. 하지만 헌법을 만든 회의에서 가장 영향력 있는 사람이었어요.'],
+    message: '"많은 것을 알수록 더 잘 도울 수 있어. 배움은 나를 위한 게 아니라 함께를 위한 거야."',
+    parent_tip: '아이가 다양한 것에 관심을 보일 때 "한 가지에 집중해"라고 하지 말고 프랭클린처럼 연결하는 법을 배울 수 있도록 지켜봐 주세요.',
+    related: ['1-3','4-4'],
+  },
+  '9-2': {
+    story: ['이회영 6형제는 1910년 전 재산을 팔아 만주로 망명했어요. 지금 돈으로 약 600억 원을 독립운동 자금으로 썼어요.','6형제 중 살아서 돌아온 이는 한 명이었어요. 이회영은 1932년 일본 경찰에 붙잡혀 옥사했어요. 그러나 그의 가문이 세운 신흥무관학교가 수많은 독립군을 키웠어요.'],
+    message: '"진짜 리더는 자신이 희생하며 길을 열어."',
+    parent_tip: '아이에게 "리더란 명령하는 사람이 아니라 앞장서서 짐을 지는 사람"이라고 이야기해 주세요.',
+    related: ['6-1','6-2'],
+  },
+  '9-3': {
+    story: ['마틴 루서 킹은 1963년 워싱턴 대행진에서 25만 명 앞에 섰어요. "나에게는 꿈이 있습니다" — 그 연설은 즉흥이었어요. 원고에 없던 말을 가스펠 가수 머핀 잭슨의 "Tell them about the dream!"이라는 외침을 듣고 시작했어요.','그는 암살당하기 전날 "나는 산 정상에 올라가 봤습니다. 그리고 약속의 땅을 봤습니다"라고 했어요. 자신의 죽음을 예감했어요.'],
+    message: '"꿈을 말하는 것만으로도 세상이 바뀌기 시작해."',
+    parent_tip: '아이의 꿈이 무엇인지 물어보고, 그 꿈을 말로 표현하게 해주세요. MLK는 꿈을 말함으로써 현실을 바꿨어요.',
+    related: ['5-3','6-3'],
+  },
+  '9-4': {
+    story: ['페리클레스 시대 아테네는 파르테논 신전을 세우고, 민주주의를 꽃피우고, 소크라테스·플라톤·에우리피데스가 활동했어요. 인류 역사상 가장 풍성한 30년이었어요.','그는 민주주의를 이렇게 설명했어요. "우리는 가난을 부끄러워하지 않는다. 가난에서 벗어나려는 노력을 게을리하는 것을 부끄러워할 뿐이다."'],
+    message: '"모든 사람의 의견이 중요해. 리더는 그 목소리를 모아 방향을 만드는 사람이야."',
+    parent_tip: '가족 결정을 내릴 때 아이의 의견도 물어봐 주세요. 민주주의는 가정에서 시작해요.',
+    related: ['4-3','8-1'],
+  },
+  '10-1': {
+    story: ['김수환 추기경은 "나는 바보입니다"라는 말을 자주 했어요. 한국 최초의 추기경이었지만 가장 낮은 곳에 있으려 했어요.','1987년 6월 항쟁 때 명동성당에 학생들이 피신하자 그는 "군인들이 들어오려면 내 시신을 밟고 지나가라"고 했어요. 그 말 하나가 학생들을 지켰어요.'],
+    message: '"진짜 강한 사람은 자기를 낮출 줄 아는 사람이야."',
+    parent_tip: '아이에게 "미안해"와 "고마워"를 먼저 말하는 어른의 모습을 보여주세요. 김수환 추기경은 그걸 평생 실천했어요.',
+    related: ['10-2','7-3'],
+  },
+  '10-2': {
+    story: ['법정 스님은 "무소유"에서 이렇게 썼어요. "우리가 선택한 것들이 우리를 소유한다." 가진 것이 많을수록 자유롭지 못하다는 역설이에요.','그는 세상을 떠나면서 "내 책을 더 이상 출판하지 말라"고 했어요. 자신의 이름으로 인세가 생기는 것도 원하지 않았어요.'],
+    message: '"가지려 하면 잃게 되고, 놓아주면 자유로워져."',
+    parent_tip: '아이가 무언가를 집착하며 놓지 못할 때 "이게 없으면 어떻게 될까?"라고 부드럽게 물어봐 주세요.',
+    related: ['10-1','10-3'],
+  },
+  '10-3': {
+    story: ['달라이 라마는 24세에 조국을 잃었어요. 60년이 넘도록 망명 중이지만 "중국 인민을 미워하지 않는다"고 했어요. "그들도 고통 속에 있는 존재이기 때문"이라고.','그는 매일 새벽 3시에 일어나 명상을 해요. "분노는 나를 죽이고 상대는 멀쩡히 있다. 그러니 분노는 내 적이다"라고 했어요.'],
+    message: '"마음을 다스릴 수 있는 사람이 세상을 다스릴 수 있어."',
+    parent_tip: '아이가 화가 났을 때 "숨을 한 번 크게 쉬어봐"라고 해주세요. 달라이 라마는 그걸 60년 동안 해왔어요.',
+    related: ['10-2','6-3'],
+  },
+  '10-4': {
+    story: ['마르쿠스 아우렐리우스는 로마 황제였어요. 하지만 매일 밤 혼자 쓴 일기가 『명상록』이에요. 황제의 화려함이 아니라 자신의 나약함과 싸운 기록이에요.','그는 "오늘 나쁜 사람들을 만날 것이다. 하지만 그들도 선하게 살 권리가 있다"며 하루를 시작했어요. 화가 나기 전에 용서를 준비한 거예요.'],
+    message: '"나를 다스리는 것이 천하를 다스리는 것보다 어렵고 값진 일이야."',
+    parent_tip: '아이와 함께 오늘 하루를 돌아보는 시간을 가져보세요. 마르쿠스는 일기로 자신을 다듬었어요.',
+    related: ['10-2','4-3'],
+  },
+  '11-1': {
+    story: ['윤동주는 일제 강점기에 일본 유학을 갔다가 독립운동 혐의로 잡혔어요. 후쿠오카 형무소에서 27세에 세상을 떠났어요. 그가 쓴 시는 그때까지 세상에 알려지지 않았었어요.','그의 대표시 "서시"는 이렇게 시작해요. "죽는 날까지 하늘을 우러러 한 점 부끄럼이 없기를." 부끄럽지 않게 살겠다는 다짐이 그의 삶이었어요.'],
+    message: '"오늘 하루 부끄럽지 않았어? 그것만으로 충분히 잘 산 거야."',
+    parent_tip: '자기 전 아이에게 "오늘 가장 감사한 것이 뭐야?"라고 물어봐 주세요. 윤동주는 별을 보며 그걸 했어요.',
+    related: ['11-3','6-1'],
+  },
+  '11-2': {
+    story: ['김점동은 가난한 가정에서 태어나 조선 최초의 여성 의사가 됐어요. 미국까지 건너가 의학을 공부하고 돌아와 조선 여성들을 치료했어요.','34세에 결핵으로 세상을 떠나는 마지막 순간까지 환자를 걱정했어요. 짧은 삶이었지만 "내가 할 수 있는 것을 다 했다"는 삶이었어요.'],
+    message: '"지금 네가 가진 것으로 할 수 있는 것을 해. 완벽하지 않아도 돼."',
+    parent_tip: '아이가 조건이 갖춰지면 하겠다고 미룰 때 김점동처럼 "지금 있는 것으로 시작하자"고 격려해 주세요.',
+    related: ['1-4','5-2'],
+  },
+  '11-3': {
+    story: ['안네 프랑크는 나치를 피해 2년간 은신처에서 살았어요. 15세의 일기에 이런 말이 있어요. "이 모든 것에도 불구하고 사람들은 본질적으로 선하다고 나는 믿는다."','그녀는 결국 수용소에서 세상을 떠났어요. 하지만 아버지가 살아남아 그 일기를 세상에 알렸어요. 지금 30개 이상의 언어로 번역됐어요.'],
+    message: '"희망은 상황이 좋을 때만 갖는 게 아니야. 가장 어두울 때도 빛을 찾는 거야."',
+    parent_tip: '힘든 일이 생겼을 때 아이와 함께 그 안에서 좋은 점을 하나라도 찾아봐 주세요. 안네처럼.',
+    related: ['11-1','11-4'],
+  },
+  '11-4': {
+    story: ['루이 암스트롱은 뉴올리언스 극빈층에서 태어났어요. 13세에 보육원에 들어가 거기서 처음 트럼펫을 배웠어요.','그의 노래 "What a Wonderful World"는 베트남 전쟁 중에 나왔어요. 세상이 가장 어두울 때 "이 얼마나 멋진 세상인가"를 노래한 거예요.'],
+    message: '"세상이 힘들수록 감사할 것을 찾아봐. 그게 음악이 주는 선물이야."',
+    parent_tip: '아이와 함께 오늘 좋았던 것 세 가지를 이야기해 보세요. 루이 암스트롱은 늘 그걸 노래로 했어요.',
+    related: ['11-3','3-2'],
+  },
+  '12-1': {
+    story: ['원효는 당나라로 유학을 가다가 해골에 고인 물을 마셨어요. 밤에는 달콤했지만 아침에 해골임을 알고 구역질이 났어요. 그 순간 깨달았어요. "모든 것은 마음이 만든다."','그는 고승의 품을 버리고 민중 속으로 들어가 춤을 추고 노래하며 불교를 전했어요. 위엄 대신 친근함으로.'],
+    message: '"진짜 깨달음은 높은 곳이 아니라 사람들 사이에서 와."',
+    parent_tip: '아이가 "이게 뭔지 알겠어"라고 할 때 "어떻게 알게 됐어?"를 물어봐 주세요. 깨달음의 과정이 더 소중해요.',
+    related: ['10-2','10-3'],
+  },
+  '12-2': {
+    story: ['주기철 목사는 일제가 신사참배를 강요할 때 "일사각오"(죽기로 작정함)를 외쳤어요. 5번 감옥에 갔다가 결국 1944년 옥중에서 세상을 떠났어요.','그는 마지막 설교에서 "양을 위하여 목숨을 버리는 것이 목자"라고 했어요. 신앙 때문이 아니라 신념 때문에 선택한 길이었어요.'],
+    message: '"믿는 것을 지키기 위해 대가를 치를 수 있을 때 그게 진짜 믿음이야."',
+    parent_tip: '아이에게 "네가 절대 포기하지 않을 것이 있어?"라고 물어봐 주세요. 그 대답이 아이의 핵심 가치예요.',
+    related: ['6-1','5-2'],
+  },
+  '12-3': {
+    story: ['마르틴 루터는 1517년 교회 문에 95개조 논제를 붙였어요. 당시 최대 권력이었던 교회에 정면으로 맞선 거예요.','그는 성경을 라틴어에서 독일어로 번역했어요. "성경은 라틴어를 아는 성직자만의 것이 아니라 모든 사람의 것"이라며. 그 번역이 독일어를 통일하고 종교개혁의 불씨가 됐어요.'],
+    message: '"진리를 가진 사람이 권력을 가진 사람보다 강해."',
+    parent_tip: '아이가 권위에 부당하게 복종해야 하는 상황을 만나면 "이건 옳은가?"를 먼저 생각하게 가르쳐 주세요.',
+    related: ['6-3','9-3'],
+  },
+  '12-4': {
+    story: ['본회퍼는 히틀러를 피해 외국에서 안전하게 살 수 있었어요. 하지만 "이 시대에 독일에 있지 않으면 전후 독일 재건에 참여할 권리가 없다"며 돌아왔어요.','히틀러 암살 계획에 참여하다 잡혀 처형당하기 전날 그는 평온하게 예배를 이끌었어요. "이것이 끝이지만 나에게는 시작이다"라고 했어요.'],
+    message: '"때로는 옳은 일을 위해 더 큰 것을 포기해야 해. 그게 가장 어려운 용기야."',
+    parent_tip: '아이에게 "편한 것과 옳은 것이 다를 때 어떻게 해야 할까?"를 함께 이야기해 보세요.',
+    related: ['6-1','12-2'],
+  },
+};
+
+const TYPES = ['호기심','학구열','창의성','통찰력','용기','진실성','사랑과 친절','사회적 지능','리더십과 공정성','자기조절','감사와 희망','영성'];
+
+
+const QUESTIONS = {
+  /* ── 성인용 4바퀴 ──
+     1바퀴: 집에서 관찰
+     2바퀴: 밖에서 / 학교·친구 상황
+     3바퀴: 대화·감정·상호작용
+     4바퀴: 전반적 성향 / 본질 깊이 */
+  adult: [
+    /* 1바퀴 — 집에서 */
+    {type:'호기심',    round:1, text:'새 물건이 집에 오면\n먼저 달려가서 살펴본다.'},
+    {type:'학구열',    round:1, text:'좋아하는 주제의 책을\n여러 번 반복해서 본다.'},
+    {type:'창의성',    round:1, text:'놀잇감을 원래 쓰임과\n다르게 활용해서 논다.'},
+    {type:'통찰력',    round:1, text:'결정하기 전에\n잠깐 멈춰서 생각한다.'},
+    {type:'용기',      round:1, text:'무섭거나 힘든 일도\n울더라도 끝까지 해낸다.'},
+    {type:'진실성',    round:1, text:'잘못한 일을\n숨기지 않고 말한다.'},
+    {type:'사랑과 친절',round:1,text:'가족이 슬퍼 보이면\n옆에 가서 안아준다.'},
+    {type:'사회적 지능',round:1,text:'가족의 기분 변화를\n빨리 알아챈다.'},
+    {type:'리더십과 공정성',round:1,text:'가족 활동에서\n역할 분담을 먼저 제안한다.'},
+    {type:'자기조절',  round:1, text:'하기 싫은 숙제도\n정해진 시간에 끝낸다.'},
+    {type:'감사와 희망',round:1,text:'도움받으면 "고마워"라고\n자연스럽게 말한다.'},
+    {type:'영성',      round:1, text:'"왜 사는 걸까" 같은\n큰 질문을 한다.'},
+    /* 2바퀴 — 밖에서 / 친구·학교 */
+    {type:'호기심',    round:2, text:'처음 가는 장소에서\n여기저기 돌아보며 탐색한다.'},
+    {type:'학구열',    round:2, text:'학교 수업 내용이 이해되지 않으면\n집에 와서 찾아본다.'},
+    {type:'창의성',    round:2, text:'친구들과 놀 때\n새로운 놀이 방법을 제안한다.'},
+    {type:'통찰력',    round:2, text:'친구들 사이에서 갈등이 생기면\n원인을 먼저 파악하려 한다.'},
+    {type:'용기',      round:2, text:'반 친구들 앞에서 발표할 때\n긴장하면서도 해낸다.'},
+    {type:'진실성',    round:2, text:'친구에게 잘못했을 때\n먼저 다가가 사과한다.'},
+    {type:'사랑과 친절',round:2,text:'학교에서 혼자 있는 친구를 보면\n자연스럽게 다가간다.'},
+    {type:'사회적 지능',round:2,text:'친구의 표정이나 말투가 달라지면\n무슨 일인지 감지한다.'},
+    {type:'리더십과 공정성',round:2,text:'모둠 활동에서\n모두가 참여하도록 이끈다.'},
+    {type:'자기조절',  round:2, text:'하고 싶은 것이 있어도\n순서를 기다릴 수 있다.'},
+    {type:'감사와 희망',round:2,text:'선생님이나 친구가 도와주면\n꼭 감사 인사를 전한다.'},
+    {type:'영성',      round:2, text:'자연이나 동물을 보면\n경이로운 감정을 느끼는 것 같다.'},
+    /* 3바퀴 — 대화·감정·상호작용 */
+    {type:'호기심',    round:3, text:'대화 중 모르는 단어나 개념이 나오면\n바로 물어보거나 찾아본다.'},
+    {type:'학구열',    round:3, text:'관심 있는 주제라면\n대화가 길어져도 지치지 않는다.'},
+    {type:'창의성',    round:3, text:'"이렇게 하면 어떨까?" 하는\n아이디어를 자주 꺼낸다.'},
+    {type:'통찰력',    round:3, text:'상황을 설명할 때\n핵심을 먼저 말하는 편이다.'},
+    {type:'용기',      round:3, text:'자신의 생각이 다수와 달라도\n말로 표현할 수 있다.'},
+    {type:'진실성',    round:3, text:'불편한 사실이라도\n돌려 말하지 않고 직접 전한다.'},
+    {type:'사랑과 친절',round:3,text:'상대가 힘든 이야기를 할 때\n끝까지 들어주는 편이다.'},
+    {type:'사회적 지능',round:3,text:'말하는 사람의 감정을\n표현 이전에 먼저 느낀다.'},
+    {type:'리더십과 공정성',round:3,text:'의견이 부딪힐 때\n양쪽의 말을 정리해 중재한다.'},
+    {type:'자기조절',  round:3, text:'화가 나도 상황이 지나면\n차분하게 이야기할 수 있다.'},
+    {type:'감사와 희망',round:3,text:'힘든 일을 겪어도\n"그래도 배운 것이 있다"고 생각한다.'},
+    {type:'영성',      round:3, text:'깊은 대화를 나눈 후\n뭔가 채워지는 느낌을 받는다.'},
+    /* 4바퀴 — 본질·전반적 성향 */
+    {type:'호기심',    round:4, text:'익숙한 것도\n다시 보면 새로운 면을 발견한다.'},
+    {type:'학구열',    round:4, text:'무언가를 배울 때\n"왜 이렇게 될까"를 먼저 생각한다.'},
+    {type:'창의성',    round:4, text:'기존 방식이 최선이 아닐 수 있다고\n자주 느낀다.'},
+    {type:'통찰력',    round:4, text:'복잡한 상황에서\n가장 중요한 것이 무엇인지 보인다.'},
+    {type:'용기',      round:4, text:'결과가 두렵더라도\n옳다고 생각하면 행동한다.'},
+    {type:'진실성',    round:4, text:'남의 시선보다\n스스로의 기준이 더 중요하다.'},
+    {type:'사랑과 친절',round:4,text:'내가 힘들어도\n곁에 있는 사람을 먼저 챙긴다.'},
+    {type:'사회적 지능',round:4,text:'처음 만나는 사람과도\n편하게 대화를 이어간다.'},
+    {type:'리더십과 공정성',round:4,text:'집단이 잘못된 방향으로 가면\n혼자라도 다른 의견을 낸다.'},
+    {type:'자기조절',  round:4, text:'즉각적인 욕구보다\n나중의 더 나은 결과를 선택한다.'},
+    {type:'감사와 희망',round:4,text:'지금 이 순간에도\n감사할 것을 찾아낼 수 있다.'},
+    {type:'영성',      round:4, text:'삶의 의미나 목적에 대해\n깊이 생각하는 편이다.'},
+  ],
+  child_lower: [
+    {type:'호기심',    round:1, text:'새 물건이 오면\n나는 제일 먼저 만져봐!'},
+    {type:'학구열',    round:1, text:'좋아하는 책은\n여러 번 봐!'},
+    {type:'창의성',    round:1, text:'장난감을 다른 방식으로\n가지고 놀아!'},
+    {type:'통찰력',    round:1, text:'고를 때\n잠깐 생각하고 골라.'},
+    {type:'용기',      round:1, text:'무서워도\n나는 끝까지 해내!'},
+    {type:'진실성',    round:1, text:'잘못한 건\n말해!'},
+    {type:'사랑과 친절',round:1,text:'가족이 슬퍼 보이면\n내가 안아줘!'},
+    {type:'사회적 지능',round:1,text:'식구 기분 바뀌면\n금방 알아!'},
+    {type:'리더십과 공정성',round:1,text:'식구끼리 할 때\n내가 정하자고 해!'},
+    {type:'자기조절',  round:1, text:'하기 싫어도\n끝까지 해!'},
+    {type:'감사와 희망',round:1,text:'도와주면\n"고마워!"라고 말해!'},
+    {type:'영성',      round:1, text:'"왜 사는 거야?"라고\n물어봐!'},
+    /* 2바퀴 — 학교·친구 */
+    {type:'호기심',    round:2, text:'새로운 곳에 가면\n여기저기 먼저 둘러봐!'},
+    {type:'학구열',    round:2, text:'모르는 게 생기면\n꼭 찾아봐!'},
+    {type:'창의성',    round:2, text:'친구들이랑 놀 때\n새 방법을 내가 먼저 말해!'},
+    {type:'통찰력',    round:2, text:'싸움이 나면\n왜 그런지 먼저 생각해.'},
+    {type:'용기',      round:2, text:'반에서 발표할 때\n떨려도 해!'},
+    {type:'진실성',    round:2, text:'친구한테 잘못했으면\n내가 먼저 사과해!'},
+    {type:'사랑과 친절',round:2,text:'혼자 있는 친구 보면\n말 걸어줘!'},
+    {type:'사회적 지능',round:2,text:'친구 표정이 이상하면\n바로 알아챠!'},
+    {type:'리더십과 공정성',round:2,text:'같이 할 때\n모두 다 할 수 있게 도와줘!'},
+    {type:'자기조절',  round:2, text:'내 차례 아니면\n기다릴 수 있어!'},
+    {type:'감사와 희망',round:2,text:'도움받으면\n꼭 고맙다고 해!'},
+    {type:'영성',      round:2, text:'꽃이나 동물 보면\n신기하고 예쁘다는 생각이 들어!'},
+    /* 3바퀴 — 대화·감정 */
+    {type:'호기심',    round:3, text:'모르는 말 들으면\n그게 뭔지 바로 물어봐!'},
+    {type:'학구열',    round:3, text:'재미있는 거 이야기하면\n오래 들어도 안 질려!'},
+    {type:'창의성',    round:3, text:'"이렇게 하면 어때?" 하고\n내가 먼저 말할 때가 많아!'},
+    {type:'통찰력',    round:3, text:'무슨 일인지 설명할 때\n중요한 것부터 말해!'},
+    {type:'용기',      round:3, text:'내 생각이 달라도\n말할 수 있어!'},
+    {type:'진실성',    round:3, text:'싫은 것도\n솔직하게 말해!'},
+    {type:'사랑과 친절',round:3,text:'친구가 힘든 얘기 할 때\n끝까지 들어줘!'},
+    {type:'사회적 지능',round:3,text:'친구가 말 안 해도\n기분이 어떤지 알아!'},
+    {type:'리더십과 공정성',round:3,text:'친구들이 싸우면\n내가 중간에서 말해줘!'},
+    {type:'자기조절',  round:3, text:'화나도 잠깐 참고\n나중에 얘기해!'},
+    {type:'감사와 희망',round:3,text:'힘든 일이 있어도\n좋은 점 찾을 수 있어!'},
+    {type:'영성',      round:3, text:'혼자 조용히 있을 때\n여러 가지 생각이 많이 나!'},
+    /* 4바퀴 — 보너스 (나 자신에 대해) */
+    {type:'호기심',    round:4, text:'늘 보던 것도\n다시 보면 새로운 게 보여!'},
+    {type:'학구열',    round:4, text:'뭔가 배울 때\n"왜 이렇게 되지?" 먼저 생각해!'},
+    {type:'창의성',    round:4, text:'원래 하던 방식 말고\n다른 방법이 있을 것 같은 느낌이 들어!'},
+    {type:'통찰력',    round:4, text:'복잡한 상황에서도\n뭐가 제일 중요한지 알 것 같아!'},
+    {type:'용기',      round:4, text:'무서워도 맞는 일이라면\n할 수 있어!'},
+    {type:'진실성',    round:4, text:'남들이 뭐라 해도\n내가 옳다고 생각하는 대로 해!'},
+    {type:'사랑과 친절',round:4,text:'내가 힘들어도\n옆 사람을 먼저 챙기게 돼!'},
+    {type:'사회적 지능',round:4,text:'처음 보는 사람이랑도\n금방 이야기할 수 있어!'},
+    {type:'리더십과 공정성',round:4,text:'모두가 그렇게 해도\n아닌 것 같으면 말할 수 있어!'},
+    {type:'자기조절',  round:4, text:'지금 당장 하고 싶어도\n더 좋은 걸 위해 기다릴 수 있어!'},
+    {type:'감사와 희망',round:4,text:'지금 이 순간에도\n고마운 게 있어!'},
+    {type:'영성',      round:4, text:'내가 왜 살고 있는지\n가끔 생각해!'},
+  ],
+  child_upper: [
+    {type:'호기심',    round:1, text:'새 물건이 오면\n나는 먼저 살펴봐.'},
+    {type:'학구열',    round:1, text:'좋아하는 주제의 책은\n반복해서 봐.'},
+    {type:'창의성',    round:1, text:'물건을 원래 용도와\n다르게 써보는 편이야.'},
+    {type:'통찰력',    round:1, text:'결정하기 전에\n잠깐 생각해보는 편이야.'},
+    {type:'용기',      round:1, text:'무섭거나 힘들어도\n끝까지 해내는 편이야.'},
+    {type:'진실성',    round:1, text:'잘못한 일은\n숨기지 않고 말하는 편이야.'},
+    {type:'사랑과 친절',round:1,text:'가족이 힘들어 보이면\n옆에서 위로해.'},
+    {type:'사회적 지능',round:1,text:'가족의 기분 변화를\n금방 알아채는 편이야.'},
+    {type:'리더십과 공정성',round:1,text:'가족끼리 할 때\n계획을 먼저 말하는 편이야.'},
+    {type:'자기조절',  round:1, text:'하기 싫은 일도\n끝까지 하는 편이야.'},
+    {type:'감사와 희망',round:1,text:'도움받으면 "고마워"라고\n자연스럽게 말해.'},
+    {type:'영성',      round:1, text:'"왜 사는 걸까"\n같은 생각을 할 때가 있어.'},
+    /* 2바퀴 — 학교·친구 */
+    {type:'호기심',    round:2, text:'처음 가는 곳에서\n주변을 먼저 살펴보는 편이야.'},
+    {type:'학구열',    round:2, text:'수업에서 모르는 내용이 나오면\n따로 찾아보는 편이야.'},
+    {type:'창의성',    round:2, text:'친구들이랑 놀 때\n새로운 아이디어를 먼저 내.'},
+    {type:'통찰력',    round:2, text:'친구들 사이에 갈등이 생기면\n왜 그런지 파악하려 해.'},
+    {type:'용기',      round:2, text:'반 앞에서 발표할 때\n긴장하더라도 해내는 편이야.'},
+    {type:'진실성',    round:2, text:'친구에게 잘못했으면\n먼저 사과하는 편이야.'},
+    {type:'사랑과 친절',round:2,text:'혼자 있는 친구를 보면\n자연스럽게 말을 걸어.'},
+    {type:'사회적 지능',round:2,text:'친구 표정이나 말투가 달라지면\n금방 알아채는 편이야.'},
+    {type:'리더십과 공정성',round:2,text:'모둠 활동에서\n모두가 참여하도록 챙기는 편이야.'},
+    {type:'자기조절',  round:2, text:'하고 싶어도\n내 차례를 기다릴 수 있어.'},
+    {type:'감사와 희망',round:2,text:'친구나 선생님이 도와주면\n꼭 감사 인사를 해.'},
+    {type:'영성',      round:2, text:'자연이나 동물을 보면\n신기하고 경이롭다는 생각이 들어.'},
+    /* 3바퀴 — 대화·감정 */
+    {type:'호기심',    round:3, text:'대화 중 모르는 개념이 나오면\n바로 물어보거나 찾아봐.'},
+    {type:'학구열',    round:3, text:'관심 있는 주제 이야기는\n오래 들어도 안 지루해.'},
+    {type:'창의성',    round:3, text:'"이렇게 하면 어떨까?" 하는\n아이디어가 자주 떠올라.'},
+    {type:'통찰력',    round:3, text:'상황을 설명할 때\n중요한 것부터 말하는 편이야.'},
+    {type:'용기',      round:3, text:'내 생각이 달라도\n말로 표현하는 편이야.'},
+    {type:'진실성',    round:3, text:'불편한 사실이라도\n솔직하게 말하는 편이야.'},
+    {type:'사랑과 친절',round:3,text:'친구가 힘든 이야기 할 때\n끝까지 들어주는 편이야.'},
+    {type:'사회적 지능',round:3,text:'말을 안 해도\n상대가 어떤 기분인지 느껴져.'},
+    {type:'리더십과 공정성',round:3,text:'의견이 충돌할 때\n양쪽을 이해하며 중재하는 편이야.'},
+    {type:'자기조절',  round:3, text:'화가 나도 상황이 지나면\n차분하게 이야기할 수 있어.'},
+    {type:'감사와 희망',round:3,text:'힘든 일이 있어도\n"그래도 배웠다"고 생각하는 편이야.'},
+    {type:'영성',      round:3, text:'깊은 대화를 나눈 후\n뭔가 채워지는 느낌이 들어.'},
+    /* 4바퀴 — 보너스 (내 마음 깊이) */
+    {type:'호기심',    round:4, text:'익숙한 것도\n다시 보면 새로운 면이 보여.'},
+    {type:'학구열',    round:4, text:'뭔가 배울 때\n"왜 이렇게 될까"를 먼저 생각해.'},
+    {type:'창의성',    round:4, text:'기존 방식이 최선이 아닐 수 있다는\n생각이 자주 들어.'},
+    {type:'통찰력',    round:4, text:'복잡한 상황에서도\n가장 중요한 게 뭔지 보이는 편이야.'},
+    {type:'용기',      round:4, text:'결과가 두렵더라도\n옳다고 생각하면 행동해.'},
+    {type:'진실성',    round:4, text:'남의 시선보다\n내 기준이 더 중요한 편이야.'},
+    {type:'사랑과 친절',round:4,text:'내가 힘들어도\n곁에 있는 사람을 먼저 챙기게 돼.'},
+    {type:'사회적 지능',round:4,text:'처음 만나는 사람과도\n편하게 대화를 이어가는 편이야.'},
+    {type:'리더십과 공정성',round:4,text:'모두가 그렇게 해도\n아닌 것 같으면 다른 의견을 내.'},
+    {type:'자기조절',  round:4, text:'당장 하고 싶어도\n나중의 더 나은 결과를 위해 기다려.'},
+    {type:'감사와 희망',round:4,text:'지금 이 순간에도\n감사할 것을 찾아낼 수 있어.'},
+    {type:'영성',      round:4, text:'삶의 의미나 목적에 대해\n깊이 생각하는 편이야.'},
+  ]
+};
+
+const BUBBLE_LABELS = {1:'전혀 그렇지 않아요',2:'별로 그렇지 않아요',3:'조금 그래요',4:'꽤 그래요',5:'완전히 그래요'};
+const NARR_ICONS = ['ico-orange','ico-purple','ico-navy','ico-pink'];
+const NARR_EMOJIS = ['🌟','💛','💙','🧡'];
+const BADGE_CLASSES = ['b-gold','b-sand','b-navy','b-pink'];
+
+/* ══════════════════════════════
+   전역 상태
+══════════════════════════════ */
+let whoType = null, whoLabel = '', whoIcon = '';
+let ageGroup = null, ageSelected = false;
+let currentQ = 0, answers = {}, round = 1;
+let sessions = []; // {label, icon, scores{}}
+let currentSession = null;
+
+/* ══════════════════════════════
+   화면 전환
+══════════════════════════════ */
+function renderWhoAvatars() {
+  const types = ['mom','dad','adult','child'];
+  types.forEach(t => {
+    const el = document.getElementById('avatar-' + t);
+    if (el) el.innerHTML = makeAvatar(t, 48);
+  });
+}
+
+function goTo(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+  /* 응답자 선택 화면 진입 시 아바타 렌더링 */
+  if (id === 's-who') renderWhoAvatars();
+}
+
+/* ══════════════════════════════
+   화면 2
+══════════════════════════════ */
+function selectWho(el, type, icon, label) {
+  document.querySelectorAll('.who-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  whoType = type; whoIcon = icon; whoLabel = label;
+  document.getElementById('btn-who').classList.add('on');
+}
+
+/* ══════════════════════════════
+   화면 3
+══════════════════════════════ */
+function selectAge(el, group) {
+  document.querySelectorAll('.age-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  ageGroup = group; ageSelected = true;
+  checkInfo();
+}
+function checkInfo() {
+  const name = document.getElementById('child-name').value.trim();
+  const btn = document.getElementById('btn-info');
+  (name.length > 0 && ageSelected) ? btn.classList.add('on') : btn.classList.remove('on');
+}
+
+/* ══════════════════════════════
+   설문 시작
+══════════════════════════════ */
+function startSurvey() {
+  const childName  = document.getElementById('child-name').value.trim();
+  const savedRound = loadCompletedRound(childName);
+
+  /* ── 진입 분기 ──────────────────────────────
+     0바퀴: 처음 시작
+     1~2바퀴: 이어서
+     3바퀴(정상 완주): 보너스 4바퀴 안내
+     4바퀴 이상(보너스 완주): 또 보너스 4바퀴
+  ─────────────────────────────────────────── */
+  if (savedRound === 0) {
+    /* 처음 시작 */
+    round = 1;
+  } else if (savedRound < 3) {
+    /* 중간 이탈 → 이어서 */
+    round = savedRound + 1;
+    showToast(savedRound + '바퀴까지 완료됐어요. ' + round + '바퀴부터 이어갈게요 ✨');
+  } else {
+    /* 3바퀴 완주 후 재진입 → 보너스 4바퀴 */
+    round = 4;
+    showToast('3바퀴 완주! 새로운 문항 조합으로 보너스 바퀴를 시작해요 🎉');
+  }
+
+  currentQ = 0; answers = {};
+  loadQ(); goTo('s-survey');
+}
+
+/* ── 문항 슬라이스 반환 ──────────────────────
+   1~3바퀴: 해당 round 전용 12문항
+   4바퀴(보너스): 전용 4바퀴 문항 6개 + 3바퀴 문항 6개 셔플 혼합
+─────────────────────────────────────────── */
+function getQSlice() {
+  const ql = whoType === 'child'
+    ? (ageGroup === 'lower' ? QUESTIONS.child_lower : QUESTIONS.child_upper)
+    : QUESTIONS.adult;
+
+  if (round <= 3) {
+    /* 1~3바퀴: 해당 round 전용 */
+    const slice = ql.filter(q => q.round === round);
+    if (slice.length > 0) return slice;
+    return ql.slice((round - 1) * 12, round * 12); /* 구버전 폴백 */
+  }
+
+  /* 4바퀴(보너스): 전용 4바퀴 6문항 + 3바퀴 6문항 셔플 */
+  const r4 = ql.filter(q => q.round === 4);
+  const r3 = ql.filter(q => q.round === 3);
+
+  if (r4.length === 0) {
+    /* 4바퀴 문항 없으면 3바퀴 전체 셔플 */
+    return shuffle([...r3]);
+  }
+
+  /* 4바퀴 전용 6개 + 3바퀴 중 6개 선택 후 셔플 */
+  const half4 = r4.slice(0, 6);
+  const half3 = shuffle([...r3]).slice(0, 6);
+  return shuffle([...half4, ...half3]);
+}
+
+/* Fisher-Yates 셔플 */
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+const ROUND_LABEL = {
+  1: '1바퀴 · 집에서',
+  2: '2바퀴 · 밖에서',
+  3: '3바퀴 · 대화에서',
+  4: '✨ 보너스 바퀴',
+};
+
+function loadQ() {
+  const ql  = getQSlice();
+  if (!ql || ql.length === 0) return;
+  const q   = ql[currentQ];
+  const qNum = currentQ + 1;
+
+  document.getElementById('q-num-label').textContent = 'Q ' + qNum;
+  document.getElementById('q-text').innerHTML = q.text.replace(/\n/g,'<br>');
+  document.getElementById('q-sub').textContent = whoType === 'child'
+    ? '솔직하게 선택해줘!' : '평소 자주 보이는 모습을 기준으로 응답해주세요.';
+  document.getElementById('pg-count').textContent = qNum + ' / 12';
+  document.getElementById('pg-label').textContent = ROUND_LABEL[round] || (round + '바퀴');
+  document.getElementById('pg-fill').style.width = (qNum / 12 * 100) + '%';
+
+  const showEmoji = (whoType === 'child' && ageGroup === 'lower');
+  document.getElementById('emoji-row').style.display = showEmoji ? 'flex' : 'none';
+
+  const slider = document.getElementById('score-range');
+  slider.value = 3;
+  slider.style.setProperty('--fp', '50%');
+  updateTicks(-1); updateEmojis(-1);
+  document.getElementById('s-bubble').classList.remove('on');
+  document.getElementById('btn-ans').classList.remove('on');
+  document.getElementById('s-hint').textContent = '막대를 손가락으로 밀어서 선택해주세요';
+
+  if (answers[currentQ] !== undefined) {
+    const v = answers[currentQ];
+    slider.value = v;
+    updateSliderFill(v); updateTicks(v); updateEmojis(v); showBubble(v);
+    document.getElementById('btn-ans').classList.add('on');
+    document.getElementById('s-hint').textContent = '';
+  }
+}
+
+/* 슬라이더 이벤트 */
+function onSlide(val) {
+  val = parseInt(val);
+  updateSliderFill(val); updateTicks(val); updateEmojis(val); showBubble(val);
+  document.getElementById('s-hint').textContent = '';
+}
+function onSlideEnd(val) {
+  val = parseInt(val);
+  answers[currentQ] = val;
+  document.getElementById('btn-ans').classList.add('on');
+}
+function updateSliderFill(val) {
+  const pct = ((val-1)/4*100).toFixed(1)+'%';
+  document.getElementById('score-range').style.setProperty('--fp', pct);
+}
+function updateTicks(val) {
+  for(let i=1;i<=5;i++) document.getElementById('tk-'+i).classList.toggle('on', i===val);
+}
+function updateEmojis(val) {
+  for(let i=1;i<=5;i++) { const e=document.getElementById('em-'+i); if(e) e.classList.toggle('on', i===val); }
+}
+function showBubble(val) {
+  document.getElementById('b-num').textContent = val;
+  document.getElementById('b-txt').textContent = BUBBLE_LABELS[val] || '';
+  document.getElementById('s-bubble').classList.add('on');
+}
+
+/* 이전/다음 */
+function prevQ() {
+  if (currentQ <= 0) { goTo('s-info'); return; }
+  currentQ--; loadQ();
+}
+function nextQ() {
+  if (answers[currentQ] === undefined) return;
+  currentQ++;
+  if (currentQ >= 12) { calcMid(); return; }
+  loadQ();
+}
+
+/* ══════════════════════════════
+   중간 결과 계산
+══════════════════════════════ */
+function calcMid() {
+  /* 바퀴 완료 저장 */
+  const childName = document.getElementById('child-name').value.trim();
+  saveCompletedRound(childName, round);
+  /* 현재 바퀴 응답 누적 저장 */
+  saveRoundAnswers(childName);
+
+  const scores = calcScores();
+  const top3   = getTop3(scores);
+  const name   = childName || '이 아이';
+  const pf     = namePostfix(name);
+
+  /* 바퀴별 제목 분기 */
+  let midTitle = name + pf + '<br>결과가 나왔어요';
+  if (round === 3) midTitle = '🎉 3바퀴 완주!<br>' + name + pf + ' 결과예요';
+  if (round === 4) midTitle = '✨ 보너스 바퀴 완료!<br>' + name + pf + ' 결과예요';
+  document.getElementById('mid-title').innerHTML = midTitle;
+
+  const container = document.getElementById('mid-top3');
+  container.innerHTML = '';
+  const bars = [80, 60, 44];
+  top3.forEach((t, i) => {
+    container.innerHTML += `
+      <div class="mid-rank-item">
+        <div class="mid-rank-num rk${i+1}">${i+1}</div>
+        <div class="mid-rank-name">${t.type}</div>
+        <div class="mid-rank-bar" style="width:${bars[i]}px;opacity:${1 - i*0.2}"></div>
+      </div>`;
+  });
+
+  /* ── 바퀴별 배지 · 설명 · 버튼 업데이트 ── */
+  const badgeMap = {
+    1: '1바퀴 완료! (12문항)',
+    2: '2바퀴 완료! (24문항)',
+    3: '🎉 3바퀴 완주! (36문항)',
+    4: '✨ 보너스 바퀴 완료!',
+  };
+  const subMap = {
+    1: '1바퀴(12문항) 기준이에요. 3바퀴까지 풀면 더 정확해져요.',
+    2: '2바퀴(24문항) 기준이에요. 1바퀴 더 풀면 완주예요!',
+    3: '36문항 완주 기준 결과예요. 가장 정확한 분석이에요.',
+    4: '보너스 바퀴까지 완료! 누적 분석 결과예요.',
+  };
+  const el_badge = document.getElementById('mid-badge');
+  const el_sub   = document.getElementById('mid-sub');
+  if (el_badge) el_badge.textContent = badgeMap[round] || (round + '바퀴 완료!');
+  if (el_sub)   el_sub.textContent   = subMap[round]   || '';
+
+  /* 정확도 배지 — 현재 바퀴 강조 */
+  ['pill-r1','pill-r2','pill-r3'].forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const active = (i + 1) === round;
+    el.style.fontWeight  = active ? '900' : '600';
+    el.style.opacity     = active ? '1' : '0.5';
+    el.style.transform   = active ? 'scale(1.08)' : 'scale(1)';
+  });
+
+  /* 더 풀기 버튼 텍스트 */
+  const moreBtnTitle = document.getElementById('more-btn-title');
+  const moreBtnSub   = document.getElementById('more-btn-sub');
+  if (moreBtnTitle) moreBtnTitle.textContent = '➕ ' + (round + 1) + '바퀴 계속하기';
+  if (moreBtnSub)   moreBtnSub.textContent   = '12문항 더 풀면 결과가 더 정확해져요.';
+
+  /* 더 풀기 버튼 표시 여부 */
+  const moreBtn = document.querySelector('.choice-more');
+  if (moreBtn) moreBtn.style.display = round < 3 ? 'block' : 'none';
+
+  goTo('s-mid');
+}
+
+function continueQ() {
+  round++; currentQ = 0; answers = {};
+  loadQ(); goTo('s-survey');
+}
+
+/* ══════════════════════════════
+   localStorage 바퀴 저장
+══════════════════════════════ */
+function saveCompletedRound(name, r) {
+  try {
+    const key = 'wiin_round_' + (name||'noname') + '_' + whoLabel;
+    const prev = parseInt(localStorage.getItem(key) || '0');
+    if (r > prev) localStorage.setItem(key, r);
+  } catch(e) {}
+}
+function loadCompletedRound(name) {
+  try {
+    const key = 'wiin_round_' + (name||'noname') + '_' + whoLabel;
+    return parseInt(localStorage.getItem(key) || '0');
+  } catch(e) { return 0; }
+}
+function saveRoundAnswers(name) {
+  try {
+    const key = 'wiin_ans_' + (name||'noname') + '_' + whoLabel;
+    const prev = JSON.parse(localStorage.getItem(key) || '{}');
+    Object.entries(answers).forEach(([idx, val]) => {
+      prev[round + '_' + idx] = val;
+    });
+    localStorage.setItem(key, JSON.stringify(prev));
+  } catch(e) {}
+}
+function loadAllAnswers(name) {
+  try {
+    const key = 'wiin_ans_' + (name||'noname') + '_' + whoLabel;
+    return JSON.parse(localStorage.getItem(key) || '{}');
+  } catch(e) { return {}; }
+}
+
+/* ══════════════════════════════
+   점수 계산 & 매칭
+══════════════════════════════ */
+function calcScores() {
+  const scores = {}; const counts = {};
+  TYPES.forEach(t => { scores[t] = 0; counts[t] = 0; });
+
+  const childName = document.getElementById('child-name').value.trim();
+  /* 저장된 이전 바퀴 + 현재 바퀴 답변 합산 */
+  const saved  = loadAllAnswers(childName);
+  /* 현재 바퀴 답변을 saved에 오버라이드 */
+  Object.entries(answers).forEach(([idx, val]) => {
+    saved[round + '_' + idx] = val;
+  });
+
+  Object.entries(saved).forEach(([key, val]) => {
+    const [r, idx] = key.split('_').map(Number);
+    const ql = whoType === 'child'
+      ? (ageGroup === 'lower' ? QUESTIONS.child_lower : QUESTIONS.child_upper)
+      : QUESTIONS.adult;
+    const slice = ql.filter(q => q.round === r);
+    const q = slice[idx];
+    if (!q) return;
+    scores[q.type] += val;
+    counts[q.type]++;
+  });
+
+  TYPES.forEach(t => { if (counts[t] > 0) scores[t] = scores[t] / counts[t]; });
+  return scores;
+}
+
+function getTop3(scores) {
+  return TYPES.map(t => ({type:t, score:scores[t]}))
+    .sort((a,b) => b.score - a.score)
+    .slice(0, 3);
+}
+
+function matchFigure(top3) {
+  let best = null, bestScore = -1;
+  const scoreMap = Object.fromEntries(top3.map(t => [t.type, t.score]));
+  FIGURES.forEach(f => {
+    const s = (scoreMap[f.primary]||0)*3 + (scoreMap[f.s1]||0)*2 + (scoreMap[f.s2]||0)*1;
+    const betterScore = s > bestScore;
+    const sameScoreKoreaFirst = (s === bestScore && f.country === 'korea' && best?.country !== 'korea');
+    if (betterScore || sameScoreKoreaFirst) { bestScore = s; best = f; }
+  });
+  return best;
+}
+
+/* ══════════════════════════════
+   결과 화면
+══════════════════════════════ */
+async function showResult() {
+  const name = document.getElementById('child-name').value.trim() || '아이';
+  const pf = namePostfix(name);
+  const loadingMsg = currentSessionId
+    ? name + pf + '의<br>닮은 위인과<br>참여자 결과를 모으고 있어요...'
+    : name + pf + '의<br>닮은 위인을 찾고 있어요...';
+  document.getElementById('loading-text').innerHTML = loadingMsg;
+  goTo('s-loading');
+
+  /* 내 결과 먼저 계산 */
+  const scores  = calcScores();
+  const top3    = getTop3(scores);
+  const figure  = matchFigure(top3);
+  const rawName = document.getElementById('child-name').value.trim();
+  const myName  = rawName || '이 아이';
+
+  /* 내 결과 sessions에 추가 */
+  currentSession = { label: whoLabel, icon: whoIcon, scores, top3, figure };
+  if (!sessions.find(s => s.label === whoLabel)) {
+    sessions.push(currentSession);
+  }
+
+  /* Firebase에 내 결과 저장 */
+  if (currentSessionId) {
+    await saveResultToFirebase(figure, scores, top3);
+    /* 세션의 다른 참여자 결과도 함께 불러오기 */
+    await loadAllSessionResults(currentSessionId);
+  }
+
+  /* 최소 1.2초 로딩 후 결과 화면 */
+  await new Promise(r => setTimeout(r, 1200));
+
+  buildResult(myName, scores, figure);
+  goTo('s-result');
+
+  /* 실시간 리스너 (이후 새 참여자 자동 추가) */
+  if (currentSessionId) startSessionListener(currentSessionId);
+}
+
+/* Firebase에서 세션 전체 참여자 결과 불러와 sessions에 병합 */
+async function loadAllSessionResults(code) {
+  if (!db || !fs) return;
+  try {
+    const { collection, getDocs } = fs;
+    const snap = await getDocs(collection(db, 'sessions', code, 'respondents'));
+    snap.forEach(d => {
+      const r = d.data();
+      if (r.status !== 'done' || !r.scores) return;
+      /* 이미 있으면 skip, 없으면 추가 */
+      if (sessions.find(s => s.label === r.label)) return;
+      const fig = FIGURES.find(f => f.name === r.figureName)
+               || FIGURES.find(f => f.primary === r.figurePrimary)
+               || FIGURES[0];
+      sessions.push({
+        label:  r.label,
+        icon:   r.icon || 'adult',
+        scores: r.scores,
+        top3:   (r.top3 || []).map(t => ({ type: t, score: r.scores[t] || 0 })),
+        figure: fig,
+      });
+    });
+  } catch(e) {
+    console.error('세션 결과 로드 실패:', e);
+  }
+}
+
+function buildResult(name, scores, figure) {
+  if (!name) {
+    const rawName = document.getElementById('child-name').value.trim();
+    name   = rawName || '이 아이';
+    scores = calcScores();
+    figure = matchFigure(getTop3(scores));
+  }
+
+  const gradeLabel = ageGroup === 'lower' ? '초1~4학년' : '초5~중2';
+  const isChildRespondent = (whoType === 'child');
+  const gradeSpan = isChildRespondent ? '' : `<span class="rh-grade">${gradeLabel}</span>`;
+
+  document.getElementById('rh-name').innerHTML = name + ' ' + gradeSpan;
+  const badgeText = document.getElementById('rh-badge-text');
+  if (badgeText) badgeText.textContent = sessions.length + '명 참여';
+
+  /* 탭 생성 */
+  buildTabs();
+
+  /* 서사형 비교 */
+  buildNarrative(name, scores);
+
+  /* 레이더 차트 */
+  buildChart(sessions.map(s => s.scores));
+
+  /* 성장 나침반 + 쿠팡파트너스 */
+  buildCompass(scores);
+
+  /* localStorage 저장 */
+  saveResult(name, figure);
+}
+
+function buildTabs() {
+  const tg = document.getElementById('tab-group');
+  tg.innerHTML = '';
+  /* 공통 탭 */
+  if (sessions.length > 1) {
+    tg.innerHTML += `<div class="tab active" onclick="switchTab('common',this)">
+      <span class="tab-icon">🌟</span>
+      <span class="tab-lbl">공통</span>
+    </div>`;
+  }
+  sessions.forEach((s, i) => {
+    const active = sessions.length === 1 && i === 0 ? 'active' : '';
+    const avatarSvg = makeAvatar(s.icon, 28);
+    tg.innerHTML += `<div class="tab ${active}" onclick="switchTab(${i},this)">
+      <span class="tab-icon" style="line-height:1;display:flex;justify-content:center;">${avatarSvg}</span>
+      <span class="tab-lbl">${s.label}</span>
+    </div>`;
+  });
+
+  /* 첫 카드 표시 */
+  if (sessions.length > 1) showCard('common');
+  else showCard(0);
+}
+
+function switchTab(key, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  showCard(key);
+}
+
+function showCard(key) {
+  const cw = document.getElementById('card-wrap');
+  let f, tagText, bannerText = '';
+
+  if (key === 'common' && sessions.length > 1) {
+    const commonResult = findCommon();
+    const allScores = {};
+    TYPES.forEach(t => {
+      allScores[t] = sessions.reduce((sum, s) => sum + (s.scores[t]||0), 0) / sessions.length;
+    });
+    const top3 = getTop3(allScores);
+    f = matchFigure(top3);
+
+    if (commonResult.type === null) {
+      /* 공통 없음 — 다양한 아이 메시지 */
+      tagText = '🌈 각자 다른 눈으로 본 결과';
+      bannerText = '세 사람이 본 모습이 달라요. 이건 아이가 다양한 얼굴을 가졌다는 뜻이에요.';
+    } else {
+      tagText = commonResult.strong
+        ? '🌟 세 사람이 모두 본 중심'
+        : '🌟 세 시선이 가장 가까운 곳';
+      bannerText = commonResult.strong
+        ? '모두가 공통으로 느낀 가장 강한 성향이에요.'
+        : '범위를 넓혀 찾은 공통 성향이에요. 비슷한 결이 있어요.';
+    }
+  } else {
+    const idx = typeof key === 'number' ? key : 0;
+    const sess = sessions[idx];
+    f = sess.figure;
+    const pf = namePostfix(sess.label);
+    /* 카드 태그에 작은 아바타 인라인 */
+    const miniAvatar = `<span style="display:inline-flex;align-items:center;vertical-align:middle;width:20px;height:20px;margin-right:2px;">${makeAvatar(sess.icon, 20)}</span>`;
+    tagText = miniAvatar + sess.label + pf + '이 본 결과';
+    bannerText = '';
+  }
+
+  /* 배경 스타일: img 필드 있으면 이미지, 없으면 그라디언트 폴백 */
+  const bgStyle = f.img
+    ? `background: url('${f.img}') center/cover no-repeat; position:relative;`
+    : `background: ${f.color};`;
+
+  /* 이미지 있을 때 어두운 오버레이 추가 (글씨 가독성 확보) */
+  const overlay = f.img
+    ? `<div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.25) 0%,rgba(0,0,0,0.55) 100%);border-radius:var(--r-lg);z-index:1;"></div>`
+    : '';
+
+  /* 이미지 있을 때 card-symbol(이모지) 숨김 */
+  const symbolEl = f.img
+    ? ''
+    : `<div class="card-symbol">${f.symbol}</div>`;
+
+  cw.innerHTML = `
+    <div class="main-card" style="${bgStyle}" onclick="openDetail('${f.id}')" style="cursor:pointer;">
+      ${overlay}
+      ${symbolEl}
+      <div class="card-top">
+        <div class="card-tag">${tagText}</div>
+        <div class="card-name-ko">${f.name}</div>
+        <div class="card-name-en">${f.en}</div>
+      </div>
+      <div class="card-bottom">
+        <div class="card-quote">${f.quote.replace(/\n/g,'<br>')}</div>
+        <div class="trait-row">
+          <div class="trait-chip primary">${f.primary}</div>
+          <div class="trait-chip">${f.s1}</div>
+          <div class="trait-chip">${f.s2}</div>
+        </div>
+        ${bannerText ? `<div class="common-banner"><div class="common-dot"></div><span>${bannerText}</span></div>` : ''}
+        <div style="margin-top:10px;text-align:right;">
+          <span style="font-size:11px;color:rgba(255,255,255,0.6);font-weight:600;">더 알아보기 →</span>
+        </div>
+      </div>
+    </div>`;
+}
+
+function findCommon() {
+  if (sessions.length < 2) return { type: sessions[0]?.top3[0]?.type || '호기심', strong: true };
+  /* 교집합 찾기 — TOP3 → TOP5 → TOP7 */
+  for (let depth = 3; depth <= 7; depth++) {
+    const sets = sessions.map(s =>
+      TYPES.map(t => ({type:t, score:s.scores[t]||0}))
+        .sort((a,b) => b.score - a.score)
+        .slice(0, depth)
+        .map(x => x.type)
+    );
+    const common = sets[0].filter(t => sets.every(s => s.includes(t)));
+    if (common.length > 0) return { type: common[0], strong: depth <= 3 };
+  }
+  /* 완전 교집합 없음 — 다양한 아이 */
+  return { type: null, strong: false };
+}
+
+function buildNarrative(name, scores) {
+  const pf = namePostfix(name);
+  const title = sessions.length > 1
+    ? name + pf + '의 결이<br>이렇게 보여요'
+    : name + pf + '의 성향이<br>보여요';
+  document.getElementById('narr-title').innerHTML = title;
+
+  const items = document.getElementById('narr-items');
+  items.innerHTML = '';
+
+  if (sessions.length === 1) {
+    /* 단일 응답자 — TOP3 표시 */
+    const s = sessions[0];
+    s.top3.forEach((t, i) => {
+      items.innerHTML += `
+        <div class="narr-item">
+          <div class="narr-label"><span>${NARR_EMOJIS[i]}</span> ${['가장 강한 성향','두 번째 성향','세 번째 성향'][i]}</div>
+          <div class="small-card">
+            <div class="icon-box ${NARR_ICONS[i]}">${['🌟','✨','💫'][i]}</div>
+            <div class="sc-text">
+              <div class="sc-title">${t.type}</div>
+              <div class="sc-sub">${s.label} ${['1위','2위','3위'][i]}</div>
+            </div>
+            <div class="badge ${BADGE_CLASSES[i]}">${['TOP 1','TOP 2','TOP 3'][i]}</div>
+          </div>
+        </div>`;
+    });
+  } else {
+    /* 다중 응답자 — 공통/부분/고유 */
+    /* 공통 */
+    const allTop3 = sessions.map(s => s.top3.map(t => t.type));
+    const common3 = allTop3[0].filter(t => allTop3.every(s => s.includes(t)));
+    if (common3.length > 0) {
+      common3.forEach(t => {
+        items.innerHTML += `
+          <div class="narr-item">
+            <div class="narr-label"><span>🌟</span> 모두가 함께 본 <strong>${name}${namePostfix(name)}의 중심</strong></div>
+            <div class="small-card">
+              <div class="icon-box ico-orange">🔍</div>
+              <div class="sc-text"><div class="sc-title">${t}</div><div class="sc-sub">전원 TOP 3</div></div>
+              <div class="badge b-gold">강한 공통</div>
+            </div>
+          </div>`;
+      });
+    }
+
+    /* 부분 공통 (2명) */
+    sessions.forEach((s1, i) => {
+      sessions.forEach((s2, j) => {
+        if (j <= i) return;
+        const s1types = s1.top3.map(t => t.type);
+        const s2types = s2.top3.map(t => t.type);
+        const partial = s1types.filter(t => s2types.includes(t) && !common3.includes(t));
+        partial.forEach(t => {
+          items.innerHTML += `
+            <div class="narr-item">
+              <div class="narr-label"><span>💛</span> ${s1.label}와 ${s2.label}이 <strong>같은 눈으로</strong></div>
+              <div class="small-card">
+                <div class="icon-box ico-purple">✨</div>
+                <div class="sc-text"><div class="sc-title">${t}</div><div class="sc-sub">${s1.label} · ${s2.label} 공통</div></div>
+                <div class="badge b-sand">부분 공통</div>
+              </div>
+            </div>`;
+        });
+      });
+    });
+
+    /* 고유 성향 */
+    sessions.forEach((s, i) => {
+      const unique = s.top3.map(t => t.type).filter(t =>
+        !sessions.some((other, j) => j !== i && other.top3.map(x => x.type).includes(t))
+      );
+      if (unique.length > 0) {
+        unique.forEach(t => {
+          items.innerHTML += `
+            <div class="narr-item">
+              <div class="narr-label"><span>${NARR_EMOJIS[i+1]}</span> ${s.label}의 시선에서 <strong>빛나는</strong></div>
+              <div class="small-card">
+                <div class="icon-box ${NARR_ICONS[i+1]}">${s.icon}</div>
+                <div class="sc-text"><div class="sc-title">${t}</div><div class="sc-sub">${s.label}만 TOP 3</div></div>
+                <div class="badge ${BADGE_CLASSES[i+1]}">${s.label} 고유</div>
+              </div>
+            </div>`;
+        });
+      }
+    });
+  }
+}
+
+/* 레이더 차트 */
+function buildChart(scoresArr) {
+  const svg = document.getElementById('radar-svg');
+  const cx=150, cy=150, r=90;
+  const n = TYPES.length;
+  const colors = ['#C0392B','#0A3D62','#D4A017','#27AE60'];
+  const legendContainer = document.getElementById('chart-legend');
+  const chartSub = document.getElementById('chart-sub');
+
+  /* 꼭짓점 */
+  const pts = TYPES.map((_, i) => {
+    const angle = (Math.PI * 2 * i / n) - Math.PI / 2;
+    return { x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle) };
+  });
+
+  let html = '';
+  /* 그리드 */
+  [0.33, 0.66, 1].forEach(scale => {
+    const gpts = pts.map(p => ({ x: cx + (p.x - cx) * scale, y: cy + (p.y - cy) * scale }));
+    html += `<polygon points="${gpts.map(p => p.x+','+p.y).join(' ')}" fill="none" stroke="#E8E4DC" stroke-width="1" opacity="0.7"/>`;
+  });
+  /* 축선 */
+  pts.forEach(p => { html += `<line x1="${cx}" y1="${cy}" x2="${p.x}" y2="${p.y}" stroke="#E8E4DC" stroke-width="0.8" stroke-dasharray="3,3" opacity="0.4"/>`; });
+  /* 레이블 */
+  pts.forEach((p, i) => {
+    const dx = (p.x - cx) * 0.18, dy = (p.y - cy) * 0.18;
+    html += `<text x="${p.x+dx}" y="${p.y+dy}" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#999" font-weight="500">${TYPES[i]}</text>`;
+  });
+  /* 데이터 폴리곤 */
+  scoresArr.forEach((scores, si) => {
+    const datapts = pts.map((p, i) => {
+      const maxScore = 5, val = Math.min(scores[TYPES[i]] || 0, maxScore);
+      const ratio = val / maxScore;
+      return { x: cx + (p.x - cx) * ratio, y: cy + (p.y - cy) * ratio };
+    });
+    const color = colors[si % colors.length];
+    html += `<polygon points="${datapts.map(p => p.x+','+p.y).join(' ')}" fill="${color}" fill-opacity="0.20" stroke="${color}" stroke-width="1.8" stroke-linejoin="round"/>`;
+  });
+  /* 중심 */
+  html += `<circle cx="${cx}" cy="${cy}" r="3" fill="#ccc"/>`;
+  svg.innerHTML = html;
+
+  /* 범례 */
+  legendContainer.innerHTML = '';
+  sessions.forEach((s, i) => {
+    legendContainer.innerHTML += `<div class="legend-item"><span class="legend-dot" style="background:${colors[i]};"></span>${s.label}이 본 ${document.getElementById('child-name').value.trim()||'아이'}</div>`;
+  });
+  chartSub.textContent = sessions.length + '명의 시선 · 12가지 성향 분포';
+}
+
+/* ══════════════════════════════
+   다시 하기 / 추가 응답자
+══════════════════════════════ */
+function restartSurvey() {
+  /* 완전 초기화 — 새 아이/새 가족으로 다시 시작 */
+  sessions = []; currentSession = null;
+  whoType = null; whoIcon = ''; whoLabel = '';
+  ageGroup = null; ageSelected = false;
+  answers = {}; currentQ = 0; round = 1;
+  /* localStorage 세션 기록 초기화 */
+  clearSessionFromLocal();
+  currentSessionId = null; currentSessionCode = null;
+  if (sessionUnsubscribe) { sessionUnsubscribe(); sessionUnsubscribe = null; }
+  try {
+    const name = document.getElementById('child-name').value.trim() || 'noname';
+    ['엄마','아빠','어른','나'].forEach(label => {
+      localStorage.removeItem('wiin_round_' + name + '_' + label);
+      localStorage.removeItem('wiin_ans_'   + name + '_' + label);
+    });
+  } catch(e) {}
+  document.querySelectorAll('.who-card').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.age-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('btn-who').classList.remove('on');
+  document.getElementById('btn-info').classList.remove('on');
+  document.getElementById('child-name').value = '';
+  goTo('s-start');
+}
+
+/* 다른 응답자 추가 (같은 아이, 다른 사람) */
+function addRespondent() {
+  whoType = null; whoIcon = ''; whoLabel = '';
+  answers = {}; currentQ = 0; round = 1;
+  document.querySelectorAll('.who-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('btn-who').classList.remove('on');
+  goTo('s-who');
+}
+
+/* ══════════════════════════════
+   SVG 캐릭터 아바타
+══════════════════════════════ */
+const AVATARS = {
+  mom: {
+    bg: '#FFD6E0',       /* 핑크 배경 */
+    face: '#FFBE98',     /* 살구 피부 */
+    hair: '#5C3317',     /* 진갈색 머리 */
+    acc: '#FF6B9D',      /* 핑크 포인트 */
+    hairStyle: 'long',   /* 긴 머리 */
+  },
+  dad: {
+    bg: '#C8E6FF',       /* 하늘 배경 */
+    face: '#FFBE98',
+    hair: '#2C2C2C',     /* 검정 머리 */
+    acc: '#4A90D9',      /* 파란 포인트 */
+    hairStyle: 'short',
+  },
+  adult: {
+    bg: '#E8EFE7',       /* Sage Leaf 밝은 배경 */
+    face: '#F5C38E',     /* 황금 피부 */
+    hair: '#7A5C3A',     /* 갈색 머리 */
+    acc: '#4A7C3F',      /* Forest Green 중간톤 */
+    hairStyle: 'mid',
+  },
+  child: {
+    bg: '#FFF3C4',       /* 노랑 배경 */
+    face: '#FFBE98',
+    hair: '#3A2000',     /* 짙은 갈색 */
+    acc: '#FFC107',      /* 노랑 포인트 */
+    hairStyle: 'kids',
+  },
+};
+
+function makeAvatar(type, size = 48) {
+  const a = AVATARS[type] || AVATARS.adult;
+  const s = size;
+  const c = s / 2;   /* center */
+  const r = s * 0.42; /* 원 반지름 */
+
+  /* 머리 스타일별 SVG 패스 */
+  let hair = '';
+  if (a.hairStyle === 'long') {
+    /* 여성 긴 머리 */
+    hair = `
+      <ellipse cx="${c}" cy="${c*0.55}" rx="${r*0.62}" ry="${r*0.68}" fill="${a.hair}"/>
+      <rect x="${c - r*0.62}" y="${c*0.55}" width="${r*0.22}" height="${r*0.85}" rx="${r*0.1}" fill="${a.hair}"/>
+      <rect x="${c + r*0.40}" y="${c*0.55}" width="${r*0.22}" height="${r*0.85}" rx="${r*0.1}" fill="${a.hair}"/>`;
+  } else if (a.hairStyle === 'short') {
+    /* 남성 짧은 머리 */
+    hair = `
+      <ellipse cx="${c}" cy="${c*0.52}" rx="${r*0.60}" ry="${r*0.52}" fill="${a.hair}"/>`;
+  } else if (a.hairStyle === 'mid') {
+    /* 중간 머리 */
+    hair = `
+      <ellipse cx="${c}" cy="${c*0.54}" rx="${r*0.62}" ry="${r*0.60}" fill="${a.hair}"/>
+      <rect x="${c - r*0.62}" y="${c*0.55}" width="${r*0.20}" height="${r*0.5}" rx="${r*0.08}" fill="${a.hair}"/>
+      <rect x="${c + r*0.42}" y="${c*0.55}" width="${r*0.20}" height="${r*0.5}" rx="${r*0.08}" fill="${a.hair}"/>`;
+  } else {
+    /* 아이 머리 — 동그랗게 */
+    hair = `
+      <ellipse cx="${c}" cy="${c*0.50}" rx="${r*0.58}" ry="${r*0.55}" fill="${a.hair}"/>`;
+  }
+
+  return `<svg viewBox="0 0 ${s} ${s}" xmlns="http://www.w3.org/2000/svg">
+    <!-- 배경 원 -->
+    <circle cx="${c}" cy="${c}" r="${r*1.1}" fill="${a.bg}"/>
+    <!-- 머리카락 (뒤) -->
+    ${hair}
+    <!-- 얼굴 -->
+    <ellipse cx="${c}" cy="${c*1.05}" rx="${r*0.50}" ry="${r*0.55}" fill="${a.face}"/>
+    <!-- 눈 -->
+    <ellipse cx="${c - r*0.17}" cy="${c*0.98}" rx="${r*0.07}" ry="${r*0.09}" fill="#333"/>
+    <ellipse cx="${c + r*0.17}" cy="${c*0.98}" rx="${r*0.07}" ry="${r*0.09}" fill="#333"/>
+    <!-- 눈 반짝이 -->
+    <circle cx="${c - r*0.13}" cy="${c*0.94}" r="${r*0.025}" fill="white"/>
+    <circle cx="${c + r*0.21}" cy="${c*0.94}" r="${r*0.025}" fill="white"/>
+    <!-- 볼터치 -->
+    <ellipse cx="${c - r*0.28}" cy="${c*1.08}" rx="${r*0.12}" ry="${r*0.07}" fill="${a.acc}" opacity="0.35"/>
+    <ellipse cx="${c + r*0.28}" cy="${c*1.08}" rx="${r*0.12}" ry="${r*0.07}" fill="${a.acc}" opacity="0.35"/>
+    <!-- 입 (미소) -->
+    <path d="M${c - r*0.14} ${c*1.18} Q${c} ${c*1.28} ${c + r*0.14} ${c*1.18}" stroke="#D4736A" stroke-width="${r*0.06}" fill="none" stroke-linecap="round"/>
+    <!-- 몸통 -->
+    <ellipse cx="${c}" cy="${s*0.88}" rx="${r*0.46}" ry="${r*0.28}" fill="${a.acc}"/>
+  </svg>`;
+}
+
+/* ══════════════════════════════
+   localStorage 저장 · 복원
+══════════════════════════════ */
+function saveResult(name, figure) {
+  try {
+    const data = {
+      name,
+      figure: { name: figure.name, primary: figure.primary },
+      sessions: sessions.map(s => ({
+        label: s.label,
+        icon: s.icon,
+        top3: s.top3,
+        figureName: s.figure.name,
+      })),
+      savedAt: new Date().toLocaleDateString('ko-KR'),
+    };
+    localStorage.setItem('wiin_last_result', JSON.stringify(data));
+  } catch(e) { /* localStorage 미지원 환경 무시 */ }
+}
+
+function loadLastResult() {
+  try {
+    const raw = localStorage.getItem('wiin_last_result');
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch(e) { return null; }
+}
+
+/* 시작 화면에서 이전 결과 배너 표시 */
+function checkPreviousResult() {
+  /* 세션 배너로 대체되어 사용하지 않음 */
+}
+
+/* ══════════════════════════════
+   위인 상세 화면
+══════════════════════════════ */
+function openDetail(figureId) {
+  const f = FIGURES.find(x => x.id === figureId);
+  const d = DETAILS[figureId];
+  if (!f) return;
+
+  /* 헤더 */
+  document.getElementById('detail-name-ko').textContent = f.name;
+  document.getElementById('detail-name-en').textContent = f.en;
+  document.getElementById('detail-primary-chip').textContent = f.primary;
+
+  const bg = document.getElementById('detail-hero-bg');
+  if (f.img) {
+    bg.style.background = `url('${f.img}') center/cover no-repeat`;
+  } else {
+    bg.style.background = f.color;
+  }
+
+  /* 일화 */
+  const stories = document.getElementById('detail-stories');
+  if (d?.story) {
+    stories.innerHTML = d.story.map(s =>
+      `<div class="detail-story-item">
+        <div class="detail-story-dot"></div>
+        <div class="detail-story-text">${s}</div>
+      </div>`
+    ).join('');
+  } else {
+    stories.innerHTML = `<div class="detail-story-text">${f.quote.replace(/\n/g,' ')}</div>`;
+  }
+
+  /* 메시지 */
+  document.getElementById('detail-message').textContent =
+    d?.message || `"${f.primary}의 힘으로 세상을 바꾼 ${f.name}처럼."`;
+
+  /* 부모 팁 */
+  document.getElementById('detail-tip').textContent =
+    d?.parent_tip || `${f.name}의 ${f.primary} 성향을 가진 아이를 응원해 주세요.`;
+
+  /* 관련 위인 */
+  const related = document.getElementById('detail-related');
+  if (d?.related) {
+    related.innerHTML = d.related.map(id => {
+      const rf = FIGURES.find(x => x.id === id);
+      if (!rf) return '';
+      return `<div class="detail-related-card" onclick="closeDetail();setTimeout(()=>openDetail('${rf.id}'),300)">
+        <div class="detail-related-sym">${rf.symbol}</div>
+        <div class="detail-related-name">${rf.name}</div>
+        <div class="detail-related-type">${rf.primary}</div>
+      </div>`;
+    }).join('');
+  } else {
+    related.innerHTML = '';
+  }
+
+  document.getElementById('detail-overlay').classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDetail(e) {
+  if (e && e.target !== document.getElementById('detail-overlay')) return;
+  document.getElementById('detail-overlay').classList.remove('on');
+  document.body.style.overflow = '';
+}
+
+/* ══════════════════════════════
+   공유하기
+══════════════════════════════ */
+function buildInviteUrl() {
+  /* URL에 코드 포함 — 받는 사람이 클릭만 하면 자동 입력 */
+  const base = 'https://wein.kr';
+  return currentSessionCode
+    ? `${base}?code=${currentSessionCode}`
+    : base;
+}
+
+function buildShareText() {
+  const name       = document.getElementById('child-name').value.trim() || '우리 아이';
+  const pf         = namePostfix(name);
+  const inviteUrl  = buildInviteUrl();
+  const code       = currentSessionCode;
+
+  /* 결과가 있을 때 (설문 완료 후 공유) */
+  if (sessions.length > 0) {
+    const mainFigure = sessions[0]?.figure?.name || '위인';
+    const top1       = sessions[0]?.top3[0]?.type || '';
+
+    if (code) {
+      /* 세션 있음 — 초대 + 결과 함께 */
+      return `안녕하세요 😊\n` +
+        `${name}${pf}의 성향을 알아보는데 함께해 주실 수 있으실까요?\n\n` +
+        `${name}${pf}를 아끼는 분들이 각자의 시선으로\n` +
+        `짧은 설문(12문항, 3분)에 답해주시면\n` +
+        `${name}${pf}와 닮은 위인을 함께 발견할 수 있어요 🌟\n\n` +
+        `아래 링크를 클릭하시면 바로 시작돼요 👇\n` +
+        `${inviteUrl}\n\n` +
+        `📌 링크가 안 열리시면:\n` +
+        `  wein.kr 접속 → 코드로 참여하기 → ${code} 입력`;
+    } else {
+      /* 세션 없음 — 결과만 공유 */
+      return `✨ ${name}${pf}와 닮은 위인은 "${mainFigure}"이에요!\n` +
+        `가장 강한 성향: ${top1}\n\n` +
+        `우리 아이와 닮은 위인을 찾아보세요 👇\n${inviteUrl}`;
+    }
+  }
+
+  /* 결과 전 — 순수 초대 */
+  if (code) {
+    return `안녕하세요 😊\n` +
+      `${name}${pf}의 성향을 알아보는데 함께해 주실 수 있으실까요?\n\n` +
+      `짧은 설문(12문항, 3분)에 답해주시면\n` +
+      `${name}${pf}와 닮은 위인을 함께 발견할 수 있어요 🌟\n\n` +
+      `아래 링크를 클릭하시면 바로 시작돼요 👇\n` +
+      `${inviteUrl}\n\n` +
+      `📌 링크가 안 열리시면:\n` +
+      `  wein.kr 접속 → 코드로 참여하기 → ${code} 입력`;
+  }
+
+  return `wein.kr — 우리 아이와 닮은 위인 찾기`;
+}
+
+function openShare() {
+  const displayUrl = buildInviteUrl();
+  document.getElementById('share-overlay').classList.add('on');
+  document.getElementById('share-url-text').textContent = displayUrl;
+}
+
+function closeShare(e) {
+  if (e && e.target !== document.getElementById('share-overlay')) return;
+  document.getElementById('share-overlay').classList.remove('on');
+}
+
+function shareKakao() {
+  if (window.Kakao && window.Kakao.isInitialized()) {
+    window.Kakao.Link.sendDefault({
+      objectType: 'text',
+      text: buildShareText(),
+      link: { mobileWebUrl: buildInviteUrl(), webUrl: buildInviteUrl() },
+    });
+  } else {
+    copyToClipboard(buildShareText());
+    showToast('초대 메시지가 복사됐어요! 카카오톡에 붙여넣기 하세요. 💬');
+  }
+  closeShare();
+}
+
+function shareLink() {
+  copyToClipboard(buildInviteUrl());
+  showToast('링크가 복사됐어요! 클릭하면 자동으로 참여돼요 🔗');
+  closeShare();
+}
+
+function shareText() {
+  copyToClipboard(buildShareText());
+  showToast('초대 메시지가 복사됐어요! 📋');
+  closeShare();
+}
+
+function shareNative() {
+  const text = buildShareText();
+  const url  = buildInviteUrl();
+  if (navigator.share) {
+    navigator.share({
+      title: '우리 아이와 닮은 위인은?',
+      text,
+      url,
+    }).catch(() => {});
+  } else {
+    copyToClipboard(text);
+    showToast('초대 메시지가 복사됐어요!');
+  }
+  closeShare();
+}
+
+function copyToClipboard(text) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
+  } else {
+    fallbackCopy(text);
+  }
+}
+
+function fallbackCopy(text) {
+  const el = document.createElement('textarea');
+  el.value = text;
+  el.style.position = 'fixed';
+  el.style.opacity = '0';
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
+}
+
+/* ══════════════════════════════
+   토스트 메시지
+══════════════════════════════ */
+let toastTimer = null;
+function showToast(msg, duration = 2400) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('on');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('on'), duration);
+}
+
+/* ══════════════════════════════
+   성장 나침반 — 12성향 × 6카테고리 추천 데이터
+   쿠팡파트너스 ID: 11782769-27ea-48c3-ab3f-ebdab57227a0
+══════════════════════════════ */
+const AF_ID = 'af_id=11782769-27ea-48c3-ab3f-ebdab57227a0';
+function coupang(itemId) {
+  return `https://www.coupang.com/vp/products/${itemId}?${AF_ID}&amp;from=affiliate`;
+}
+
+/* 성향별 한 줄 설명 */
+const TYPE_DESC = {
+  '호기심':       '새로운 것을 발견하고 탐구하는 힘',
+  '학구열':       '배움에 기쁨을 느끼고 깊이 파고드는 힘',
+  '창의성':       '새로운 방법과 아이디어를 만드는 힘',
+  '통찰력':       '상황의 본질을 꿰뚫어 보는 힘',
+  '용기':         '두려움에도 앞으로 나아가는 힘',
+  '진실성':       '솔직하고 신뢰받는 사람이 되는 힘',
+  '사랑과 친절':  '따뜻하게 돌보고 나누는 힘',
+  '사회적 지능':  '사람의 마음을 읽고 연결하는 힘',
+  '리더십과 공정성': '함께를 이끌고 공정하게 판단하는 힘',
+  '자기조절':     '충동을 다스리고 목표를 지키는 힘',
+  '감사와 희망':  '긍정으로 세상을 바라보는 힘',
+  '영성':         '삶의 의미와 연결을 느끼는 힘',
+};
+
+/* 성장 가능성 설명 (낮을 때 표현) */
+const GROWTH_DESC = {
+  '호기심':       '더 많이 탐구하면 세상이 넓어져요',
+  '학구열':       '알고 싶은 것을 더 찾아보는 습관으로',
+  '창의성':       '엉뚱한 상상이 혁신의 씨앗이 돼요',
+  '통찰력':       '한 발 물러서 보는 연습이 도움 돼요',
+  '용기':         '작은 도전이 큰 용기를 만들어요',
+  '진실성':       '솔직함이 신뢰의 기초예요',
+  '사랑과 친절':  '마음을 나누는 습관이 관계를 키워요',
+  '사회적 지능':  '상대 마음 읽기로 관계가 깊어져요',
+  '리더십과 공정성': '함께 결정하는 경험이 리더십을 키워요',
+  '자기조절':     '작은 약속 지키기부터 시작해요',
+  '감사와 희망':  '오늘 감사한 것 찾기로 마음이 밝아져요',
+  '영성':         '조용한 질문이 깊은 아이를 만들어요',
+};
+
+/* 12성향 × 6카테고리 추천 상품 */
+const COMPASS_PRODUCTS = {
+  '호기심': {
+    '도서':     [{name:'why? 시리즈 과학 세트',desc:'궁금증을 실험으로 풀어가는 대표 과학책',emoji:'🔬',url:coupang('8470757342')},{name:'신기한 스쿨버스 시리즈',desc:'모험하며 배우는 과학 탐구 동화',emoji:'🚌',url:coupang('7698123456')},{name:'어린이 백과사전 세트',desc:'무엇이든 찾아볼 수 있는 지식 창고',emoji:'📖',url:coupang('8012345678')}],
+    '활동':     [{name:'과학실험 키트 50가지',desc:'집에서 하는 신기한 과학 실험 세트',emoji:'⚗️',url:coupang('7234567890')},{name:'탐정 보드게임 클루',desc:'단서를 모아 추리하는 탐구 게임',emoji:'🕵️',url:coupang('6789012345')},{name:'자연 관찰 루페 세트',desc:'곤충·식물을 관찰하는 어린이 현미경',emoji:'🔍',url:coupang('7890123456')}],
+    '학습도구': [{name:'마인드맵 노트 세트',desc:'생각을 시각화하는 창의 노트',emoji:'🗺️',url:coupang('6543210987')},{name:'질문 카드 100장',desc:'매일 하나씩 던지는 호기심 카드',emoji:'❓',url:coupang('7123456789')},{name:'어린이 관찰 일기장',desc:'자연과 일상을 관찰하고 기록',emoji:'📒',url:coupang('8234567890')}],
+    '디지털':   [{name:'코딩 교육 앱 스크래치',desc:'게임 만들며 배우는 기초 코딩',emoji:'💻',url:'https://scratch.mit.edu'},{name:'칸아카데미 키즈',desc:'수학·과학 무료 탐구 학습',emoji:'📱',url:'https://www.khanacademy.org/kids'},{name:'내셔널지오그래픽 앱',desc:'세계 자연·과학 영상 탐구',emoji:'🌍',url:coupang('7654321098')}],
+    '운동':     [{name:'어린이 등산 배낭 세트',desc:'자연을 탐험하는 등산 입문 세트',emoji:'🎒',url:coupang('8901234567')},{name:'자전거 탐험 키트',desc:'동네를 탐험하는 어린이 자전거 용품',emoji:'🚲',url:coupang('7012345678')},{name:'물놀이 과학 물총',desc:'물의 압력을 배우며 노는 과학 물총',emoji:'💦',url:coupang('6901234567')}],
+    '예술':     [{name:'어린이 사진 카메라',desc:'세상을 새로운 시선으로 담는 카메라',emoji:'📷',url:coupang('8123456789')},{name:'자연물 공예 키트',desc:'나뭇잎·돌멩이로 만드는 자연 예술',emoji:'🍂',url:coupang('7234561234')},{name:'실험 미술 놀이 키트',desc:'과학과 예술을 합친 창의 미술',emoji:'🎨',url:coupang('6345678901')}],
+  },
+  '학구열': {
+    '도서':     [{name:'초등 고전 읽기 세트',desc:'논어·명심보감 어린이 해설판',emoji:'📜',url:coupang('8456789012')},{name:'수학의 발견 시리즈',desc:'수학이 재미있어지는 스토리 수학책',emoji:'🔢',url:coupang('7567890123')},{name:'세계사 탐험 그림책',desc:'역사를 여행하는 어린이 세계사',emoji:'🗺️',url:coupang('6678901234')}],
+    '활동':     [{name:'어린이 독서 토론 카드',desc:'책을 읽고 생각을 나누는 토론 카드',emoji:'💬',url:coupang('7789012345')},{name:'세계 지도 퍼즐',desc:'나라와 수도를 배우는 대형 퍼즐',emoji:'🗺️',url:coupang('8890123456')},{name:'역사 인물 보드게임',desc:'역사 위인을 만나는 카드 게임',emoji:'🃏',url:coupang('7901234567')}],
+    '학습도구': [{name:'어린이 플래너 다이어리',desc:'목표와 공부를 계획하는 어린이 플래너',emoji:'📅',url:coupang('8012345690')},{name:'독서 기록장 세트',desc:'읽은 책을 정리하는 독서 노트',emoji:'📚',url:coupang('7123456801')},{name:'마인드맵 학습 카드',desc:'개념을 연결하는 학습 카드 세트',emoji:'🧠',url:coupang('6234567912')}],
+    '디지털':   [{name:'칸아카데미 프리미엄',desc:'수학·과학 체계적 온라인 학습',emoji:'📱',url:'https://www.khanacademy.org'},{name:'밀크T 초등 학습지',desc:'교과서 연계 맞춤 디지털 학습',emoji:'💻',url:coupang('7345678901')},{name:'뇌새김 영어 앱',desc:'매일 10분 반복 학습 영어',emoji:'🎧',url:coupang('8456789101')}],
+    '운동':     [{name:'바둑 입문 세트',desc:'집중력과 사고력을 키우는 바둑',emoji:'⚫',url:coupang('7567890212')},{name:'체스 교육용 세트',desc:'전략적 사고를 키우는 체스',emoji:'♟️',url:coupang('6678901323')},{name:'어린이 탁구 세트',desc:'순발력과 집중력을 키우는 탁구',emoji:'🏓',url:coupang('7789012434')}],
+    '예술':     [{name:'어린이 점토 공예 세트',desc:'손으로 배우는 입체 조형 활동',emoji:'🏺',url:coupang('8890123545')},{name:'캘리그라피 입문 세트',desc:'글씨를 예쁘게 쓰며 집중하기',emoji:'✒️',url:coupang('7901234656')},{name:'종이접기 전집',desc:'수학적 사고력을 기르는 종이접기',emoji:'📄',url:coupang('8012345767')}],
+  },
+  '창의성': {
+    '도서':     [{name:'발명왕 에디슨 이야기',desc:'1000번의 실패로 배우는 창의력',emoji:'💡',url:coupang('7123456878')},{name:'어린이 디자인 씽킹',desc:'문제를 창의적으로 해결하는 법',emoji:'🎨',url:coupang('6234567989')},{name:'만들고 상상하는 그림책',desc:'상상력을 자극하는 창작 그림책',emoji:'✨',url:coupang('7345679090')}],
+    '활동':     [{name:'레고 크리에이터 세트',desc:'마음껏 상상해서 만드는 레고',emoji:'🧱',url:coupang('8456789201')},{name:'아이디어 보드게임',desc:'창의적 생각을 겨루는 게임',emoji:'🎲',url:coupang('7567890312')},{name:'DIY 목공예 키트',desc:'직접 만드는 어린이 목공 세트',emoji:'🔨',url:coupang('6678901423')}],
+    '학습도구': [{name:'스케치북 + 드로잉 세트',desc:'아이디어를 자유롭게 그리는 세트',emoji:'✏️',url:coupang('7789012534')},{name:'발명 아이디어 노트',desc:'발명가처럼 생각을 기록하는 노트',emoji:'💡',url:coupang('8890123645')},{name:'스토리 만들기 카드',desc:'카드로 이야기를 창작하는 활동',emoji:'🃏',url:coupang('7901234756')}],
+    '디지털':   [{name:'스크래치 코딩 교재',desc:'게임·애니메이션 직접 만들기',emoji:'🎮',url:coupang('8012345867')},{name:'그림판 태블릿 펜',desc:'디지털 드로잉 입문 태블릿 펜',emoji:'🖊️',url:coupang('7123456978')},{name:'유튜브 크리에이터 키트',desc:'영상 만들기 어린이 입문 세트',emoji:'🎬',url:coupang('6234568089')}],
+    '운동':     [{name:'리듬체조 리본 세트',desc:'음악과 몸으로 표현하는 리듬체조',emoji:'🎀',url:coupang('7345679190')},{name:'어린이 댄스 DVD',desc:'케이팝 댄스로 표현력 키우기',emoji:'💃',url:coupang('8456789301')},{name:'어린이 서핑 부기보드',desc:'물에서 자유롭게 창의적으로',emoji:'🏄',url:coupang('7567890412')}],
+    '예술':     [{name:'어린이 수채화 세트',desc:'색으로 감정을 표현하는 수채화',emoji:'🎨',url:coupang('6678901523')},{name:'클레이 아트 키트',desc:'손으로 만드는 캐릭터 점토 놀이',emoji:'🦄',url:coupang('7789012634')},{name:'어린이 뮤지컬 DVD',desc:'노래와 연기로 표현하는 뮤지컬',emoji:'🎭',url:coupang('8890123745')}],
+  },
+  '통찰력': {
+    '도서':     [{name:'어린이 철학 토론 책',desc:'깊이 생각하는 힘을 기르는 철학책',emoji:'🤔',url:coupang('7901234856')},{name:'추리 소설 어린이 시리즈',desc:'단서를 모아 결론을 내는 추리책',emoji:'🔍',url:coupang('8012345967')},{name:'손자병법 어린이판',desc:'전략적 사고를 키우는 고전',emoji:'📜',url:coupang('7123457078')}],
+    '활동':     [{name:'루빅스 큐브 세트',desc:'패턴을 파악하는 입체 퍼즐',emoji:'🎲',url:coupang('6234568189')},{name:'전략 보드게임 카탄',desc:'자원과 전략으로 승리하는 게임',emoji:'🏰',url:coupang('7345679290')},{name:'추리 탈출 방 게임',desc:'단서를 찾아 탈출하는 어린이 게임',emoji:'🔐',url:coupang('8456789401')}],
+    '학습도구': [{name:'어린이 논리 사고 워크북',desc:'논리적 사고력을 키우는 문제집',emoji:'🧩',url:coupang('7567890512')},{name:'사고력 수학 교재',desc:'수학으로 배우는 논리적 사고',emoji:'🔢',url:coupang('6678901623')},{name:'마인드맵 플래너',desc:'생각을 구조화하는 마인드맵 도구',emoji:'🗺️',url:coupang('7789012734')}],
+    '디지털':   [{name:'어린이 경제 앱',desc:'투자·경제를 게임으로 배우기',emoji:'💰',url:coupang('8890123845')},{name:'코딩 퍼즐 앱',desc:'논리적 사고로 코딩 문제 해결',emoji:'💻',url:coupang('7901234956')},{name:'전략 시뮬레이션 게임',desc:'도시를 설계하는 전략 게임',emoji:'🏙️',url:coupang('8012346067')}],
+    '운동':     [{name:'어린이 바둑 교재',desc:'수읽기로 통찰력을 키우는 바둑',emoji:'⚫',url:coupang('7123457178')},{name:'양궁 입문 세트',desc:'집중력과 예측력을 키우는 양궁',emoji:'🏹',url:coupang('6234568289')},{name:'체스 + 바둑 2in1',desc:'두뇌 스포츠 두 가지를 한 번에',emoji:'♟️',url:coupang('7345679390')}],
+    '예술':     [{name:'건축 모형 키트',desc:'설계하고 만드는 미니 건축 세트',emoji:'🏗️',url:coupang('8456789501')},{name:'퍼즐 아트 1000조각',desc:'전체를 보는 눈을 키우는 퍼즐',emoji:'🖼️',url:coupang('7567890612')},{name:'만화 스토리보드 노트',desc:'장면을 기획하는 만화 노트',emoji:'💬',url:coupang('6678901723')}],
+  },
+  '용기': {
+    '도서':     [{name:'안네 프랑크 어린이 전기',desc:'용기있게 살았던 소녀의 이야기',emoji:'📔',url:coupang('7789012834')},{name:'겁쟁이가 아니야!',desc:'두려움을 이기는 어린이 동화',emoji:'💪',url:coupang('8890123945')},{name:'도전! 세계 탐험가',desc:'모험으로 세상을 바꾼 탐험가들',emoji:'🗺️',url:coupang('7901235056')}],
+    '활동':     [{name:'어린이 클라이밍 세트',desc:'높이 오르며 용기를 키우는 클라이밍',emoji:'🧗',url:coupang('8012346167')},{name:'어린이 캠핑 세트',desc:'자연에서 혼자 해내는 경험',emoji:'⛺',url:coupang('7123457278')},{name:'서바이벌 보드게임',desc:'위기 상황 판단력을 키우는 게임',emoji:'🎯',url:coupang('6234568389')}],
+    '학습도구': [{name:'용기 확언 카드 50장',desc:'매일 아침 읽는 자신감 카드',emoji:'💬',url:coupang('7345679490')},{name:'어린이 발표력 워크북',desc:'말하는 자신감을 키우는 교재',emoji:'🎤',url:coupang('8456789601')},{name:'도전 일기장',desc:'매일 하나씩 도전을 기록하는 일기',emoji:'📒',url:coupang('7567890712')}],
+    '디지털':   [{name:'어린이 스피치 앱',desc:'발표 연습으로 자신감 키우기',emoji:'🎤',url:coupang('6678901823')},{name:'마인크래프트 교육판',desc:'어려운 미션을 해결하며 성취감',emoji:'🎮',url:coupang('7789012934')},{name:'VR 체험 키트',desc:'가상현실로 두려움을 극복하기',emoji:'🥽',url:coupang('8890124045')}],
+    '운동':     [{name:'어린이 태권도 용품 세트',desc:'도전과 극복을 배우는 태권도',emoji:'🥋',url:coupang('7901235156')},{name:'어린이 수영 교구 세트',desc:'물에 대한 두려움을 이기는 수영',emoji:'🏊',url:coupang('8012346267')},{name:'스케이트보드 입문',desc:'균형과 용기를 키우는 스케이트',emoji:'🛹',url:coupang('7123457378')}],
+    '예술':     [{name:'어린이 연극 대본집',desc:'무대 위에서 용기를 키우는 연극',emoji:'🎭',url:coupang('6234568489')},{name:'즉흥 표현 카드 게임',desc:'생각나는 대로 표현하는 카드',emoji:'🃏',url:coupang('7345679590')},{name:'어린이 스탠드업 코미디',desc:'웃음으로 자신감을 키우는 책',emoji:'😄',url:coupang('8456789701')}],
+  },
+  '진실성': {
+    '도서':     [{name:'안중근 어린이 전기',desc:'신념을 지킨 독립운동가의 이야기',emoji:'🏴',url:coupang('7567890812')},{name:'정직한 아이 동화책',desc:'솔직함의 가치를 배우는 동화',emoji:'💛',url:coupang('6678901923')},{name:'약속을 지킨 친구',desc:'신뢰와 약속에 대한 그림책',emoji:'🤝',url:coupang('7789013034')}],
+    '활동':     [{name:'감정 카드 게임',desc:'솔직한 감정 표현을 연습하는 카드',emoji:'❤️',url:coupang('8890124145')},{name:'토론 보드게임',desc:'자신의 의견을 솔직하게 말하기',emoji:'💬',url:coupang('7901235256')},{name:'신뢰 빌딩 팀 게임',desc:'신뢰를 쌓는 협력 보드게임',emoji:'🤝',url:coupang('8012346367')}],
+    '학습도구': [{name:'감사 일기장',desc:'하루의 솔직한 감정을 쓰는 일기',emoji:'📓',url:coupang('7123457478')},{name:'어린이 양심 교육 카드',desc:'옳고 그름을 생각하는 대화 카드',emoji:'⚖️',url:coupang('6234568589')},{name:'자기 선언문 노트',desc:'내가 지킬 약속을 쓰는 노트',emoji:'✍️',url:coupang('7345679690')}],
+    '디지털':   [{name:'마음 일기 앱',desc:'솔직한 감정을 기록하는 앱',emoji:'📱',url:coupang('8456789801')},{name:'어린이 뉴스 앱',desc:'세상을 솔직하게 보는 어린이 뉴스',emoji:'📰',url:coupang('7567890912')},{name:'토론 학습 유튜브',desc:'자신의 생각을 말하는 연습',emoji:'🎬',url:coupang('6678902023')}],
+    '운동':     [{name:'무술 도복 세트',desc:'예의와 규칙을 배우는 무술',emoji:'🥋',url:coupang('7789013134')},{name:'어린이 골프 세트',desc:'정직이 규칙인 스포츠 골프',emoji:'⛳',url:coupang('8890124245')},{name:'줄넘기 기록 도전 세트',desc:'기록에 솔직한 줄넘기 도전',emoji:'🪢',url:coupang('7901235356')}],
+    '예술':     [{name:'자화상 그리기 키트',desc:'나 자신을 솔직하게 표현하기',emoji:'🖼️',url:coupang('8012346467')},{name:'일기 쓰기 동화',desc:'솔직하게 쓰는 글쓰기 동화',emoji:'📝',url:coupang('7123457578')},{name:'어린이 시 쓰기 노트',desc:'마음속 생각을 시로 표현하기',emoji:'✒️',url:coupang('6234568689')}],
+  },
+  '사랑과 친절': {
+    '도서':     [{name:'방정환 어린이 전기',desc:'어린이를 사랑한 위인의 이야기',emoji:'💛',url:coupang('7345679790')},{name:'친절한 아이 동화책',desc:'나눔과 배려를 배우는 그림책',emoji:'🤗',url:coupang('8456789901')},{name:'이타심 어린이 철학책',desc:'왜 남을 도와야 하는지 이야기',emoji:'❤️',url:coupang('7567891012')}],
+    '활동':     [{name:'봉사활동 체험 키트',desc:'집에서 하는 작은 나눔 활동',emoji:'🤲',url:coupang('6678902123')},{name:'협력 보드게임',desc:'함께 이겨야 하는 협동 게임',emoji:'🎲',url:coupang('7789013234')},{name:'동물 돌봄 놀이 세트',desc:'생명을 돌보는 책임감 놀이',emoji:'🐾',url:coupang('8890124345')}],
+    '학습도구': [{name:'감사 카드 만들기 세트',desc:'고마움을 표현하는 카드 만들기',emoji:'💌',url:coupang('7901235456')},{name:'친절 미션 카드',desc:'하루 한 가지 친절 실천 카드',emoji:'💛',url:coupang('8012346567')},{name:'공감 능력 워크북',desc:'다른 사람 입장에서 생각하기',emoji:'❤️',url:coupang('7123457678')}],
+    '디지털':   [{name:'어린이 헌혈 교육 앱',desc:'나눔의 의미를 배우는 교육 앱',emoji:'❤️',url:coupang('6234568789')},{name:'세계 어린이 돕기 앱',desc:'전 세계 어린이를 이해하는 앱',emoji:'🌍',url:coupang('7345679890')},{name:'감사 영상 편지 앱',desc:'고마운 사람에게 영상 편지 보내기',emoji:'📹',url:coupang('8456789901')}],
+    '운동':     [{name:'어린이 구급법 키트',desc:'다친 친구를 도울 수 있는 응급처치',emoji:'🩺',url:coupang('7567891012')},{name:'함께하는 요가 매트',desc:'부모와 함께하는 어린이 요가',emoji:'🧘',url:coupang('6678902123')},{name:'어린이 달리기 크루 세트',desc:'함께 달리는 팀 달리기 세트',emoji:'🏃',url:coupang('7789013234')}],
+    '예술':     [{name:'퀼트 만들기 키트',desc:'조각을 이어 따뜻함을 만드는 퀼트',emoji:'🪡',url:coupang('8890124345')},{name:'가족 앨범 만들기',desc:'소중한 사람과의 추억을 담는 앨범',emoji:'📸',url:coupang('7901235456')},{name:'손편지 세트',desc:'마음을 담아 쓰는 손편지 키트',emoji:'✉️',url:coupang('8012346567')}],
+  },
+  '사회적 지능': {
+    '도서':     [{name:'감정 코칭 어린이 책',desc:'감정을 읽고 표현하는 방법',emoji:'❤️',url:coupang('7123457778')},{name:'친구 사귀는 법',desc:'관계를 잘 맺는 어린이 사회성 책',emoji:'👫',url:coupang('6234568889')},{name:'비언어 소통 그림책',desc:'표정과 몸짓으로 마음 읽기',emoji:'😊',url:coupang('7345679990')}],
+    '활동':     [{name:'감정 표현 보드게임',desc:'감정을 말하고 공감하는 게임',emoji:'😊',url:coupang('8456790101')},{name:'역할극 인형 세트',desc:'다양한 상황을 연기해보는 놀이',emoji:'🎭',url:coupang('7567891212')},{name:'파티 협력 게임',desc:'여럿이 함께 이기는 협력 게임',emoji:'🎉',url:coupang('6678902323')}],
+    '학습도구': [{name:'감정 일기장',desc:'오늘 내 감정을 그리고 쓰는 일기',emoji:'😊',url:coupang('7789013434')},{name:'공감 대화 카드',desc:'상대 마음을 이해하는 대화 카드',emoji:'💬',url:coupang('8890124545')},{name:'사회성 향상 워크북',desc:'친구 관계를 배우는 활동 교재',emoji:'👥',url:coupang('7901235656')}],
+    '디지털':   [{name:'감정 인식 게임 앱',desc:'표정으로 감정을 맞추는 앱',emoji:'😊',url:coupang('8012346767')},{name:'어린이 심리 앱',desc:'내 마음을 알아가는 어린이 앱',emoji:'🧠',url:coupang('7123457878')},{name:'친구 만들기 미션 앱',desc:'소셜 스킬을 키우는 게임형 앱',emoji:'👫',url:coupang('6234568989')}],
+    '운동':     [{name:'어린이 농구 세트',desc:'패스와 협력으로 배우는 팀 스포츠',emoji:'🏀',url:coupang('7345680090')},{name:'어린이 축구 교실 용품',desc:'팀플레이로 사회성을 키우는 축구',emoji:'⚽',url:coupang('8456790201')},{name:'짝 줄넘기 세트',desc:'함께하는 페어 줄넘기 세트',emoji:'🪢',url:coupang('7567891312')}],
+    '예술':     [{name:'합창단 입문 교재',desc:'함께 소리를 맞추는 합창 경험',emoji:'🎵',url:coupang('6678902423')},{name:'어린이 연극 대본',desc:'친구와 함께 만드는 미니 연극',emoji:'🎭',url:coupang('7789013534')},{name:'그룹 아트 키트',desc:'함께 만드는 대형 공동 작품',emoji:'🎨',url:coupang('8890124645')}],
+  },
+  '리더십과 공정성': {
+    '도서':     [{name:'세종대왕 어린이 전기',desc:'모두를 위한 리더의 이야기',emoji:'👑',url:coupang('7901235756')},{name:'어린이 민주주의',desc:'함께 결정하는 방법을 배우는 책',emoji:'🗳️',url:coupang('8012346867')},{name:'공정한 세상 그림책',desc:'정의와 규칙에 대한 어린이 동화',emoji:'⚖️',url:coupang('7123457978')}],
+    '활동':     [{name:'프로젝트 관리 보드게임',desc:'팀을 이끌어 목표를 달성하는 게임',emoji:'🎯',url:coupang('6234569089')},{name:'어린이 모의 법정 키트',desc:'공정한 판단을 연습하는 게임',emoji:'⚖️',url:coupang('7345680190')},{name:'투표 보드게임',desc:'민주주의를 게임으로 배우기',emoji:'🗳️',url:coupang('8456790301')}],
+    '학습도구': [{name:'어린이 리더십 워크북',desc:'리더의 자질을 기르는 활동 교재',emoji:'👑',url:coupang('7567891412')},{name:'회의 진행 카드',desc:'의견을 모으는 어린이 회의 도구',emoji:'📋',url:coupang('6678902523')},{name:'목표 설정 플래너',desc:'팀 목표를 세우고 이루는 플래너',emoji:'🎯',url:coupang('7789013634')}],
+    '디지털':   [{name:'어린이 경영 시뮬레이션',desc:'가상 회사를 운영하는 경영 게임',emoji:'🏢',url:coupang('8890124745')},{name:'역사 전략 게임 앱',desc:'역사 속 리더가 되어 결정하기',emoji:'🗡️',url:coupang('7901235856')},{name:'팀 프로젝트 앱',desc:'온라인으로 팀을 이끄는 협업 앱',emoji:'👥',url:coupang('8012346967')}],
+    '운동':     [{name:'어린이 야구 세트',desc:'주장의 역할을 배우는 팀 스포츠',emoji:'⚾',url:coupang('7123458078')},{name:'어린이 배드민턴 세트',desc:'복식 팀플레이로 리더십 키우기',emoji:'🏸',url:coupang('6234569189')},{name:'릴레이 달리기 바통',desc:'팀을 믿고 달리는 릴레이 세트',emoji:'🏃',url:coupang('7345680290')}],
+    '예술':     [{name:'어린이 오케스트라 책',desc:'지휘자처럼 전체를 조율하는 이야기',emoji:'🎼',url:coupang('8456790401')},{name:'연극 연출 키트',desc:'무대를 이끄는 연출 경험',emoji:'🎬',url:coupang('7567891512')},{name:'밴드 합주 입문 세트',desc:'함께 음악을 만드는 팀 경험',emoji:'🎸',url:coupang('6678902623')}],
+  },
+  '자기조절': {
+    '도서':     [{name:'감정 조절 동화책',desc:'화나고 슬플 때 마음 다스리기',emoji:'😌',url:coupang('7789013734')},{name:'마음챙김 어린이 책',desc:'명상으로 마음을 고요하게',emoji:'🧘',url:coupang('8890124845')},{name:'습관의 힘 어린이판',desc:'좋은 습관이 인생을 바꾸는 이야기',emoji:'⭐',url:coupang('7901235956')}],
+    '활동':     [{name:'어린이 명상 카드',desc:'하루 5분 마음을 고요하게 하는 카드',emoji:'🧘',url:coupang('8012347067')},{name:'감정 조절 보드게임',desc:'화를 다스리는 방법을 배우는 게임',emoji:'😤',url:coupang('7123458178')},{name:'타이머 학습 세트',desc:'시간을 지키는 습관을 만드는 도구',emoji:'⏱️',url:coupang('6234569289')}],
+    '학습도구': [{name:'어린이 하루 루틴 차트',desc:'규칙적인 생활을 만드는 루틴 표',emoji:'📅',url:coupang('7345680390')},{name:'감정 온도계 카드',desc:'내 감정 상태를 파악하는 도구',emoji:'🌡️',url:coupang('8456790501')},{name:'집중력 플래너',desc:'할 일을 정하고 지키는 플래너',emoji:'✅',url:coupang('7567891612')}],
+    '디지털':   [{name:'Forest 집중력 앱',desc:'나무를 키우며 집중하는 앱',emoji:'🌲',url:'https://www.forestapp.cc'},{name:'마음챙김 명상 앱',desc:'어린이를 위한 짧은 명상 가이드',emoji:'🧘',url:coupang('6678902723')},{name:'루틴 관리 어린이 앱',desc:'해야 할 일을 게임처럼 관리하기',emoji:'✅',url:coupang('7789013834')}],
+    '운동':     [{name:'어린이 요가 매트 세트',desc:'호흡과 균형으로 자기조절 배우기',emoji:'🧘',url:coupang('8890124945')},{name:'어린이 수영 강습 용품',desc:'물속에서 배우는 절제와 인내',emoji:'🏊',url:coupang('7901236056')},{name:'줄넘기 + 기록 카드',desc:'매일 기록하며 꾸준함을 키우기',emoji:'🪢',url:coupang('8012347167')}],
+    '예술':     [{name:'어린이 뜨개질 키트',desc:'꾸준히 해야 완성되는 뜨개질',emoji:'🧶',url:coupang('7123458278')},{name:'색칠하기 명상 북',desc:'집중하며 색을 채우는 명상 컬러링',emoji:'🎨',url:coupang('6234569389')},{name:'오카리나 입문 세트',desc:'숨을 조절하며 배우는 악기',emoji:'🎵',url:coupang('7345680490')}],
+  },
+  '감사와 희망': {
+    '도서':     [{name:'윤동주 시집 어린이판',desc:'감사와 희망을 담은 별 헤는 밤',emoji:'⭐',url:coupang('8456790601')},{name:'긍정의 힘 어린이 책',desc:'매일 감사하는 습관을 키우는 책',emoji:'☀️',url:coupang('7567891712')},{name:'안네의 일기 어린이판',desc:'어둠 속에서도 희망을 찾은 소녀',emoji:'📔',url:coupang('6678902823')}],
+    '활동':     [{name:'감사 나무 만들기 키트',desc:'감사한 일을 적어 붙이는 나무',emoji:'🌳',url:coupang('7789013934')},{name:'소원 램프 만들기',desc:'희망을 담아 만드는 조명 공예',emoji:'🪔',url:coupang('8890125045')},{name:'희망 메시지 보드',desc:'긍정 메시지를 붙이는 패브릭 보드',emoji:'✉️',url:coupang('7901236156')}],
+    '학습도구': [{name:'감사 일기장 365일',desc:'365일 매일 감사를 기록하는 일기',emoji:'📓',url:coupang('8012347267')},{name:'긍정 확언 카드',desc:'아침마다 읽는 희망의 말 카드',emoji:'🌟',url:coupang('7123458378')},{name:'버킷리스트 노트',desc:'하고 싶은 것을 꿈꾸는 버킷리스트',emoji:'🌈',url:coupang('6234569489')}],
+    '디지털':   [{name:'감사 일기 앱',desc:'매일 감사한 것을 기록하는 앱',emoji:'📱',url:coupang('7345680590')},{name:'명상 음악 스피커',desc:'긍정적 에너지를 주는 명상 음악',emoji:'🎵',url:coupang('8456790701')},{name:'긍정 영상 채널',desc:'희망을 주는 어린이 유튜브 채널',emoji:'📺',url:coupang('7567891812')}],
+    '운동':     [{name:'어린이 트레킹 세트',desc:'자연에서 감사함을 느끼는 산행',emoji:'🏔️',url:coupang('6678902923')},{name:'별자리 관측 세트',desc:'밤하늘에서 희망을 찾는 천문대',emoji:'🔭',url:coupang('7789014034')},{name:'어린이 가드닝 키트',desc:'씨앗이 자라는 기쁨을 배우는 텃밭',emoji:'🌱',url:coupang('8890125145')}],
+    '예술':     [{name:'수채화 풍경 그리기',desc:'아름다운 세상을 담는 수채화',emoji:'🌅',url:coupang('7901236256')},{name:'감사 메시지 캘리그라피',desc:'감사의 말을 예쁘게 쓰는 캘리그라피',emoji:'✒️',url:coupang('8012347367')},{name:'포토 다이어리 키트',desc:'소중한 순간을 담는 사진 일기',emoji:'📸',url:coupang('7123458478')}],
+  },
+  '영성': {
+    '도서':     [{name:'원효 어린이 전기',desc:'모든 것은 마음이 만든다는 깨달음',emoji:'☸️',url:coupang('6234569589')},{name:'어린이 철학 질문 책',desc:'왜 사는지 함께 생각하는 책',emoji:'🤔',url:coupang('7345680690')},{name:'세계 종교 그림책',desc:'다양한 믿음과 삶의 방식을 이해',emoji:'🌍',url:coupang('8456790801')}],
+    '활동':     [{name:'명상 캔들 만들기',desc:'고요한 시간을 만드는 캔들 공예',emoji:'🕯️',url:coupang('7567891912')},{name:'자연 명상 산책 키트',desc:'숲에서 감각을 깨우는 명상 세트',emoji:'🌲',url:coupang('6678903023')},{name:'인생 질문 카드',desc:'삶의 의미를 함께 나누는 카드',emoji:'💭',url:coupang('7789014134')}],
+    '학습도구': [{name:'마음 일기장',desc:'깊은 생각을 기록하는 성찰 일기',emoji:'📓',url:coupang('8890125245')},{name:'감사·기도 노트',desc:'조용히 마음을 모으는 기도 노트',emoji:'🙏',url:coupang('7901236356')},{name:'철학 질문 카드',desc:'매일 하나씩 깊은 질문을 던지기',emoji:'💭',url:coupang('8012347467')}],
+    '디지털':   [{name:'어린이 마음챙김 앱',desc:'명상으로 내면을 돌보는 앱',emoji:'🧘',url:coupang('7123458578')},{name:'자연 소리 힐링 앱',desc:'새소리·물소리로 마음을 고요하게',emoji:'🌿',url:coupang('6234569689')},{name:'클래식 명상 음악',desc:'마음을 편안하게 하는 클래식 모음',emoji:'🎼',url:coupang('7345680790')}],
+    '운동':     [{name:'어린이 명상 요가 세트',desc:'몸과 마음을 함께 고요하게 하기',emoji:'🧘',url:coupang('8456790901')},{name:'자연 관찰 산책 세트',desc:'걸으며 자연과 연결되는 산책',emoji:'🌿',url:coupang('7567892012')},{name:'별자리 관측 망원경',desc:'우주를 바라보며 경이로움 느끼기',emoji:'🔭',url:coupang('6678903123')}],
+    '예술':     [{name:'만다라 컬러링 북',desc:'원을 채우며 명상하는 컬러링',emoji:'🔮',url:coupang('7789014234')},{name:'도예 입문 세트',desc:'흙을 만지며 마음을 다스리는 도예',emoji:'🏺',url:coupang('8890125345')},{name:'어린이 시 쓰기 노트',desc:'마음속 이야기를 시로 표현하기',emoji:'✒️',url:coupang('7901236456')}],
+  },
+};
+
+/* ── 성장 나침반 상태 ── */
+let compassSelectedType = null;  /* 현재 선택된 성향 */
+let compassSelectedCat  = '도서'; /* 현재 선택된 카테고리 */
+let compassIsGrowth     = false;  /* 성장가능성 성향 여부 */
+
+/* ── 결과 화면 빌드 후 성장 나침반 채우기 ── */
+function buildCompass(scores) {
+  const childName = document.getElementById('child-name').value.trim() || '이 아이';
+  const pf = namePostfix(childName);
+
+  /* 전체 12개 성향 정렬 */
+  const sorted = TYPES.map(t => ({ type: t, score: scores[t] || 0 }))
+    .sort((a, b) => b.score - a.score);
+
+  const top3    = sorted.slice(0, 3);
+  const bottom3 = sorted.slice(-3).reverse(); /* 낮은 순 */
+
+  /* 제목 */
+  document.getElementById('compass-title').innerHTML =
+    childName + pf + '의<br>강점과 성장 나침반';
+  document.getElementById('compass-sub').textContent =
+    '성향을 탭하면 맞춤 추천을 볼 수 있어요';
+
+  const row = document.getElementById('strength-row');
+  row.innerHTML = '';
+
+  /* 강점 TOP3 */
+  const rankClass = ['rank-gold','rank-silver','rank-bronze'];
+  const rankLabel = ['1위','2위','3위'];
+  const rankEmoji = ['🥇','🥈','🥉'];
+  top3.forEach((item, i) => {
+    row.innerHTML += `
+      <div class="strength-item" onclick="selectStrength(this,'${item.type}',false)">
+        <div class="strength-rank ${rankClass[i]}">${rankEmoji[i]}</div>
+        <div class="strength-info">
+          <div class="strength-name">⭐ ${item.type}</div>
+          <div class="strength-desc">${TYPE_DESC[item.type] || ''}</div>
+        </div>
+        <div class="strength-arrow">›</div>
+      </div>`;
+  });
+
+  /* 구분선 */
+  row.innerHTML += `
+    <div style="display:flex;align-items:center;gap:10px;margin:4px 0;">
+      <div style="flex:1;height:1px;background:rgba(45,90,39,0.15);"></div>
+      <div style="font-size:11px;font-weight:700;color:var(--forest);white-space:nowrap;">🌱 성장 가능성</div>
+      <div style="flex:1;height:1px;background:rgba(45,90,39,0.15);"></div>
+    </div>`;
+
+  /* 성장 가능성 BOTTOM3 */
+  const growthRank = ['rank-g1','rank-g2','rank-g3'];
+  bottom3.forEach((item, i) => {
+    row.innerHTML += `
+      <div class="strength-item growth-item" onclick="selectStrength(this,'${item.type}',true)">
+        <div class="strength-rank ${growthRank[i]}">🌱</div>
+        <div class="strength-info">
+          <div class="strength-name" style="color:var(--forest)">${item.type}</div>
+          <div class="strength-desc">${GROWTH_DESC[item.type] || ''}</div>
+        </div>
+        <div class="strength-arrow">›</div>
+      </div>`;
+  });
+}
+
+/* ── 성향 선택 ── */
+function selectStrength(el, type, isGrowth) {
+  /* 선택 표시 */
+  document.querySelectorAll('.strength-item').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+
+  compassSelectedType = type;
+  compassIsGrowth     = isGrowth;
+  compassSelectedCat  = '도서';
+
+  /* 카테고리 탭 표시 */
+  const tabs = document.getElementById('cat-tabs');
+  tabs.style.display = 'flex';
+
+  /* 탭 활성 색상 (강점=네이비, 성장=포레스트) */
+  document.querySelectorAll('.cat-tab').forEach((t, i) => {
+    t.classList.remove('active','growth-active');
+    if (i === 0) t.classList.add(isGrowth ? 'growth-active' : 'active');
+  });
+
+  /* 상품 표시 */
+  showProducts(type, '도서', isGrowth);
+}
+
+/* ── 카테고리 선택 ── */
+function selectCat(el, cat) {
+  document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active','growth-active'));
+  el.classList.add(compassIsGrowth ? 'growth-active' : 'active');
+  compassSelectedCat = cat;
+  showProducts(compassSelectedType, cat, compassIsGrowth);
+}
+
+/* ── 상품 표시 ── */
+function showProducts(type, cat, isGrowth) {
+  const list = document.getElementById('product-list');
+  const notice = document.getElementById('compass-notice');
+  const products = COMPASS_PRODUCTS[type]?.[cat] || [];
+
+  list.style.display = 'flex';
+  notice.style.display = 'block';
+
+  if (products.length === 0) {
+    list.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text-light);font-size:13px;">준비 중이에요</div>`;
+    return;
+  }
+
+  const ctaClass = isGrowth ? 'product-cta-growth' : '';
+  const ctaColor = isGrowth ? 'var(--forest)' : 'var(--navy)';
+  const tagText  = isGrowth ? `🌱 ${type} 키우기` : `⭐ ${type} 강화`;
+
+  list.innerHTML = products.map(p => `
+    <a class="product-card" href="${p.url}" target="_blank" rel="noopener noreferrer sponsored">
+      <div class="product-thumb">${p.emoji}</div>
+      <div class="product-info">
+        <div class="product-name">${p.name}</div>
+        <div class="product-desc">${p.desc}</div>
+        <div class="product-cta ${ctaClass}">
+          쿠팡에서 보기 →
+        </div>
+      </div>
+    </a>`).join('');
+
+  /* 부드럽게 스크롤 */
+  list.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+
+function namePostfix(name) {
+  if (!name) return '이';
+  const last = name.charCodeAt(name.length - 1);
+  if (last < 0xAC00 || last > 0xD7A3) return '이'; /* 한글 아니면 '이' */
+  return (last - 0xAC00) % 28 === 0 ? '' : '이'; /* 받침 없으면 '' */
+}
+
+/* ══════════════════════════════
+   Firebase 세션 관리
+══════════════════════════════ */
+let db = null;
+let fs = null; /* firestore helpers */
+let currentSessionId  = null;  /* 현재 세션 ID (Firestore doc ID) */
+let currentSessionCode = null; /* 표시용 코드 (MINJUN-A3F9) */
+let respondentDocId   = null;  /* 내 응답자 doc ID */
+let sessionUnsubscribe = null; /* 실시간 리스너 해제 함수 */
+
+/* Firebase 준비 완료 후 초기화 */
+window.addEventListener('firebase-ready', () => {
+  db = window._db;
+  fs = window._fsHelpers;
+  console.log('Firebase 연결 완료');
+  onSessionNameInput(); /* 입력값 있으면 버튼 활성화 */
+});
+
+/* ── 세션 화면 UI ── */
+function switchSessionMode(mode) {
+  const isCre = mode === 'create';
+  document.getElementById('btn-mode-create').classList.toggle('active', isCre);
+  document.getElementById('btn-mode-join').classList.toggle('active', !isCre);
+  document.getElementById('panel-create').classList.toggle('active', isCre);
+  document.getElementById('panel-join').classList.toggle('active', !isCre);
+}
+
+function onSessionNameInput() {
+  const childName  = document.getElementById('session-child-name').value.trim();
+  const creatorName = document.getElementById('creator-name').value.trim();
+  const btn = document.getElementById('btn-create-session');
+  const preview = document.getElementById('session-code-preview');
+  if (childName.length > 0) {
+    const code = generateCode(childName);
+    document.getElementById('preview-code').textContent = code;
+    preview.style.display = 'block';
+  } else {
+    preview.style.display = 'none';
+  }
+  const ok = childName.length > 0 && creatorName.length > 0;
+  btn.classList.toggle('on', ok);
+}
+
+function onJoinCodeInput() {
+  const code = document.getElementById('join-code-input').value.trim().toUpperCase();
+  const name = document.getElementById('joiner-name').value.trim();
+  const btn  = document.getElementById('btn-join-session');
+  const info = document.getElementById('join-session-info');
+  const err  = document.getElementById('join-error');
+  info.style.display = 'none';
+  err.style.display  = 'none';
+  btn.classList.toggle('on', code.length >= 6 && name.length > 0);
+}
+
+/* ── 세션 코드 생성: 아이이름(최대5자)-랜덤4자 ── */
+function generateCode(childName) {
+  const prefix = childName.toUpperCase()
+    .replace(/[^A-Z0-9가-힣]/g, '')
+    .substring(0, 5);
+  /* 한글을 로마자로 변환 (간단 음역) */
+  const romanized = prefix
+    .replace(/[가나다]/g,'GA').replace(/[마바사]/g,'MA')
+    .replace(/[아자차]/g,'A').replace(/[카타파하]/g,'KA')
+    .replace(/[ㄱ-ㅎ가-힣]/g, c => {
+      const code = c.charCodeAt(0);
+      if (code >= 0xAC00 && code <= 0xD7A3) {
+        /* 유니코드 한글 → 초성 추출 */
+        const cho = ['G','GG','N','D','DD','R','M','B','BB','S','SS','','J','JJ','CH','K','T','P','H'];
+        const idx = Math.floor((code - 0xAC00) / 28 / 21);
+        return cho[idx] || 'K';
+      }
+      return c;
+    })
+    .substring(0, 5);
+  const suffix = Math.random().toString(36).substring(2, 6).toUpperCase();
+  return (romanized || 'WEIN') + '-' + suffix;
+}
+
+/* ── 세션 만들기 ── */
+async function createSession() {
+  const btn = document.getElementById('btn-create-session');
+
+  /* 버튼 로딩 상태 */
+  const setBtnLoading = (loading) => {
+    if (!btn) return;
+    btn.textContent = loading ? '⏳ 세션 만드는 중...' : '세션 만들고 설문 시작 →';
+    if (loading) {
+      btn.classList.remove('on');
+      btn.style.opacity = '0.7';
+      btn.style.pointerEvents = 'none';
+    } else {
+      /* 입력값 있으면 다시 활성화 */
+      const cn = document.getElementById('session-child-name')?.value.trim();
+      const cr = document.getElementById('creator-name')?.value.trim();
+      btn.classList.toggle('on', !!(cn && cr));
+      btn.style.opacity = '';
+      btn.style.pointerEvents = '';
+    }
+  };
+  setBtnLoading(true);
+
+  /* Firebase 준비 대기 (최대 8초) */
+  if (!db) {
+    const ready = await new Promise(resolve => {
+      const timeout = setTimeout(() => resolve(false), 8000);
+      window.addEventListener('firebase-ready', () => {
+        clearTimeout(timeout); resolve(true);
+      }, { once: true });
+    });
+    if (!ready || !db) {
+      setBtnLoading(false);
+      showToast('인터넷 연결을 확인해주세요. 다시 시도해주세요.');
+      return;
+    }
+  }
+
+  const childName   = document.getElementById('session-child-name').value.trim();
+  const creatorName = document.getElementById('creator-name').value.trim();
+  if (!childName || !creatorName) { setBtnLoading(false); return; }
+
+  const code = document.getElementById('preview-code').textContent;
+
+  try {
+    const { doc, setDoc, serverTimestamp } = fs;
+    /* 세션 문서 생성 */
+    const sessionRef = doc(db, 'sessions', code);
+    await setDoc(sessionRef, {
+      childName,
+      code,
+      createdBy: creatorName,
+      createdAt: serverTimestamp(),
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      status: 'active',
+    });
+
+    currentSessionId   = code;
+    currentSessionCode = code;
+
+    /* 아이 이름을 앱 전역에 반영 */
+    document.getElementById('child-name').value = childName;
+
+    /* 내 응답자 doc 예약 생성 */
+    const respRef = doc(db, 'sessions', code, 'respondents', creatorName);
+    await setDoc(respRef, {
+      label: creatorName,
+      icon: whoIcon || 'adult',
+      whoType: whoType || 'adult',
+      status: 'pending',
+      joinedAt: serverTimestamp(),
+    });
+    respondentDocId = creatorName;
+
+    showToast('세션 생성 완료! 코드: ' + code + ' 🎉');
+    /* 세션 코드 localStorage에 저장 (재방문 복원용) */
+    saveSessionToLocal(code, childName, creatorName);
+    /* 응답자 선택 화면으로 */
+    goTo('s-who');
+    /* 실시간 리스너 시작 */
+    startSessionListener(code);
+
+  } catch(e) {
+    console.error(e);
+    setBtnLoading(false);
+    showToast('세션 생성에 실패했어요. 다시 시도해주세요.');
+  }
+}
+
+/* ── 세션 참여 ── */
+async function joinSession() {
+  const joinBtn = document.getElementById('btn-join-session');
+  if (joinBtn) {
+    joinBtn.textContent = '⏳ 참여 중...';
+    joinBtn.style.opacity = '0.7';
+    joinBtn.style.pointerEvents = 'none';
+  }
+
+  /* Firebase 준비 대기 (최대 8초) */
+  if (!db) {
+    showToast('Firebase 연결 중...');
+    const ready = await new Promise(resolve => {
+      const timeout = setTimeout(() => resolve(false), 8000);
+      window.addEventListener('firebase-ready', () => {
+        clearTimeout(timeout); resolve(true);
+      }, { once: true });
+    });
+    if (!ready || !db) {
+      joinBtn.textContent = '참여하고 설문 시작 →';
+      joinBtn.style.opacity = '';
+      joinBtn.style.pointerEvents = '';
+      showToast('인터넷 연결을 확인해주세요.');
+      return;
+    }
+  }
+  const code = document.getElementById('join-code-input').value.trim().toUpperCase();
+  const name = document.getElementById('joiner-name').value.trim();
+  if (!code || !name) {
+    joinBtn.textContent = '참여하고 설문 시작 →';
+    joinBtn.style.opacity = '';
+    return;
+  }
+
+  showToast('세션을 찾고 있어요...');
+  try {
+    const { doc, getDoc, setDoc, serverTimestamp } = fs;
+    const sessionSnap = await getDoc(doc(db, 'sessions', code));
+    if (!sessionSnap.exists()) {
+      document.getElementById('join-error').style.display = 'block';
+      joinBtn.textContent = '참여하고 설문 시작 →';
+      joinBtn.style.opacity = '';
+      joinBtn.style.pointerEvents = '';
+      showToast('세션 코드를 찾을 수 없어요.');
+      return;
+    }
+    const sessionData = sessionSnap.data();
+    const childName   = sessionData.childName;
+
+    if (sessionData.expiresAt && sessionData.expiresAt.toDate() < new Date()) {
+      joinBtn.textContent = '참여하고 설문 시작 →';
+      joinBtn.style.opacity = ''; joinBtn.style.pointerEvents = '';
+      showToast('만료된 세션이에요. 새 세션을 만들어주세요.');
+      return;
+    }
+
+    currentSessionId   = code;
+    currentSessionCode = code;
+    document.getElementById('child-name').value = childName;
+
+    const respRef = doc(db, 'sessions', code, 'respondents', name);
+    await setDoc(respRef, {
+      label: name, icon: 'adult', whoType: 'adult',
+      status: 'pending', joinedAt: serverTimestamp(),
+    });
+    respondentDocId = name;
+    whoLabel = name;
+
+    showToast(childName + ' 세션에 참여했어요! 👋');
+    saveSessionToLocal(code, childName, name);
+    goTo('s-who');
+    startSessionListener(code);
+
+  } catch(e) {
+    console.error(e);
+    joinBtn.textContent = '참여하고 설문 시작 →';
+    joinBtn.style.opacity = ''; joinBtn.style.pointerEvents = '';
+    showToast('참여에 실패했어요. 다시 시도해주세요.');
+  }
+}
+
+/* ── 실시간 세션 리스너 ── */
+function startSessionListener(code) {
+  if (!db) return;
+  if (sessionUnsubscribe) sessionUnsubscribe();
+  const { collection, onSnapshot } = fs;
+  sessionUnsubscribe = onSnapshot(
+    collection(db, 'sessions', code, 'respondents'),
+    (snapshot) => {
+      const respondents = [];
+      snapshot.forEach(d => respondents.push({ id: d.id, ...d.data() }));
+      onSessionUpdate(respondents);
+    }
+  );
+}
+
+/* ── 세션 업데이트 처리 ── */
+function onSessionUpdate(respondents) {
+  /* 결과 화면이 활성화된 경우 탭·차트 실시간 갱신 */
+  const resultScreen = document.getElementById('s-result');
+  if (resultScreen && resultScreen.classList.contains('active')) {
+    /* 완료된 응답자만 추출 */
+    const done = respondents.filter(r => r.status === 'done' && r.scores);
+    if (done.length > sessions.length) {
+      /* 새 응답자 추가 — sessions 배열에 병합 */
+      done.forEach(r => {
+        if (!sessions.find(s => s.label === r.label)) {
+          sessions.push({
+            label:  r.label,
+            icon:   r.icon || 'adult',
+            scores: r.scores,
+            top3:   r.top3 || [],
+            figure: FIGURES.find(f => f.name === r.figureName) || sessions[0]?.figure,
+          });
+        }
+      });
+      buildTabs();
+      const name = document.getElementById('child-name').value.trim() || '이 아이';
+      buildNarrative(name, calcScores());
+      buildChart(sessions.map(s => s.scores));
+      buildCompass(calcScores());
+    }
+    /* 배지 업데이트 */
+    const el = document.getElementById('rh-badge-text');
+    if (el) el.textContent = done.length + '명 참여';
+  }
+}
+
+/* ── 결과를 Firebase에 저장 ── */
+async function saveResultToFirebase(figure, scores, top3) {
+  if (!db || !currentSessionId || !respondentDocId) return;
+  try {
+    const { doc, setDoc } = fs;
+    await setDoc(doc(db, 'sessions', currentSessionId, 'respondents', respondentDocId), {
+      label:      whoLabel,
+      icon:       whoIcon,
+      whoType,
+      scores,
+      top3:       top3.map(t => t.type),
+      figureName: figure.name,
+      figurePrimary: figure.primary,
+      status:     'done',
+      completedAt: fs.serverTimestamp(),
+    }, { merge: true });
+  } catch(e) {
+    console.error('Firebase 저장 실패:', e);
+  }
+}
+
+
+/* ══════════════════════════════
+   세션 localStorage 저장 · 복원
+══════════════════════════════ */
+function saveSessionToLocal(code, childName, myName) {
+  try {
+    localStorage.setItem('wein_session', JSON.stringify({
+      code, childName, myName,
+      savedAt: new Date().toISOString(),
+    }));
+  } catch(e) {}
+}
+
+function loadSessionFromLocal() {
+  try {
+    const raw = localStorage.getItem('wein_session');
+    if (!raw) return null;
+    const data = JSON.parse(raw);
+    /* 7일 이내 세션만 유효 */
+    const savedAt = new Date(data.savedAt);
+    if (Date.now() - savedAt.getTime() > 7 * 24 * 60 * 60 * 1000) {
+      localStorage.removeItem('wein_session');
+      return null;
+    }
+    return data;
+  } catch(e) { return null; }
+}
+
+function clearSessionFromLocal() {
+  try { localStorage.removeItem('wein_session'); } catch(e) {}
+}
+
+/* ── Firebase에서 세션 전체 참여자 결과 불러오기 ── */
+async function restoreSessionFromFirebase(code) {
+  if (!db) {
+    /* Firebase 아직 준비 안 됐으면 ready 후 재시도 */
+    window.addEventListener('firebase-ready', () => restoreSessionFromFirebase(code), { once: true });
+    return;
+  }
+  try {
+    const { doc, getDoc, collection, getDocs } = fs;
+
+    /* 세션 문서 확인 */
+    const { getDocs: gd } = fs;
+    const sessionSnap = await getDoc(doc(db, 'sessions', code));
+    if (!sessionSnap.exists()) {
+      showToast('세션이 만료됐거나 존재하지 않아요.');
+      clearSessionFromLocal();
+      return;
+    }
+    const sessionData = sessionSnap.data();
+    const childName   = sessionData.childName;
+
+    /* 아이 이름 복원 */
+    document.getElementById('child-name').value = childName;
+    currentSessionId   = code;
+    currentSessionCode = code;
+
+    /* 완료된 응답자 전체 불러오기 */
+    const respSnap = await getDocs
+      ? getDocs(collection(db, 'sessions', code, 'respondents'))
+      : await (async () => {
+          /* getDocs 없으면 onSnapshot으로 1회 읽기 */
+          return new Promise(resolve => {
+            const { onSnapshot, collection: col } = fs;
+            const unsub = onSnapshot(col(db, 'sessions', code, 'respondents'), snap => {
+              unsub();
+              resolve(snap);
+            });
+          });
+        })();
+
+    const restored = [];
+    respSnap.forEach(d => {
+      const r = d.data();
+      if (r.status === 'done' && r.scores) {
+        const figure = FIGURES.find(f => f.name === r.figureName)
+                    || FIGURES.find(f => f.primary === r.figurePrimary)
+                    || FIGURES[0];
+        restored.push({
+          label:  r.label,
+          icon:   r.icon || 'adult',
+          scores: r.scores,
+          top3:   (r.top3 || []).map(t => ({ type: t, score: r.scores[t] || 0 })),
+          figure,
+        });
+      }
+    });
+
+    if (restored.length === 0) {
+      showToast('아직 완료한 참여자가 없어요. 설문을 먼저 진행해주세요.');
+      /* 이전 세션 있으니 s-who로 */
+      goTo('s-who');
+      startSessionListener(code);
+      return;
+    }
+
+    /* sessions 배열 복원 */
+    sessions = restored;
+
+    /* 결과 화면 빌드 */
+    const name = childName || '이 아이';
+    const gradeLabel = ageGroup === 'lower' ? '초1~4학년' : '초5~중2';
+    const badgeText = document.getElementById('rh-badge-text');
+    if (badgeText) badgeText.textContent = sessions.length + '명 참여';
+    document.getElementById('rh-name').innerHTML = name;
+
+    buildTabs();
+    buildNarrative(name, sessions[0].scores);
+    buildChart(sessions.map(s => s.scores));
+    buildCompass(sessions[0].scores);
+
+    goTo('s-result');
+    /* 실시간 리스너 시작 (이후 참여자 자동 추가) */
+    startSessionListener(code);
+
+    showToast(sessions.length + '명의 결과를 불러왔어요 ✨');
+
+  } catch(e) {
+    console.error('세션 복원 실패:', e);
+    showToast('결과를 불러오는 데 실패했어요. 다시 시도해주세요.');
+  }
+}
+
+/* ── 재방문 시 이전 세션 배너 표시 ── */
+function checkPreviousSession() {
+  const prev = loadSessionFromLocal();
+  if (!prev) return;
+
+  const banner = document.getElementById('prev-result-banner');
+  if (!banner) return;
+
+  banner.innerHTML = `
+    <div style="background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.18);
+                border-radius:12px;padding:14px 16px;margin-bottom:16px;">
+      <div style="font-size:10px;color:rgba(255,255,255,0.50);margin-bottom:6px;">
+        이전에 진행한 세션
+      </div>
+      <div style="font-size:14px;color:rgba(255,255,255,0.92);font-weight:700;margin-bottom:2px;">
+        ${prev.childName}이 세션
+        <span style="font-size:12px;color:rgba(255,255,255,0.55);font-weight:400;margin-left:6px;">
+          코드: ${prev.code}
+        </span>
+      </div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.60);margin-bottom:12px;">
+        ${prev.myName}으로 참여 중
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button onclick="restoreSessionFromFirebase('${prev.code}')"
+          style="flex:1;padding:10px;background:var(--accent);color:var(--charcoal);
+                 border:none;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;">
+          결과 이어보기 →
+        </button>
+        <button onclick="clearSessionFromLocal(); document.getElementById('prev-result-banner').style.display='none';"
+          style="padding:10px 14px;background:rgba(255,255,255,0.10);color:rgba(255,255,255,0.60);
+                 border:none;border-radius:10px;font-size:12px;cursor:pointer;">
+          닫기
+        </button>
+      </div>
+    </div>`;
+  banner.style.display = 'block';
+}
+
+/* 페이지 로드 초기화 */
+window.addEventListener('DOMContentLoaded', () => {
+  checkPreviousResult();
+  checkPreviousSession();
+  checkUrlCode();       /* URL에 코드 있으면 자동 참여 화면 진입 */
+});
+
+/* URL 파라미터에서 세션 코드 자동 감지 */
+function checkUrlCode() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const code   = params.get('code');
+    if (!code) return;
+
+    /* 세션 화면의 코드 입력란에 자동 삽입 */
+    goTo('s-session');
+    switchSessionMode('join');
+
+    /* Firebase 준비 후 코드 자동 입력 */
+    const fillCode = () => {
+      const input = document.getElementById('join-code-input');
+      if (input) {
+        input.value = code.toUpperCase();
+        onJoinCodeInput();
+        showToast('초대 링크로 접속됐어요! 이름을 입력하고 참여해주세요 👋');
+      }
+    };
+
+    if (window._db) {
+      fillCode();
+    } else {
+      window.addEventListener('firebase-ready', fillCode, { once: true });
+    }
+
+    /* URL에서 코드 파라미터 제거 (뒤로가기 시 중복 방지) */
+    const cleanUrl = window.location.pathname;
+    window.history.replaceState({}, '', cleanUrl);
+
+  } catch(e) { /* URLSearchParams 미지원 환경 무시 */ }
+}
+</script>
+</body>
+</html>
