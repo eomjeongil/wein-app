@@ -2886,26 +2886,136 @@ function selectCat(el, cat) {
   showProducts(compassSelectedType, cat, compassIsGrowth);
 }
 
+const PARTNER_SEARCH_LINKS = {
+  '호기심': {
+    '도서': 'https://link.coupang.com/a/et9XTO',
+    '활동': 'https://link.coupang.com/a/et9YzV',
+    '학습도구': 'https://link.coupang.com/a/et9Y15',
+    '디지털': 'https://link.coupang.com/a/et9Znb',
+    '운동': 'https://link.coupang.com/a/et9ZIT',
+    '예술': 'https://link.coupang.com/a/et90yO',
+  },
+  '학구열': {
+    '도서': 'https://link.coupang.com/a/et90Wf',
+    '활동': 'https://link.coupang.com/a/et91xP',
+    '학습도구': 'https://link.coupang.com/a/et91Uf',
+    '디지털': 'https://link.coupang.com/a/et93fw',
+    '운동': 'https://link.coupang.com/a/et93E9',
+    '예술': 'https://link.coupang.com/a/et932r',
+  },
+  '창의성': {
+    '도서': 'https://link.coupang.com/a/et94ot',
+    '활동': 'https://link.coupang.com/a/et94K9',
+    '학습도구': 'https://link.coupang.com/a/et959g',
+    '디지털': 'https://link.coupang.com/a/et96zI',
+    '운동': 'https://link.coupang.com/a/et96VJ',
+    '예술': 'https://link.coupang.com/a/et97hf',
+  },
+  '통찰력': {
+    '도서': 'https://link.coupang.com/a/et98KW',
+    '활동': 'https://link.coupang.com/a/et98KW',
+    '학습도구': 'https://link.coupang.com/a/et9877',
+    '디지털': 'https://link.coupang.com/a/et99BG',
+    '운동': 'https://link.coupang.com/a/et99WQ',
+    '예술': 'https://link.coupang.com/a/euaai5',
+  },
+  '용기': {
+    '도서': 'https://link.coupang.com/a/euaaGW',
+    '활동': 'https://link.coupang.com/a/euabk2',
+    '학습도구': 'https://link.coupang.com/a/euabGQ',
+    '디지털': 'https://link.coupang.com/a/euacb4',
+    '운동': 'https://link.coupang.com/a/euacw5',
+    '예술': 'https://link.coupang.com/a/euacWs',
+  },
+  '진실성': {
+    '도서': 'https://link.coupang.com/a/euadhU',
+    '활동': 'https://link.coupang.com/a/euaehL',
+    '학습도구': 'https://link.coupang.com/a/euaeIC',
+    '디지털': 'https://link.coupang.com/a/euae1A',
+    '운동': 'https://link.coupang.com/a/eualmh',
+    '예술': 'https://link.coupang.com/a/eualKk',
+  },
+  '사랑과 친절': {
+    '도서': 'https://link.coupang.com/a/eual3o',
+    '활동': 'https://link.coupang.com/a/euamqk',
+    '학습도구': 'https://link.coupang.com/a/euanhu',
+    '디지털': 'https://link.coupang.com/a/euanz3',
+    '운동': 'https://link.coupang.com/a/euanSu',
+    '예술': 'https://link.coupang.com/a/euaoUS',
+  },
+  '사회적 지능': {
+    '도서': 'https://link.coupang.com/a/euaphu',
+    '활동': 'https://link.coupang.com/a/euapI6',
+    '학습도구': 'https://link.coupang.com/a/euap6j',
+    '디지털': 'https://link.coupang.com/a/euaqs2',
+    '운동': 'https://link.coupang.com/a/euaqMt',
+    '예술': 'https://link.coupang.com/a/euaq7C',
+  },
+  '리더십과 공정성': {
+    '도서': 'https://link.coupang.com/a/euaru0',
+    '활동': 'https://link.coupang.com/a/euarPy',
+    '학습도구': 'https://link.coupang.com/a/euaseb',
+    '디지털': 'https://link.coupang.com/a/euasyM',
+    '운동': 'https://link.coupang.com/a/euasXt',
+    '예술': 'https://link.coupang.com/a/euatiR',
+  },
+  '자기조절': {
+    '도서': 'https://link.coupang.com/a/euatKo',
+    '활동': 'https://link.coupang.com/a/euat64',
+    '학습도구': 'https://link.coupang.com/a/euauCa',
+    '디지털': 'https://link.coupang.com/a/euauYv',
+    '운동': 'https://link.coupang.com/a/euavm5',
+    '예술': 'https://link.coupang.com/a/euavNv',
+  },
+  '감사와 희망': {
+    '도서': 'https://link.coupang.com/a/euawBJ',
+    '활동': 'https://link.coupang.com/a/euaw1T',
+    '학습도구': 'https://link.coupang.com/a/euakO1',
+    '디지털': 'https://link.coupang.com/a/euaknW',
+    '운동': 'https://link.coupang.com/a/euajNV',
+    '예술': 'https://link.coupang.com/a/euaiQl',
+  },
+  '영성': {
+    '도서': 'https://link.coupang.com/a/euairv',
+    '활동': 'https://link.coupang.com/a/euah4Y',
+    '학습도구': 'https://link.coupang.com/a/euahID',
+    '디지털': 'https://link.coupang.com/a/euahib',
+    '운동': 'https://link.coupang.com/a/euaf6N',
+    '예술': 'https://link.coupang.com/a/euafKz',
+  },
+};
+
 /* ── 상품 표시 ── */
 function showProducts(type, cat, isGrowth) {
-  const list = document.getElementById('product-list');
-  const notice = document.getElementById('compass-notice');
-  const products = COMPASS_PRODUCTS[type]?.[cat] || [];
+  const list    = document.getElementById('product-list');
+  const notice  = document.getElementById('compass-notice');
+
+  /* 카테고리 표시명 → 내부 키 변환 */
+  const catKeyMap = {
+    '도서':'도서', '활동·놀이':'활동', '학습도구':'학습도구',
+    '디지털':'디지털', '운동·헬스':'운동', '예술·창작':'예술'
+  };
+  const catKey = catKeyMap[cat] || cat;
+
+  /* 파트너스 검색 링크 (우선) */
+  const partnerUrl = PARTNER_SEARCH_LINKS[type]?.[catKey] || '';
+  const products   = COMPASS_PRODUCTS[type]?.[catKey] || COMPASS_PRODUCTS[type]?.[cat] || [];
 
   list.style.display = 'flex';
   notice.style.display = 'block';
 
-  if (products.length === 0) {
+  if (products.length === 0 && !partnerUrl) {
     list.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text-light);font-size:13px;">준비 중이에요</div>`;
     return;
   }
 
   const ctaClass = isGrowth ? 'product-cta-growth' : '';
-  const ctaColor = isGrowth ? 'var(--forest)' : 'var(--navy)';
-  const tagText  = isGrowth ? `🌱 ${type} 키우기` : `⭐ ${type} 강화`;
 
-  list.innerHTML = products.map(p => `
-    <a class="product-card" href="${p.url}" target="_blank" rel="noopener noreferrer sponsored">
+  /* 상품 카드: 파트너스 링크 적용 */
+  list.innerHTML = products.map(p => {
+    const href = partnerUrl || p.url;
+    return `
+    <a class="product-card" href="${href}" target="_blank" rel="noopener noreferrer sponsored">
       <div class="product-thumb">${p.emoji}</div>
       <div class="product-info">
         <div class="product-name">${p.name}</div>
@@ -2914,9 +3024,21 @@ function showProducts(type, cat, isGrowth) {
           쿠팡에서 보기 →
         </div>
       </div>
-    </a>`).join('');
+    </a>`;
+  }).join('');
 
-  /* 부드럽게 스크롤 */
+  /* 파트너스 검색결과 전체 보기 버튼 */
+  if (partnerUrl) {
+    list.innerHTML += `
+      <a href="${partnerUrl}" target="_blank" rel="noopener noreferrer sponsored"
+        style="display:flex;align-items:center;justify-content:center;gap:6px;
+               padding:12px;background:var(--cream-dark);border:1px solid var(--border);
+               border-radius:var(--r-md);text-decoration:none;color:var(--navy);
+               font-size:12px;font-weight:700;">
+        🛒 쿠팡에서 더 많은 상품 보기 →
+      </a>`;
+  }
+
   list.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
