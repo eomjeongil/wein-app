@@ -280,7 +280,25 @@ input[type=range]#score-range:active::-webkit-slider-thumb { transform:scale(1.1
 .chart-legend { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
 .legend-item { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--text-sub); font-weight:500; }
 .legend-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
-/* ── 세션 화면 ── */
+/* ── 세션 초대 화면 ── */
+#s-invite { padding:32px 24px 40px; }
+.invite-code-box { background:var(--navy); border-radius:var(--r-lg); padding:24px 20px; text-align:center; margin:20px 0; }
+.invite-code-label { font-size:11px; color:rgba(255,255,255,0.55); font-weight:600; margin-bottom:8px; letter-spacing:0.4px; }
+.invite-code-big { font-size:36px; font-weight:900; color:white; letter-spacing:6px; margin-bottom:8px; }
+.invite-code-hint { font-size:12px; color:rgba(255,255,255,0.50); }
+.invite-share-btns { display:flex; flex-direction:column; gap:10px; margin:20px 0; }
+.invite-btn-copy { width:100%; padding:16px; background:var(--accent); color:var(--charcoal); border:none; border-radius:var(--r-md); font-size:15px; font-weight:800; cursor:pointer; transition:all 0.18s; }
+.invite-btn-copy:active { transform:scale(0.98); }
+.invite-btn-survey { width:100%; padding:16px; background:var(--white); color:var(--navy); border:2px solid var(--navy); border-radius:var(--r-md); font-size:15px; font-weight:800; cursor:pointer; transition:all 0.18s; }
+.invite-btn-survey:active { transform:scale(0.98); background:#EEF4FA; }
+.invite-participants { background:var(--white); border:1px solid var(--border); border-radius:var(--r-md); padding:14px 16px; margin:14px 0; }
+.invite-participants-title { font-size:11px; color:var(--text-light); font-weight:600; margin-bottom:8px; }
+.invite-participants-list { display:flex; flex-direction:column; gap:6px; }
+.invite-participant-row { display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-sub); }
+.invite-dot-waiting { width:7px; height:7px; border-radius:50%; background:var(--text-light); }
+.invite-dot-done { width:7px; height:7px; border-radius:50%; background:var(--forest-mid); animation:pulse 1.5s infinite; }
+
+/* ── 세션 초대 화면 끝 ── */
 #s-session { padding:32px 24px 40px; }
 .session-mode-row { display:flex; gap:10px; margin-bottom:24px; }
 .session-mode-btn { flex:1; padding:13px 10px; border-radius:var(--r-md); border:2px solid var(--border); background:var(--white); font-size:13px; font-weight:700; color:var(--text-sub); cursor:pointer; transition:all 0.18s; text-align:center; }
@@ -526,6 +544,46 @@ input[type=range]#score-range:active::-webkit-slider-thumb { transform:scale(1.1
   <button class="btn-next" onclick="goTo('s-start')" style="background:transparent; color:var(--text-light); opacity:1; margin-top:10px;">← 뒤로</button>
 </div>
 
+<!-- ════════════ 화면 1.7: 세션 초대 (생성 완료 후) ════════════ -->
+<div id="s-invite" class="screen">
+  <div class="screen-eyebrow">세션 생성 완료!</div>
+  <div class="screen-title" id="invite-title">민준이 세션이<br>만들어졌어요 🎉</div>
+  <div class="screen-sub">아래 코드를 카톡방에 공유해주세요.<br>참여자들이 코드를 입력하면 함께 시작돼요.</div>
+
+  <!-- 코드 박스 -->
+  <div class="invite-code-box">
+    <div class="invite-code-label">세션 코드 (카톡방에 공유하세요)</div>
+    <div class="invite-code-big" id="invite-code-display">MJ-DCM4</div>
+    <div class="invite-code-hint">참여자: wein.ai.kr → 코드로 참여하기</div>
+  </div>
+
+  <!-- 참여 현황 (실시간) -->
+  <div class="invite-participants">
+    <div class="invite-participants-title">📊 참여 현황 (실시간)</div>
+    <div class="invite-participants-list" id="invite-participant-list">
+      <div class="invite-participant-row">
+        <div class="invite-dot-waiting"></div>
+        <span>아직 참여자가 없어요</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 공유 버튼들 -->
+  <div class="invite-share-btns">
+    <button class="invite-btn-copy" onclick="copyInviteMessage()">
+      📋 초대 메시지 복사하기
+    </button>
+    <button class="invite-btn-survey" onclick="goToSurveyFromInvite()">
+      나도 지금 설문하기 →
+    </button>
+  </div>
+
+  <div style="font-size:11px;color:var(--text-light);text-align:center;line-height:1.6;">
+    공유 후 언제든 설문을 시작할 수 있어요.<br>
+    참여자들이 완료하면 결과에 자동으로 추가돼요.
+  </div>
+</div>
+
 <!-- ════════════ 화면 2: 응답자 선택 ════════════ -->
 <div id="s-who" class="screen">
   <div class="screen-eyebrow">STEP 1 / 3</div>
@@ -750,7 +808,7 @@ input[type=range]#score-range:active::-webkit-slider-thumb { transform:scale(1.1
       </button>
     </div>
     <div class="share-copy-row">
-      <div class="share-copy-text" id="share-url-text">https://wein.kr</div>
+      <div class="share-copy-text" id="share-url-text">https://wein.ai.kr</div>
       <button class="share-copy-btn" onclick="shareLink()">복사</button>
     </div>
     <button class="share-close" onclick="closeShare()">닫기</button>
@@ -2278,7 +2336,7 @@ function closeDetail(e) {
 ══════════════════════════════ */
 function buildInviteUrl() {
   /* URL에 코드 포함 — 받는 사람이 클릭만 하면 자동 입력 */
-  const base = 'https://wein.kr';
+  const base = 'https://wein.ai.kr';
   return currentSessionCode
     ? `${base}?code=${currentSessionCode}`
     : base;
@@ -2305,7 +2363,7 @@ function buildShareText() {
         `아래 링크를 클릭하시면 바로 시작돼요 👇\n` +
         `${inviteUrl}\n\n` +
         `📌 링크가 안 열리시면:\n` +
-        `  wein.kr 접속 → 코드로 참여하기 → ${code} 입력`;
+        `  wein.ai.kr 접속 → 코드로 참여하기 → ${code} 입력`;
     } else {
       /* 세션 없음 — 결과만 공유 */
       return `✨ ${name}${pf}와 닮은 위인은 "${mainFigure}"이에요!\n` +
@@ -2323,10 +2381,10 @@ function buildShareText() {
       `아래 링크를 클릭하시면 바로 시작돼요 👇\n` +
       `${inviteUrl}\n\n` +
       `📌 링크가 안 열리시면:\n` +
-      `  wein.kr 접속 → 코드로 참여하기 → ${code} 입력`;
+      `  wein.ai.kr 접속 → 코드로 참여하기 → ${code} 입력`;
   }
 
-  return `wein.kr — 우리 아이와 닮은 위인 찾기`;
+  return `wein.ai.kr — 우리 아이와 닮은 위인 찾기`;
 }
 
 function openShare() {
@@ -2845,11 +2903,12 @@ async function createSession() {
     });
     respondentDocId = creatorName;
 
-    showToast('세션 생성 완료! 코드: ' + code + ' 🎉');
-    /* 세션 코드 localStorage에 저장 (재방문 복원용) */
+    /* 세션 코드 localStorage에 저장 */
     saveSessionToLocal(code, childName, creatorName);
-    /* 응답자 선택 화면으로 */
-    goTo('s-who');
+
+    /* 초대 화면으로 이동 */
+    showInviteScreen(code, childName, creatorName);
+
     /* 실시간 리스너 시작 */
     startSessionListener(code);
 
@@ -2958,6 +3017,12 @@ function startSessionListener(code) {
 
 /* ── 세션 업데이트 처리 ── */
 function onSessionUpdate(respondents) {
+  /* 초대 화면이 활성화된 경우 참여 현황 업데이트 */
+  const inviteScreen = document.getElementById('s-invite');
+  if (inviteScreen && inviteScreen.classList.contains('active')) {
+    updateInviteParticipants(respondents);
+  }
+
   /* 결과 화면이 활성화된 경우 탭·차트 실시간 갱신 */
   const resultScreen = document.getElementById('s-result');
   if (resultScreen && resultScreen.classList.contains('active')) {
@@ -3011,8 +3076,69 @@ async function saveResultToFirebase(figure, scores, top3) {
 
 
 /* ══════════════════════════════
-   세션 localStorage 저장 · 복원
+   세션 초대 화면
 ══════════════════════════════ */
+function showInviteScreen(code, childName, creatorName) {
+  const pf = namePostfix(childName);
+  document.getElementById('invite-title').innerHTML =
+    childName + pf + '<br>세션이 만들어졌어요 🎉';
+  document.getElementById('invite-code-display').textContent = code;
+
+  /* 참여 현황 초기화 — 방장(creatorName) 표시 */
+  updateInviteParticipants([{ label: creatorName, status: 'pending' }]);
+
+  goTo('s-invite');
+  showToast('세션 생성 완료! 초대 메시지를 공유해주세요 🎉');
+}
+
+/* 참여 현황 실시간 업데이트 */
+function updateInviteParticipants(respondents) {
+  const list = document.getElementById('invite-participant-list');
+  if (!list) return;
+  if (!respondents || respondents.length === 0) {
+    list.innerHTML = `<div class="invite-participant-row">
+      <div class="invite-dot-waiting"></div>
+      <span>아직 참여자가 없어요</span>
+    </div>`;
+    return;
+  }
+  list.innerHTML = respondents.map(r => `
+    <div class="invite-participant-row">
+      <div class="${r.status === 'done' ? 'invite-dot-done' : 'invite-dot-waiting'}"></div>
+      <span style="font-weight:600;color:var(--charcoal)">${r.label}</span>
+      <span style="font-size:11px;color:var(--text-light);margin-left:auto">
+        ${r.status === 'done' ? '✅ 완료' : '⏳ 설문 중'}
+      </span>
+    </div>`).join('');
+}
+
+/* 초대 메시지 복사 */
+function copyInviteMessage() {
+  const code     = document.getElementById('invite-code-display').textContent;
+  const name     = document.getElementById('session-child-name').value.trim() || '우리 아이';
+  const pf       = namePostfix(name);
+  const url      = `https://wein.ai.kr?code=${code}`;
+  const msg =
+    `안녕하세요 😊\n` +
+    `${name}${pf}의 성향을 알아보는데 함께해 주실 수 있으실까요?\n\n` +
+    `${name}${pf}를 아끼는 분들이 각자의 시선으로\n` +
+    `짧은 설문(12문항, 3분)에 답해주시면\n` +
+    `${name}${pf}와 닮은 위인을 함께 발견할 수 있어요 🌟\n\n` +
+    `아래 링크를 클릭하시면 바로 시작돼요 👇\n` +
+    `${url}\n\n` +
+    `📌 링크가 안 열리시면:\n` +
+    `  wein.ai.kr 접속 → 코드로 참여하기 → ${code} 입력`;
+
+  copyToClipboard(msg);
+  showToast('초대 메시지가 복사됐어요! 카톡방에 붙여넣기 하세요 💬');
+}
+
+/* 초대 화면에서 내 설문 시작 */
+function goToSurveyFromInvite() {
+  goTo('s-who');
+}
+
+
 function saveSessionToLocal(code, childName, myName) {
   try {
     localStorage.setItem('wein_session', JSON.stringify({
