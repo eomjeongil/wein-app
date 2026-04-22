@@ -718,9 +718,10 @@ input[type=range]#score-range:active::-webkit-slider-thumb { transform:scale(1.1
       <div class="c-title">🎯 지금 결과 보기</div>
       <div class="c-sub c-sub-dark">닮은 위인을 바로 확인해요. 나중에 이어서 더 풀 수 있어요.</div>
     </div>
-    <div class="choice-card choice-more" onclick="continueQ()">
+    <div class="choice-card choice-more" onclick="continueQ()" style="border:2px solid var(--accent);position:relative;">
+      <div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--accent);color:var(--charcoal);font-size:10px;font-weight:800;padding:2px 10px;border-radius:10px;white-space:nowrap;">✨ 더 정확한 결과</div>
       <div class="c-title" style="color:var(--charcoal)" id="more-btn-title">➕ 2바퀴 계속하기</div>
-      <div class="c-sub c-sub-light" id="more-btn-sub">12문항 더 풀면 결과가 더 정확해져요.</div>
+      <div class="c-sub c-sub-light" id="more-btn-sub">12문항 더 풀면 훨씬 정확해져요.<br><strong style="color:var(--forest);">지금보다 2배 더 정확한 위인 매칭!</strong></div>
       <div class="accuracy-pills">
         <div class="pill pill-now" id="pill-r1">1/3 바퀴</div>
         <div class="pill pill-more" id="pill-r2">2/3 바퀴</div>
@@ -815,8 +816,8 @@ input[type=range]#score-range:active::-webkit-slider-thumb { transform:scale(1.1
   </div>
 
   <div class="bottom-action" style="flex-direction:column; gap:8px;">
-    <button class="btn btn-primary" onclick="addRespondent()" id="btn-add-respondent">
-      ➕ 다른 사람도 응답하기
+    <button class="btn btn-primary" onclick="continueMyRound()" id="btn-continue-round">
+      ➕ 2바퀴 더 하기 → 더 정확한 결과
     </button>
     <div style="display:flex; gap:10px;">
       <button class="btn btn-secondary" onclick="restartSurvey()" style="flex:1;">처음부터 다시</button>
@@ -828,23 +829,13 @@ input[type=range]#score-range:active::-webkit-slider-thumb { transform:scale(1.1
 <!-- 공유 모달 -->
 <div class="share-overlay" id="share-overlay" onclick="closeShare(event)">
   <div class="share-sheet">
-    <div class="share-sheet-title">초대 메시지 공유하기</div>
-    <div class="share-btn-row">
-      <button class="share-icon-btn" onclick="shareKakao()">
-        <span class="share-icon">💬</span>
-        <span class="share-lbl">카카오 복사</span>
+    <div class="share-sheet-title">추가 참여자 초대하기</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:4px;">
+      <button onclick="shareNative()" style="width:100%;padding:14px;background:var(--navy);color:white;border:none;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;">
+        💬 지금 바로 초대하기
       </button>
-      <button class="share-icon-btn" onclick="shareLink()">
-        <span class="share-icon">🔗</span>
-        <span class="share-lbl">링크만 복사</span>
-      </button>
-      <button class="share-icon-btn" onclick="shareText()">
-        <span class="share-icon">📋</span>
-        <span class="share-lbl">전체 복사</span>
-      </button>
-      <button class="share-icon-btn" onclick="shareNative()">
-        <span class="share-icon">📤</span>
-        <span class="share-lbl">공유하기</span>
+      <button onclick="shareLink()" style="width:100%;padding:11px;background:var(--cream-dark);color:var(--navy);border:1.5px solid var(--border);border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;">
+        🔗 링크만 복사하기
       </button>
     </div>
     <div class="share-copy-row">
@@ -1662,20 +1653,14 @@ function loadQ() {
   document.getElementById('emoji-row').style.display = showEmoji ? 'flex' : 'none';
 
   const slider = document.getElementById('score-range');
-  slider.value = 3;
-  slider.style.setProperty('--fp', '50%');
-  updateTicks(-1); updateEmojis(-1);
-  document.getElementById('s-bubble').classList.remove('on');
-  document.getElementById('btn-ans').classList.remove('on');
-  document.getElementById('s-hint').textContent = '막대를 손가락으로 밀어서 선택해주세요';
-
-  if (answers[currentQ] !== undefined) {
-    const v = answers[currentQ];
-    slider.value = v;
-    updateSliderFill(v); updateTicks(v); updateEmojis(v); showBubble(v);
-    document.getElementById('btn-ans').classList.add('on');
-    document.getElementById('s-hint').textContent = '';
-  }
+  /* 이전 답변 있으면 복원, 없으면 3번으로 초기 활성화 */
+  const prevVal = answers[currentQ] !== undefined ? answers[currentQ] : 3;
+  slider.value = prevVal;
+  updateSliderFill(prevVal); updateTicks(prevVal); updateEmojis(prevVal); showBubble(prevVal);
+  document.getElementById('s-hint').textContent = '';
+  /* 3번 기본값도 선택된 것으로 처리 */
+  if (answers[currentQ] === undefined) answers[currentQ] = 3;
+  document.getElementById('btn-ans').classList.add('on');
 }
 
 /* 슬라이더 이벤트 */
@@ -1796,9 +1781,128 @@ function continueQ() {
   loadQ(); goTo('s-survey');
 }
 
-/* ══════════════════════════════
-   localStorage 바퀴 저장
-══════════════════════════════ */
+/* 결과 화면 하단 "바퀴 이어하기" 버튼 — 현재 바퀴 기준 동적 업데이트 */
+function updateContinueBtn() {
+  const btn = document.getElementById('btn-continue-round');
+  if (!btn) return;
+  const name = document.getElementById('child-name').value.trim() || 'noname';
+  const done = loadCompletedRound(name);
+  if (done >= 3) {
+    btn.textContent = '✅ 설문 3바퀴 완료!';
+    btn.style.background = 'var(--forest)';
+    btn.onclick = null;
+    btn.style.opacity = '0.7';
+    btn.style.cursor = 'default';
+  } else if (done === 2) {
+    btn.textContent = '➕ 3바퀴 완주하기 → 가장 정확한 결과';
+    btn.onclick = () => { round = 3; currentQ = 0; answers = {}; loadQ(); goTo('s-survey'); };
+  } else {
+    btn.textContent = '➕ 2바퀴 더 하기 → 더 정확한 결과';
+    btn.onclick = () => { round = 2; currentQ = 0; answers = {}; loadQ(); goTo('s-survey'); };
+  }
+}
+
+/* 결과 카드 이미지 생성 (Canvas) — 수정 5 */
+function copyResultCard() {
+  const childName = document.getElementById('child-name').value.trim() || '우리 아이';
+  const pf        = namePostfix(childName);
+  const figure    = sessions[0]?.figure?.name || '위인';
+  const top3text  = sessions[0]?.top3?.slice(0,3).map(t => t.type).join(' · ') || '';
+  const cnt       = sessions.length;
+
+  /* Canvas로 카드 생성 */
+  const canvas = document.createElement('canvas');
+  canvas.width = 800; canvas.height = 480;
+  const ctx = canvas.getContext('2d');
+
+  /* 배경 그라데이션 */
+  const grad = ctx.createLinearGradient(0, 0, 800, 480);
+  grad.addColorStop(0, '#0A3D62');
+  grad.addColorStop(1, '#154360');
+  ctx.fillStyle = grad;
+  ctx.roundRect(0, 0, 800, 480, 24);
+  ctx.fill();
+
+  /* 골드 액센트 라인 */
+  ctx.strokeStyle = '#D4AF37';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(40, 60); ctx.lineTo(760, 60);
+  ctx.stroke();
+
+  /* wein 로고 */
+  ctx.font = '700 16px sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  ctx.fillText('wein.ai.kr', 48, 44);
+
+  /* 위인 이름 */
+  ctx.font = '900 52px sans-serif';
+  ctx.fillStyle = '#D4AF37';
+  ctx.fillText(figure, 48, 160);
+
+  /* 아이 이름 */
+  ctx.font = '700 22px sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.fillText(childName + pf + '와 닮은 위인', 48, 200);
+
+  /* 성향 태그들 */
+  const tags = (sessions[0]?.top3?.slice(0,3) || []);
+  let tx = 48;
+  tags.forEach(t => {
+    const label = t.type;
+    const w = ctx.measureText(label).width + 32;
+    ctx.fillStyle = 'rgba(255,255,255,0.12)';
+    ctx.roundRect(tx, 220, w, 36, 18);
+    ctx.fill();
+    ctx.font = '700 15px sans-serif';
+    ctx.fillStyle = 'white';
+    ctx.fillText(label, tx + 16, 244);
+    tx += w + 10;
+  });
+
+  /* 구분선 */
+  ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(48, 290); ctx.lineTo(752, 290);
+  ctx.stroke();
+
+  /* 참여 정보 */
+  ctx.font = '400 16px sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.fillText(`${cnt}명이 함께 발견한 결과`, 48, 330);
+
+  /* 하단 CTA */
+  ctx.fillStyle = '#D4AF37';
+  ctx.roundRect(48, 380, 400, 60, 12);
+  ctx.fill();
+  ctx.font = '800 18px sans-serif';
+  ctx.fillStyle = '#0A3D62';
+  ctx.fillText('우리 아이도 찾아보세요 → wein.ai.kr', 68, 417);
+
+  /* 이미지로 변환하여 다운로드 */
+  try {
+    canvas.toBlob(blob => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `wein_${figure}_결과카드.png`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('결과 카드가 저장됐어요! 📸 카톡에 이미지로 공유해보세요');
+    });
+  } catch(e) {
+    /* Canvas 지원 안 되면 텍스트로 폴백 */
+    const msg =
+      `🏆 ${childName}${pf} 위인 성향 결과\n\n` +
+      `닮은 위인: ${figure}\n강점 성향: ${top3text}\n참여 인원: ${cnt}명\n\n` +
+      `📌 우리 아이도 찾아보세요\nhttps://wein.ai.kr`;
+    copyToClipboard(msg);
+    showToast('결과 카드가 복사됐어요! 💌');
+  }
+}
+
+
 function saveCompletedRound(name, r) {
   try {
     const key = 'wiin_round_' + (name||'noname') + '_' + whoLabel;
@@ -1977,6 +2081,9 @@ function buildResult(name, scores, figure) {
 
   /* localStorage 저장 */
   saveResult(name, figure);
+
+  /* 바퀴 이어하기 버튼 상태 업데이트 */
+  setTimeout(updateContinueBtn, 200);
 }
 
 function buildTabs() {
@@ -2179,7 +2286,7 @@ function buildNarrative(name, scores) {
             <div class="narr-item">
               <div class="narr-label"><span>${NARR_EMOJIS[i+1]}</span> ${s.label}의 시선에서 <strong>빛나는</strong></div>
               <div class="small-card">
-                <div class="icon-box ${NARR_ICONS[i+1]}">${s.icon}</div>
+                <div class="icon-box ${NARR_ICONS[i+1]}" style="overflow:hidden;">${makeAvatar(s.icon, 28)}</div>
                 <div class="sc-text"><div class="sc-title">${t}</div><div class="sc-sub">${s.label}만 TOP 3</div></div>
                 <div class="badge ${BADGE_CLASSES[i+1]}">${s.label} 고유</div>
               </div>
@@ -2624,7 +2731,7 @@ function copyAppLink() {
   const top1      = sessions[0]?.top3[0]?.type || '';
 
   const msg =
-    `✨ ${childName}${pf}와 닮은 위인이 "${figure}"래요!\n` +
+    `✨ 우리 아이와 닮은 위인이 "${figure}"래요!\n` +
     `(강점 성향: ${top1})\n\n` +
     `우리 아이는 어떤 위인을 닮았을까요? 🤔\n` +
     `가족·선생님이 함께 참여할수록 더 정확해져요!\n\n` +
