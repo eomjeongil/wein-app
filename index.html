@@ -1426,7 +1426,6 @@ function goTo(id) {
 window.addEventListener('popstate', (e) => {
   if (screenHistory.length > 0) {
     const prevId = screenHistory.pop();
-    /* history 없이 화면만 전환 (무한루프 방지) */
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     const prevEl = document.getElementById(prevId);
     if (prevEl) {
@@ -1434,13 +1433,27 @@ window.addEventListener('popstate', (e) => {
       window.scrollTo(0, 0);
       if (prevId === 's-who') renderWhoAvatars();
     }
+    /* 세션 화면으로 돌아오면 버튼 상태 초기화 */
+    if (prevId === 's-session') {
+      const btn = document.getElementById('btn-create-session');
+      if (btn) {
+        btn.textContent = '세션 만들고 설문 시작 →';
+        btn.style.opacity = '';
+        btn.style.pointerEvents = '';
+        onSessionNameInput(); /* 입력값에 따라 활성/비활성 재설정 */
+      }
+      const joinBtn = document.getElementById('btn-join-session');
+      if (joinBtn) {
+        joinBtn.textContent = '참여하고 설문 시작 →';
+        joinBtn.style.opacity = '';
+        joinBtn.style.pointerEvents = '';
+      }
+    }
   } else {
-    /* 히스토리 없으면 시작 화면으로 */
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById('s-start').classList.add('active');
     window.scrollTo(0, 0);
   }
-  /* 다시 pushState로 막아두기 */
   window.history.pushState(null, '', '');
 });
 
