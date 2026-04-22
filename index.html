@@ -526,7 +526,12 @@ input[type=range]#score-range:active::-webkit-slider-thumb { transform:scale(1.1
     <div class="info-label">👦 아이 이름</div>
     <input class="info-input" type="text" id="session-child-name" placeholder="예: 민준" maxlength="10" oninput="onSessionNameInput()">
     <div class="info-label" style="margin-top:16px;">👤 내 이름 (응답자)</div>
-    <input class="joiner-name-input" type="text" id="creator-name" placeholder="예: 엄마, 아빠, 선생님..." maxlength="10" oninput="onSessionNameInput()">
+    <input class="joiner-name-input" type="text" id="creator-name" placeholder="예: 엄마, 아빠, 할머니, 선생님..." maxlength="10" oninput="onSessionNameInput()">
+    <div style="font-size:11px;color:var(--text-light);line-height:1.6;margin-top:4px;">
+      💡 관계를 그대로 써주세요<br>
+      <span style="color:var(--text-sub);">어른: 엄마·아빠·할머니·할아버지·선생님·이모·삼촌·코치·원장님 등</span><br>
+      <span style="color:var(--forest-mid);">아이: 나·본인이름·형·누나·언니·오빠·동생 등</span>
+    </div>
     <div id="session-code-preview" style="display:none;">
       <div class="session-info-box" style="margin-top:16px;">
         <div class="session-share-hint">세션 코드 (카톡방에 공유하세요)</div>
@@ -541,8 +546,13 @@ input[type=range]#score-range:active::-webkit-slider-thumb { transform:scale(1.1
   <div class="session-panel" id="panel-join">
     <div class="info-label">🔑 세션 코드 입력</div>
     <input class="session-input" type="text" id="join-code-input" placeholder="예: MINJUN-A3F9" maxlength="12" oninput="onJoinCodeInput()" style="margin-bottom:14px;">
-    <div class="info-label">👤 내 이름</div>
-    <input class="joiner-name-input" type="text" id="joiner-name" placeholder="예: 아빠, 할머니, 담임선생님..." maxlength="10" oninput="onJoinCodeInput()">
+    <div class="info-label">👤 내 이름 (관계)</div>
+    <input class="joiner-name-input" type="text" id="joiner-name" placeholder="예: 엄마, 아빠, 할머니, 선생님..." maxlength="10" oninput="onJoinCodeInput()">
+    <div style="font-size:11px;color:var(--text-light);line-height:1.6;margin-top:4px;">
+      💡 관계를 그대로 써주세요<br>
+      <span style="color:var(--text-sub);">어른: 엄마·아빠·할머니·선생님·이모·삼촌 등</span><br>
+      <span style="color:var(--forest-mid);">아이: 나·본인이름·형·누나·언니·오빠·동생 등</span>
+    </div>
     <div id="join-session-info" style="display:none; margin-top:14px;">
       <div class="session-info-box">
         <div class="session-share-hint">찾은 세션</div>
@@ -1246,18 +1256,18 @@ const QUESTIONS = {
      4바퀴: 전반적 성향 / 본질 깊이 */
   adult: [
     /* 1바퀴 — 집에서 */
-    {type:'호기심',    round:1, text:'새 물건이 집에 오면\n먼저 달려가서 살펴본다.'},
-    {type:'학구열',    round:1, text:'좋아하는 주제의 책을\n여러 번 반복해서 본다.'},
-    {type:'창의성',    round:1, text:'놀잇감을 원래 쓰임과\n다르게 활용해서 논다.'},
-    {type:'통찰력',    round:1, text:'결정하기 전에\n잠깐 멈춰서 생각한다.'},
-    {type:'용기',      round:1, text:'무섭거나 힘든 일도\n울더라도 끝까지 해낸다.'},
-    {type:'진실성',    round:1, text:'잘못한 일을\n숨기지 않고 말한다.'},
-    {type:'사랑과 친절',round:1,text:'가족이 슬퍼 보이면\n옆에 가서 안아준다.'},
-    {type:'사회적 지능',round:1,text:'가족의 기분 변화를\n빨리 알아챈다.'},
-    {type:'리더십과 공정성',round:1,text:'가족 활동에서\n역할 분담을 먼저 제안한다.'},
-    {type:'자기조절',  round:1, text:'하기 싫은 숙제도\n정해진 시간에 끝낸다.'},
-    {type:'감사와 희망',round:1,text:'도움받으면 "고마워"라고\n자연스럽게 말한다.'},
-    {type:'영성',      round:1, text:'"왜 사는 걸까" 같은\n큰 질문을 한다.'},
+    {type:'호기심',    round:1, text:'새롭거나 낯선 것을 보면\n가장 먼저 관심을 보인다.'},
+    {type:'학구열',    round:1, text:'좋아하는 주제라면\n끝까지 파고드는 편이다.'},
+    {type:'창의성',    round:1, text:'물건이나 상황을 원래 용도와\n다르게 활용하는 방법을 생각해낸다.'},
+    {type:'통찰력',    round:1, text:'어떤 일이든 바로 행동하기 전에\n잠깐 멈춰 생각하는 편이다.'},
+    {type:'용기',      round:1, text:'무섭거나 힘든 상황에서도\n포기하지 않고 끝까지 해낸다.'},
+    {type:'진실성',    round:1, text:'자신이 잘못한 일을\n솔직하게 인정하고 말한다.'},
+    {type:'사랑과 친절',round:1,text:'주변 사람이 힘들어 보이면\n먼저 다가가 살펴준다.'},
+    {type:'사회적 지능',round:1,text:'주변 사람의 기분 변화를\n빠르게 알아채는 편이다.'},
+    {type:'리더십과 공정성',round:1,text:'여럿이 함께하는 활동에서\n역할 분담을 먼저 제안한다.'},
+    {type:'자기조절',  round:1, text:'하기 싫은 일도\n정해진 때에 먼저 해내는 편이다.'},
+    {type:'감사와 희망',round:1,text:'도움을 받으면 고마움을\n자연스럽게 표현한다.'},
+    {type:'영성',      round:1, text:'"왜 사는 걸까"처럼\n삶의 의미에 대한 질문을 자주 한다.'},
     /* 2바퀴 — 밖에서 / 친구·학교 */
     {type:'호기심',    round:2, text:'처음 가는 장소에서\n여기저기 돌아보며 탐색한다.'},
     {type:'학구열',    round:2, text:'학교 수업 내용이 이해되지 않으면\n집에 와서 찾아본다.'},
@@ -1496,6 +1506,45 @@ window.addEventListener('popstate', (e) => {
 /* ══════════════════════════════
    화면 2
 ══════════════════════════════ */
+/* ══════════════════════════════
+   이름으로 어른·아이 자동 감지
+══════════════════════════════ */
+function detectWhoType(name) {
+  if (!name) return { type:'adult', icon:'adult', label:name || '어른' };
+
+  /* 아이 판단 키워드 */
+  const childKeywords = [
+    '나','본인','자신',
+    '형','오빠','누나','언니','동생','남동생','여동생',
+    '아들','딸','손자','손녀',
+  ];
+
+  /* 엄마 아이콘 */
+  const momKeywords = ['엄마','어머니','모','맘','mama','mom'];
+  /* 아빠 아이콘 */
+  const dadKeywords = ['아빠','아버지','부','파파','papa','dad'];
+
+  const n = name.trim();
+
+  /* 아이 판단: 키워드 정확 일치 또는 포함 */
+  const isChild = childKeywords.some(k =>
+    n === k || n.startsWith(k) || n.endsWith(k)
+  );
+  if (isChild) return { type:'child', icon:'child', label:n };
+
+  /* 엄마 */
+  if (momKeywords.some(k => n.includes(k)))
+    return { type:'adult', icon:'mom', label:n };
+
+  /* 아빠 */
+  if (dadKeywords.some(k => n.includes(k)))
+    return { type:'adult', icon:'dad', label:n };
+
+  /* 그 외 모두 어른 */
+  return { type:'adult', icon:'adult', label:n };
+}
+
+
 function selectWho(el, type, icon, label) {
   document.querySelectorAll('.who-card').forEach(c => c.classList.remove('selected'));
   el.classList.add('selected');
@@ -2223,9 +2272,17 @@ function restartSurvey() {
 function addRespondent() {
   whoType = null; whoIcon = ''; whoLabel = '';
   answers = {}; currentQ = 0; round = 1;
-  document.querySelectorAll('.who-card').forEach(c => c.classList.remove('selected'));
-  document.getElementById('btn-who').classList.remove('on');
-  goTo('s-who');
+
+  /* 이름 입력 받아서 자동 감지 */
+  const newName = prompt('응답자 이름을 입력해주세요\n(예: 엄마, 아빠, 할머니, 선생님, 형, 누나 등)');
+  if (!newName || !newName.trim()) return;
+
+  const detected = detectWhoType(newName.trim());
+  whoType  = detected.type;
+  whoIcon  = detected.icon;
+  whoLabel = detected.label;
+
+  goTo('s-info');
 }
 
 /* ══════════════════════════════
@@ -3295,11 +3352,19 @@ async function joinSession() {
       status: 'pending', joinedAt: serverTimestamp(),
     });
     respondentDocId = name;
-    whoLabel = name;
+
+    /* 이름으로 어른/아이 자동 감지 */
+    const detected = detectWhoType(name);
+    whoType  = detected.type;
+    whoIcon  = detected.icon;
+    whoLabel = detected.label;
 
     showToast(childName + ' 세션에 참여했어요! 👋');
     saveSessionToLocal(code, childName, name);
-    goTo('s-who');
+
+    /* 응답자 선택 화면 건너뛰고 아이 정보 입력으로 직행 */
+    document.getElementById('child-name').value = childName;
+    goTo('s-info');
     startSessionListener(code);
 
   } catch(e) {
@@ -3602,8 +3667,14 @@ async function restoreSessionFromFirebase(code) {
 
     if (restored.length === 0) {
       showToast('아직 완료한 참여자가 없어요. 설문을 먼저 진행해주세요.');
-      /* 이전 세션 있으니 s-who로 */
-      goTo('s-who');
+      /* 저장된 이름으로 자동 감지 후 s-info로 */
+      const savedName = localStorage.getItem('wein_sessions') ?
+        JSON.parse(localStorage.getItem('wein_sessions')).find(s => s.code === code)?.myName : '';
+      if (savedName) {
+        const d = detectWhoType(savedName);
+        whoType = d.type; whoIcon = d.icon; whoLabel = d.label;
+      }
+      goTo('s-info');
       startSessionListener(code);
       return;
     }
