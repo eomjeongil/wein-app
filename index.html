@@ -1401,13 +1401,48 @@ function renderWhoAvatars() {
   });
 }
 
+/* 화면 이력 스택 (뒤로가기용) */
+const screenHistory = [];
+
 function goTo(id) {
+  const current = document.querySelector('.screen.active');
+  const currentId = current ? current.id : null;
+
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  window.scrollTo(0,0);
+  window.scrollTo(0, 0);
+
   /* 응답자 선택 화면 진입 시 아바타 렌더링 */
   if (id === 's-who') renderWhoAvatars();
+
+  /* 브라우저 히스토리에 현재 화면 push */
+  if (currentId && currentId !== id) {
+    screenHistory.push(currentId);
+    window.history.pushState({ screen: id, prev: currentId }, '', '');
+  }
 }
+
+/* 브라우저 뒤로가기 가로채기 */
+window.addEventListener('popstate', (e) => {
+  if (screenHistory.length > 0) {
+    const prevId = screenHistory.pop();
+    /* history 없이 화면만 전환 (무한루프 방지) */
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const prevEl = document.getElementById(prevId);
+    if (prevEl) {
+      prevEl.classList.add('active');
+      window.scrollTo(0, 0);
+      if (prevId === 's-who') renderWhoAvatars();
+    }
+  } else {
+    /* 히스토리 없으면 시작 화면으로 */
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('s-start').classList.add('active');
+    window.scrollTo(0, 0);
+  }
+  /* 다시 pushState로 막아두기 */
+  window.history.pushState(null, '', '');
+});
 
 /* ══════════════════════════════
    화면 2
@@ -3300,9 +3335,11 @@ function checkPreviousSession() {
 
 /* 페이지 로드 초기화 */
 window.addEventListener('DOMContentLoaded', () => {
+  /* 초기 히스토리 상태 설정 — 뒤로가기 가로채기용 */
+  window.history.pushState(null, '', '');
   checkPreviousResult();
   checkPreviousSession();
-  checkUrlCode();       /* URL에 코드 있으면 자동 참여 화면 진입 */
+  checkUrlCode();
 });
 
 /* URL 파라미터에서 세션 코드 자동 감지 */
