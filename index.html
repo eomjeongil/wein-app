@@ -98,6 +98,8 @@ html, body {
 .who-card.selected .who-check { display:flex; }
 .btn-next { width:100%; padding:14px; background:var(--navy); color:var(--white); border:none; border-radius:var(--r-md); font-size:14px; font-weight:700; cursor:pointer; margin-top:20px; transition:all 0.18s; opacity:0.4; pointer-events:none; letter-spacing:-0.2px; }
 .btn-next.on { opacity:1; pointer-events:auto; }
+.btn-back { width:100%; padding:12px; background:transparent; color:var(--text-light); border:none; font-size:13px; font-weight:600; cursor:pointer; margin-top:8px; transition:all 0.18s; opacity:1; pointer-events:auto; letter-spacing:-0.2px; }
+.btn-back:active { opacity:0.6; }
 .btn-next.on:active { transform:scale(0.98); }
 .spacer { flex:1; }
 
@@ -541,7 +543,7 @@ input[type=range]#score-range:active::-webkit-slider-thumb { transform:scale(1.1
   </div>
 
   <div class="spacer"></div>
-  <button class="btn-next" onclick="goTo('s-start')" style="background:transparent; color:var(--text-light); opacity:1; margin-top:10px;">← 뒤로</button>
+  <button class="btn-back" onclick="goTo('s-start')">← 처음으로</button>
 </div>
 
 <!-- ════════════ 화면 1.7: 세션 초대 (생성 완료 후) ════════════ -->
@@ -1450,11 +1452,17 @@ window.addEventListener('popstate', (e) => {
       }
     }
   } else {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById('s-start').classList.add('active');
-    window.scrollTo(0, 0);
+    /* 히스토리 없으면 시작 화면으로 — 외부 이탈 방지 */
+    const currentActive = document.querySelector('.screen.active');
+    if (currentActive && currentActive.id !== 's-start') {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('s-start').classList.add('active');
+      window.scrollTo(0, 0);
+    }
+    /* 더미 push로 다음 뒤로가기도 가로채기 */
+    window.history.pushState(null, '', '');
+    return;
   }
-  window.history.pushState(null, '', '');
 });
 
 /* ══════════════════════════════
@@ -3422,8 +3430,11 @@ function deleteSessionCard(code) {
 
 /* 페이지 로드 초기화 */
 window.addEventListener('DOMContentLoaded', () => {
-  /* 초기 히스토리 상태 설정 — 뒤로가기 가로채기용 */
-  window.history.pushState(null, '', '');
+  /* 초기 히스토리 설정 — s-start를 베이스로 등록 */
+  screenHistory.length = 0; /* 초기화 */
+  window.history.replaceState({ screen: 's-start' }, '', ''); /* 현재 엔트리 교체 */
+  window.history.pushState(null, '', ''); /* 뒤로가기 가로채기용 더미 push */
+
   checkPreviousResult();
   checkPreviousSession();
   checkUrlCode();
