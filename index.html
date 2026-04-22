@@ -2165,7 +2165,7 @@ function restartSurvey() {
   ageGroup = null; ageSelected = false;
   answers = {}; currentQ = 0; round = 1;
   /* localStorage 세션 기록 초기화 */
-  clearSessionFromLocal();
+  if (currentSessionCode) clearSessionFromLocal(currentSessionCode);
   currentSessionId = null; currentSessionCode = null;
   if (sessionUnsubscribe) { sessionUnsubscribe(); sessionUnsubscribe = null; }
   try {
@@ -2919,7 +2919,18 @@ async function createSession() {
   const creatorName = document.getElementById('creator-name').value.trim();
   if (!childName || !creatorName) { setBtnLoading(false); return; }
 
+  /* 세션 최대 개수 체크 (같은 코드면 업데이트라 허용) */
   const code = document.getElementById('preview-code').textContent;
+  const existingSessions = loadSessions();
+  const isSameCode = existingSessions.find(s => s.code === code);
+  if (!isSameCode && isSessionFull()) {
+    setBtnLoading(false);
+    showToast('세션이 가득 찼어요 (3/3). 기존 세션을 삭제 후 새로 만들 수 있어요.');
+    /* 시작 화면으로 돌아가서 배너 표시 */
+    goTo('s-start');
+    checkPreviousSession();
+    return;
+  }
 
   try {
     const { doc, setDoc, serverTimestamp } = fs;
@@ -3187,32 +3198,75 @@ function goToSurveyFromInvite() {
 }
 
 
-function saveSessionToLocal(code, childName, myName) {
+/* ══════════════════════════════
+   세션 다중 관리 (최대 3개, 7일 유효)
+══════════════════════════════ */
+const MAX_SESSIONS = 3;
+const SESSION_TTL  = 7 * 24 * 60 * 60 * 1000; /* 7일 ms */
+
+/* 저장된 세션 목록 로드 (만료 자동 제거) */
+function loadSessions() {
   try {
-    localStorage.setItem('wein_session', JSON.stringify({
-      code, childName, myName,
-      savedAt: new Date().toISOString(),
-    }));
+    const raw = localStorage.getItem('wein_sessions');
+    const list = raw ? JSON.parse(raw) : [];
+    const now  = Date.now();
+    /* 7일 지난 세션 필터 */
+    const valid = list.filter(s => {
+      return (now - new Date(s.savedAt).getTime()) < SESSION_TTL;
+    });
+    if (valid.length !== list.length) saveSessions(valid);
+    return valid;
+  } catch(e) { return []; }
+}
+
+function saveSessions(list) {
+  try { localStorage.setItem('wein_sessions', JSON.stringify(list)); } catch(e) {}
+}
+
+/* 세션 추가 (이미 있으면 업데이트) */
+function saveSessionToLocal(code, childName, myName) {
+  const list = loadSessions();
+  const idx  = list.findIndex(s => s.code === code);
+  const entry = { code, childName, myName, savedAt: new Date().toISOString() };
+  if (idx >= 0) {
+    list[idx] = entry; /* 기존 세션 업데이트 */
+  } else {
+    list.unshift(entry); /* 새 세션 맨 앞에 추가 */
+  }
+  saveSessions(list.slice(0, MAX_SESSIONS));
+}
+
+/* 단일 세션 삭제 */
+function clearSessionFromLocal(code) {
+  try {
+    if (code) {
+      const list = loadSessions().filter(s => s.code !== code);
+      saveSessions(list);
+    } else {
+      /* code 없으면 전체 삭제 (하위 호환) */
+      localStorage.removeItem('wein_sessions');
+    }
   } catch(e) {}
 }
 
+/* 하위 호환: 단일 세션 키 마이그레이션 */
 function loadSessionFromLocal() {
+  /* 구버전 단일 키 마이그레이션 */
   try {
-    const raw = localStorage.getItem('wein_session');
-    if (!raw) return null;
-    const data = JSON.parse(raw);
-    /* 7일 이내 세션만 유효 */
-    const savedAt = new Date(data.savedAt);
-    if (Date.now() - savedAt.getTime() > 7 * 24 * 60 * 60 * 1000) {
+    const old = localStorage.getItem('wein_session');
+    if (old) {
+      const data = JSON.parse(old);
+      saveSessionToLocal(data.code, data.childName, data.myName);
       localStorage.removeItem('wein_session');
-      return null;
     }
-    return data;
-  } catch(e) { return null; }
+  } catch(e) {}
+  const list = loadSessions();
+  return list.length > 0 ? list[0] : null;
 }
 
-function clearSessionFromLocal() {
-  try { localStorage.removeItem('wein_session'); } catch(e) {}
+/* 세션 가득 참 여부 */
+function isSessionFull() {
+  return loadSessions().length >= MAX_SESSIONS;
 }
 
 /* ── Firebase에서 세션 전체 참여자 결과 불러오기 ── */
@@ -3307,43 +3361,63 @@ async function restoreSessionFromFirebase(code) {
   }
 }
 
-/* ── 재방문 시 이전 세션 배너 표시 ── */
+/* ── 재방문 시 세션 목록 배너 표시 (최대 3개) ── */
 function checkPreviousSession() {
-  const prev = loadSessionFromLocal();
-  if (!prev) return;
+  const list = loadSessions();
+  if (list.length === 0) return;
 
   const banner = document.getElementById('prev-result-banner');
   if (!banner) return;
 
-  banner.innerHTML = `
-    <div style="background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.18);
-                border-radius:12px;padding:14px 16px;margin-bottom:16px;">
-      <div style="font-size:10px;color:rgba(255,255,255,0.50);margin-bottom:6px;">
-        이전에 진행한 세션
+  const daysLeft = (s) => {
+    const left = SESSION_TTL - (Date.now() - new Date(s.savedAt).getTime());
+    return Math.max(1, Math.ceil(left / (24 * 60 * 60 * 1000)));
+  };
+
+  const pf = (name) => namePostfix ? namePostfix(name) : '이';
+
+  const cards = list.map(s => `
+    <div style="background:rgba(255,255,255,0.10);border:1px solid rgba(255,255,255,0.15);
+                border-radius:10px;padding:12px 14px;margin-bottom:8px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+        <div>
+          <span style="font-size:13px;font-weight:800;color:white;">${s.childName}${pf(s.childName)} 세션</span>
+          <span style="font-size:10px;color:rgba(255,255,255,0.45);margin-left:6px;">D-${daysLeft(s)}</span>
+        </div>
+        <span style="font-size:10px;color:rgba(255,255,255,0.40);font-weight:600;">코드: ${s.code}</span>
       </div>
-      <div style="font-size:14px;color:rgba(255,255,255,0.92);font-weight:700;margin-bottom:2px;">
-        ${prev.childName}이 세션
-        <span style="font-size:12px;color:rgba(255,255,255,0.55);font-weight:400;margin-left:6px;">
-          코드: ${prev.code}
-        </span>
+      <div style="font-size:11px;color:rgba(255,255,255,0.50);margin-bottom:10px;">
+        ${s.myName}으로 참여 중
       </div>
-      <div style="font-size:12px;color:rgba(255,255,255,0.60);margin-bottom:12px;">
-        ${prev.myName}으로 참여 중
-      </div>
-      <div style="display:flex;gap:8px;">
-        <button onclick="restoreSessionFromFirebase('${prev.code}')"
-          style="flex:1;padding:10px;background:var(--accent);color:var(--charcoal);
-                 border:none;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;">
+      <div style="display:flex;gap:6px;">
+        <button onclick="restoreSessionFromFirebase('${s.code}')"
+          style="flex:1;padding:8px;background:var(--accent);color:var(--charcoal);
+                 border:none;border-radius:8px;font-size:12px;font-weight:800;cursor:pointer;">
           결과 이어보기 →
         </button>
-        <button onclick="clearSessionFromLocal(); document.getElementById('prev-result-banner').style.display='none';"
-          style="padding:10px 14px;background:rgba(255,255,255,0.10);color:rgba(255,255,255,0.60);
-                 border:none;border-radius:10px;font-size:12px;cursor:pointer;">
-          닫기
+        <button onclick="deleteSessionCard('${s.code}')"
+          style="padding:8px 12px;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.50);
+                 border:none;border-radius:8px;font-size:11px;cursor:pointer;">
+          삭제
         </button>
       </div>
+    </div>`).join('');
+
+  banner.innerHTML = `
+    <div style="margin-bottom:16px;">
+      <div style="font-size:10px;color:rgba(255,255,255,0.50);font-weight:600;
+                  letter-spacing:0.4px;margin-bottom:8px;">
+        진행 중인 세션 (${list.length}/${MAX_SESSIONS})
+      </div>
+      ${cards}
     </div>`;
   banner.style.display = 'block';
+}
+
+/* 세션 카드 삭제 */
+function deleteSessionCard(code) {
+  clearSessionFromLocal(code);
+  checkPreviousSession(); /* 배너 갱신 */
 }
 
 /* 페이지 로드 초기화 */
