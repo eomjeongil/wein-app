@@ -377,6 +377,18 @@ input[type=range]#score-range:active::-webkit-slider-thumb { transform:scale(1.1
 .product-cta-growth { color:var(--forest); }
 .compass-notice { font-size:10px; color:var(--text-light); text-align:center; padding:8px 0 16px; line-height:1.5; }
 
+/* ── 바이럴 전파 섹션 ── */
+.viral-section { margin:0 20px 8px; background:linear-gradient(135deg,var(--navy) 0%,#1A5276 100%); border-radius:var(--r-lg); padding:22px 20px; text-align:center; }
+.viral-eyebrow { font-size:10px; color:rgba(255,255,255,0.55); font-weight:700; letter-spacing:0.4px; margin-bottom:8px; }
+.viral-title { font-size:19px; font-weight:900; color:white; line-height:1.3; margin-bottom:8px; letter-spacing:-0.3px; }
+.viral-desc { font-size:12px; color:rgba(255,255,255,0.60); line-height:1.6; margin-bottom:18px; }
+.viral-btns { display:flex; flex-direction:column; gap:8px; margin-bottom:10px; }
+.viral-btn-main { width:100%; padding:14px; background:var(--accent); color:var(--charcoal); border:none; border-radius:var(--r-md); font-size:14px; font-weight:800; cursor:pointer; transition:all 0.18s; letter-spacing:-0.2px; }
+.viral-btn-main:active { transform:scale(0.98); opacity:0.9; }
+.viral-btn-sub { width:100%; padding:12px; background:rgba(255,255,255,0.12); color:rgba(255,255,255,0.85); border:1.5px solid rgba(255,255,255,0.25); border-radius:var(--r-md); font-size:13px; font-weight:700; cursor:pointer; transition:all 0.18s; }
+.viral-btn-sub:active { transform:scale(0.98); background:rgba(255,255,255,0.18); }
+.viral-hint { font-size:10px; color:rgba(255,255,255,0.35); }
+
 /* 하단 */
 .bottom-action { padding:14px 20px 36px; display:flex; gap:10px; }
 .btn { flex:1; padding:14px 12px; border-radius:var(--r-md); font-size:13px; font-weight:700; border:none; cursor:pointer; transition:all 0.18s; letter-spacing:-0.2px; }
@@ -776,13 +788,29 @@ input[type=range]#score-range:active::-webkit-slider-thumb { transform:scale(1.1
 
   <div class="divider"></div>
 
+  <!-- 바이럴 전파 섹션 -->
+  <div class="viral-section">
+    <div class="viral-eyebrow">✨ 우리 아이만의 발견이에요</div>
+    <div class="viral-title">주변 부모님께도<br>알려주세요</div>
+    <div class="viral-desc">아이를 아끼는 분들이 함께할수록<br>더 정확한 성향이 발견돼요</div>
+    <div class="viral-btns">
+      <button class="viral-btn-main" onclick="copyAppLink()">
+        🌟 이 앱 주변에 알리기
+      </button>
+      <button class="viral-btn-sub" onclick="copyResultCard()">
+        💌 우리 아이 결과 카드 보내기
+      </button>
+    </div>
+    <div class="viral-hint">클릭 한 번으로 링크가 복사돼요</div>
+  </div>
+
   <div class="bottom-action" style="flex-direction:column; gap:8px;">
     <button class="btn btn-primary" onclick="addRespondent()" id="btn-add-respondent">
       ➕ 다른 사람도 응답하기
     </button>
     <div style="display:flex; gap:10px;">
       <button class="btn btn-secondary" onclick="restartSurvey()" style="flex:1;">처음부터 다시</button>
-      <button class="btn btn-secondary" onclick="openShare()" style="flex:1;">공유하기 ↗</button>
+      <button class="btn btn-secondary" onclick="openShare()" style="flex:1;">초대 공유 ↗</button>
     </div>
   </div>
 </div>
@@ -2528,9 +2556,80 @@ function showToast(msg, duration = 2400) {
 }
 
 /* ══════════════════════════════
-   성장 나침반 — 12성향 × 6카테고리 추천 데이터
-   쿠팡파트너스 ID: 11782769-27ea-48c3-ab3f-ebdab57227a0
+   바이럴 전파 공유 함수
 ══════════════════════════════ */
+
+/* 앱 링크 복사 — "이 앱 주변에 알리기" */
+function copyAppLink() {
+  const childName = document.getElementById('child-name').value.trim() || '우리 아이';
+  const pf        = namePostfix(childName);
+  const figure    = sessions[0]?.figure?.name || '위인';
+  const top1      = sessions[0]?.top3[0]?.type || '';
+
+  const msg =
+    `✨ ${childName}${pf}와 닮은 위인이 "${figure}"래요!\n` +
+    `(강점 성향: ${top1})\n\n` +
+    `우리 아이는 어떤 위인을 닮았을까요? 🤔\n` +
+    `가족·선생님이 함께 참여할수록 더 정확해져요!\n\n` +
+    `👇 무료로 찾아보세요\n` +
+    `https://wein.ai.kr`;
+
+  copyToClipboard(msg);
+  showToast('앱 소개 메시지가 복사됐어요! 카톡·문자에 붙여넣기 하세요 🌟');
+}
+
+/* 결과 카드 복사 — "우리 아이 결과 카드 보내기" */
+function copyResultCard() {
+  const childName = document.getElementById('child-name').value.trim() || '우리 아이';
+  const pf        = namePostfix(childName);
+  const figure    = sessions[0]?.figure?.name || '위인';
+  const top3      = sessions[0]?.top3?.slice(0,3).map(t => t.type).join(' · ') || '';
+  const cnt       = sessions.length;
+
+  const msg =
+    `🏆 ${childName}${pf} 위인 성향 결과\n\n` +
+    `닮은 위인: ${figure}\n` +
+    `강점 성향: ${top3}\n` +
+    `참여 인원: ${cnt}명\n\n` +
+    `─────────────────\n` +
+    `📌 우리 아이도 찾아보세요\n` +
+    `https://wein.ai.kr\n` +
+    `─────────────────\n` +
+    `*wein — 우리 아이 성향 매칭 앱`;
+
+  copyToClipboard(msg);
+  showToast('결과 카드가 복사됐어요! 💌 붙여넣기해서 공유해보세요');
+}
+
+/* ══════════════════════════════
+   쿠팡파트너스 API 연동 위치
+   ──────────────────────────────
+   ⬇️ 아래 coupang() 함수를 수정하면
+   파트너스 링크가 앱 전체에 반영됩니다.
+
+   [방법 B — 검색결과 URL 직접 연결]
+   현재: coupang(itemId) → 상품 직접 링크
+   변경: COMPASS_PRODUCTS 내 각 url 값을
+         파트너스 간편링크(coupa.ng/xxxxx)로 교체
+
+   [방법 A — API 자동 연동 (향후)]
+   1. 쿠팡 파트너스 → Tools → 파트너스 API
+      → Access Key + Secret Key 발급
+   2. 아래 API_CONFIG에 키 입력
+   3. fetchCoupangProducts(keyword) 함수 활성화
+══════════════════════════════ */
+
+/* ── API 설정 (향후 서버사이드에서 처리) ──
+const API_CONFIG = {
+  ACCESS_KEY: 'YOUR_ACCESS_KEY_HERE',  // ← 파트너스 Access Key
+  SECRET_KEY:  'YOUR_SECRET_KEY_HERE', // ← 파트너스 Secret Key
+  AF_ID:       '11782769-27ea-48c3-ab3f-ebdab57227a0',
+};
+
+// ⚠️ 보안 주의: API Key는 브라우저에 노출되면 안 돼요
+// → Firebase Functions(Node.js)에서 처리 권장
+// → 준비되면 이 주석을 해제하고 서버 연동하세요
+──────────────────────────────────────── */
 const AF_ID = 'af_id=11782769-27ea-48c3-ab3f-ebdab57227a0';
 function coupang(itemId) {
   return `https://www.coupang.com/vp/products/${itemId}?${AF_ID}&amp;from=affiliate`;
@@ -2731,6 +2830,28 @@ function buildCompass(scores) {
         <div class="strength-arrow">›</div>
       </div>`;
   });
+
+  /* 강점 1위 성향 + 도서 자동 선택 */
+  document.getElementById('compass-sub').textContent = '강점 1위 성향의 추천 도서예요 📚';
+  setTimeout(() => {
+    const firstItem = row.querySelector('.strength-item');
+    if (firstItem && top3[0]) {
+      firstItem.classList.add('selected');
+      compassSelectedType = top3[0].type;
+      compassSelectedCat  = '도서';
+      compassIsGrowth     = false;
+      /* 카테고리 탭 표시 */
+      const tabs = document.getElementById('cat-tabs');
+      if (tabs) {
+        tabs.style.display = 'flex';
+        tabs.querySelectorAll('.cat-tab').forEach((t, i) => {
+          t.classList.remove('active','growth-active');
+          if (i === 0) t.classList.add('active');
+        });
+      }
+      showProducts(top3[0].type, '도서', false);
+    }
+  }, 100);
 }
 
 /* ── 성향 선택 ── */
