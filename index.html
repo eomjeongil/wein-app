@@ -3202,7 +3202,30 @@ function copyInviteMessage() {
 
 /* 초대 화면에서 내 설문 시작 */
 function goToSurveyFromInvite() {
-  goTo('s-who');
+  /* 세션 만들 때 입력한 이름으로 응답자 타입 자동 감지 */
+  const creatorName = document.getElementById('creator-name').value.trim();
+
+  /* 이름 기반 자동 매핑 */
+  const nameMap = {
+    '엄마': { type: 'adult', icon: 'mom',   label: '엄마' },
+    '아빠': { type: 'adult', icon: 'dad',   label: '아빠' },
+    '나':   { type: 'child', icon: 'child', label: '나'   },
+  };
+  const matched = nameMap[creatorName];
+
+  if (matched) {
+    whoType  = matched.type;
+    whoIcon  = matched.icon;
+    whoLabel = matched.label;
+  } else {
+    /* 매핑 안 되면 "어른"으로 기본 설정 */
+    whoType  = 'adult';
+    whoIcon  = 'adult';
+    whoLabel = creatorName || '어른';
+  }
+
+  /* 아이 정보 화면으로 직행 (응답자 선택 건너뜀) */
+  goTo('s-info');
 }
 
 
