@@ -219,7 +219,7 @@ input[type=range]#score-range:active::-webkit-slider-thumb { transform:scale(1.1
 /* ══════════════════════════════
    화면 6: 결과
 ══════════════════════════════ */
-#s-result { display:none; flex-direction:column; min-height:100vh; }
+#s-result { display:none; flex-direction:column; min-height:100vh; scroll-behavior:auto; }
 #s-result.active { display:flex; }
 .result-header { position:sticky; top:0; z-index:100; background:rgba(255,248,231,0.96); backdrop-filter:blur(12px); padding:14px 20px 12px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
 .rh-left {}
@@ -832,7 +832,7 @@ input[type=range]#score-range:active::-webkit-slider-thumb { transform:scale(1.1
 
   <div class="bottom-action" style="flex-direction:column; gap:8px;">
     <button class="btn btn-primary" onclick="continueMyRound()" id="btn-continue-round">
-      ➕ 2바퀴 더 하기 → 더 정확한 결과
+      ➕ 1바퀴 더해서 더 정확한 결과 얻기
     </button>
     <div style="display:flex; gap:10px;">
       <button class="btn btn-secondary" onclick="restartSurvey()" style="flex:1;">처음부터 다시</button>
@@ -1533,6 +1533,20 @@ function goTo(id) {
   /* 응답자 선택 화면 진입 시 아바타 렌더링 */
   if (id === 's-who') renderWhoAvatars();
 
+  /* 로딩 화면 진입 시 히스토리 비우기 — 뒤로가기로 이탈 불가 */
+  if (id === 's-loading') {
+    screenHistory.length = 0;
+    window.history.pushState(null, '', '');
+    return;
+  }
+
+  /* 결과 화면 진입 시 히스토리 비우기 — 뒤로가기로 설문 복귀 방지 */
+  if (id === 's-result') {
+    screenHistory.length = 0;
+    window.history.pushState(null, '', '');
+    return;
+  }
+
   /* 브라우저 히스토리에 현재 화면 push */
   if (currentId && currentId !== id) {
     screenHistory.push(currentId);
@@ -1542,6 +1556,32 @@ function goTo(id) {
 
 /* 브라우저 뒤로가기 가로채기 */
 window.addEventListener('popstate', (e) => {
+
+  const currentActive = document.querySelector('.screen.active');
+  const currentId = currentActive ? currentActive.id : null;
+
+  /* ── 보강 1: 로딩 화면 뒤로가기 완전 차단 ── */
+  if (currentId === 's-loading') {
+    /* 로딩 중 이탈 불가 — 더미 push로 막기 */
+    window.history.pushState(null, '', '');
+    showToast('결과를 저장하는 중이에요. 잠시만 기다려주세요 ⏳');
+    return;
+  }
+
+  /* ── 보강 2: 초대 화면 뒤로가기 경고 ── */
+  if (currentId === 's-invite') {
+    const code = document.getElementById('invite-code-display')?.textContent || '';
+    const confirmed = confirm(
+      `세션이 이미 만들어졌어요.\n코드: ${code}\n\n뒤로 가시면 초대 화면을 다시 볼 수 없어요.\n계속 진행하시겠어요?`
+    );
+    if (!confirmed) {
+      /* 취소: 다시 push해서 초대 화면 유지 */
+      window.history.pushState(null, '', '');
+      return;
+    }
+    /* 확인: 히스토리에서 꺼내서 이전 화면으로 */
+  }
+
   if (screenHistory.length > 0) {
     const prevId = screenHistory.pop();
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -1558,7 +1598,7 @@ window.addEventListener('popstate', (e) => {
         btn.textContent = '세션 만들고 설문 시작 →';
         btn.style.opacity = '';
         btn.style.pointerEvents = '';
-        onSessionNameInput(); /* 입력값에 따라 활성/비활성 재설정 */
+        onSessionNameInput();
       }
       const joinBtn = document.getElementById('btn-join-session');
       if (joinBtn) {
@@ -1567,18 +1607,21 @@ window.addEventListener('popstate', (e) => {
         joinBtn.style.pointerEvents = '';
       }
     }
+    /* 설문 화면으로 돌아오면 현재 문항 재렌더링 */
+    if (prevId === 's-survey') {
+      loadQ();
+    }
   } else {
     /* 히스토리 없으면 시작 화면으로 — 외부 이탈 방지 */
-    const currentActive = document.querySelector('.screen.active');
-    if (currentActive && currentActive.id !== 's-start') {
+    if (currentId && currentId !== 's-start') {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById('s-start').classList.add('active');
       window.scrollTo(0, 0);
     }
-    /* 더미 push로 다음 뒤로가기도 가로채기 */
     window.history.pushState(null, '', '');
     return;
   }
+  window.history.pushState(null, '', '');
 });
 
 /* ══════════════════════════════
@@ -1890,10 +1933,16 @@ function updateContinueBtn() {
     btn.style.cursor = 'pointer';
     btn.onclick = () => { round = nextRound; currentQ = 0; answers = {}; loadQ(); goTo('s-survey'); };
   } else if (done === 2) {
-    btn.textContent = '➕ 3바퀴 완주하기 → 가장 정확한 결과';
+    btn.textContent = '➕ 1바퀴 더 해서 최종 결과 얻기';
+    btn.style.background = 'var(--navy)';
+    btn.style.opacity = '1';
+    btn.style.cursor = 'pointer';
     btn.onclick = () => { round = 3; currentQ = 0; answers = {}; loadQ(); goTo('s-survey'); };
   } else {
-    btn.textContent = '➕ 2바퀴 더 하기 → 더 정확한 결과';
+    btn.textContent = '➕ 1바퀴 더해서 더 정확한 결과 얻기';
+    btn.style.background = 'var(--navy)';
+    btn.style.opacity = '1';
+    btn.style.cursor = 'pointer';
     btn.onclick = () => { round = 2; currentQ = 0; answers = {}; loadQ(); goTo('s-survey'); };
   }
 }
@@ -2192,6 +2241,15 @@ async function showResult() {
 
   buildResult(myName, scores, figure);
   goTo('s-result');
+
+  /* 결과 화면 상단(위인 카드)으로 스크롤 — DOM 렌더링 완료 후 */
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      const resultEl = document.getElementById('s-result');
+      if (resultEl) resultEl.scrollTop = 0;
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    });
+  });
 
   /* 실시간 리스너 (이후 새 참여자 자동 추가) */
   if (currentSessionId) startSessionListener(currentSessionId);
@@ -3958,6 +4016,14 @@ async function restoreSessionFromFirebase(code) {
     buildCompass(sessions[0].scores);
 
     goTo('s-result');
+    /* 상단으로 스크롤 */
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const resultEl = document.getElementById('s-result');
+        if (resultEl) resultEl.scrollTop = 0;
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      });
+    });
     /* 실시간 리스너 시작 (이후 참여자 자동 추가) */
     startSessionListener(code);
 
