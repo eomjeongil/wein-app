@@ -1826,7 +1826,8 @@ function copyResultCard() {
   const top3arr   = sessions[0]?.top3?.slice(0,3) || [];
   const cnt       = sessions.length;
 
-  const W = 900, H = 560;
+  /* 1080×1080 정사각형 — SNS/카톡 최적 */
+  const W = 1080, H = 1080;
   const canvas = document.createElement('canvas');
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d');
@@ -1837,104 +1838,100 @@ function copyResultCard() {
   bg.addColorStop(0.5, '#154360');
   bg.addColorStop(1,   '#0D2137');
   ctx.fillStyle = bg;
-  roundRect(ctx, 0, 0, W, H, 28);
-  ctx.fill();
+  ctx.fillRect(0, 0, W, H);
 
   /* ── 배경 원 장식 ── */
   ctx.save();
-  ctx.globalAlpha = 0.06;
+  ctx.globalAlpha = 0.07;
   ctx.fillStyle = '#D4AF37';
-  ctx.beginPath(); ctx.arc(W - 80, 80, 200, 0, Math.PI * 2); ctx.fill();
-  ctx.beginPath(); ctx.arc(60, H - 60, 150, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(W - 100, 120, 320, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(80, H - 100, 240, 0, Math.PI * 2); ctx.fill();
   ctx.restore();
 
   /* ── 상단 골드 라인 ── */
-  const goldGrad = ctx.createLinearGradient(40, 0, W - 40, 0);
+  const goldGrad = ctx.createLinearGradient(60, 0, W - 60, 0);
   goldGrad.addColorStop(0,   'rgba(212,175,55,0)');
-  goldGrad.addColorStop(0.3, '#D4AF37');
-  goldGrad.addColorStop(0.7, '#D4AF37');
+  goldGrad.addColorStop(0.2, '#D4AF37');
+  goldGrad.addColorStop(0.8, '#D4AF37');
   goldGrad.addColorStop(1,   'rgba(212,175,55,0)');
   ctx.strokeStyle = goldGrad;
-  ctx.lineWidth = 2;
-  ctx.beginPath(); ctx.moveTo(40, 72); ctx.lineTo(W - 40, 72); ctx.stroke();
+  ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.moveTo(60, 100); ctx.lineTo(W - 60, 100); ctx.stroke();
 
   /* ── wein 로고 ── */
-  ctx.font = '600 14px "Apple SD Gothic Neo", sans-serif';
+  ctx.font = '600 26px sans-serif';
   ctx.fillStyle = 'rgba(255,255,255,0.35)';
-  ctx.fillText('✨ wein.ai.kr', 48, 52);
+  ctx.fillText('✨ wein.ai.kr', 68, 72);
 
   /* ── 참여 인원 뱃지 ── */
   const badgeText = `${cnt}명 참여`;
-  ctx.font = '700 13px sans-serif';
-  const bw = ctx.measureText(badgeText).width + 24;
-  ctx.fillStyle = 'rgba(255,255,255,0.1)';
-  roundRect(ctx, W - 48 - bw, 36, bw, 28, 14);
+  ctx.font = '700 22px sans-serif';
+  const bw = ctx.measureText(badgeText).width + 36;
+  ctx.fillStyle = 'rgba(255,255,255,0.12)';
+  roundRect(ctx, W - 68 - bw, 46, bw, 42, 21);
   ctx.fill();
-  ctx.fillStyle = 'rgba(255,255,255,0.7)';
-  ctx.fillText(badgeText, W - 48 - bw + 12, 55);
+  ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+  ctx.lineWidth = 1;
+  roundRect(ctx, W - 68 - bw, 46, bw, 42, 21);
+  ctx.stroke();
+  ctx.fillStyle = 'rgba(255,255,255,0.75)';
+  ctx.fillText(badgeText, W - 68 - bw + 18, 75);
 
-  /* ── 위인 이름 ── */
-  ctx.font = `900 ${figure.length > 8 ? 44 : 52}px "Apple SD Gothic Neo", sans-serif`;
+  /* ── 위인 이름 (대형) ── */
+  const figFontSize = figure.length > 8 ? 88 : figure.length > 5 ? 100 : 116;
+  ctx.font = `900 ${figFontSize}px sans-serif`;
   ctx.fillStyle = '#D4AF37';
-  ctx.fillText(figure, 48, 160);
+  ctx.fillText(figure, 68, 280);
 
   /* ── 아이 이름 라인 ── */
-  ctx.font = '500 20px sans-serif';
+  ctx.font = '400 34px sans-serif';
   ctx.fillStyle = 'rgba(255,255,255,0.55)';
-  ctx.fillText(`${childName}${pf}와 닮은 위인`, 48, 198);
+  ctx.fillText(`${childName}${pf}와 닮은 위인`, 68, 340);
 
   /* ── 인용구 ── */
   if (quote) {
-    ctx.font = 'italic 500 16px sans-serif';
-    ctx.fillStyle = 'rgba(255,255,255,0.4)';
-    const maxW = W - 100;
-    wrapText(ctx, `"${quote}"`, 48, 236, maxW, 24);
+    ctx.font = 'italic 400 28px sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.38)';
+    wrapText(ctx, `"${quote}"`, 68, 410, W - 136, 40);
   }
 
   /* ── 성향 태그들 ── */
-  const tagY = quote ? 296 : 240;
-  let tx = 48;
+  const tagY = quote ? 520 : 430;
+  let tx = 68;
   top3arr.forEach((t, i) => {
     const label = t.type || t;
-    ctx.font = '700 15px sans-serif';
-    const tw = ctx.measureText(label).width + 32;
+    ctx.font = `700 26px sans-serif`;
+    const tw = ctx.measureText(label).width + 52;
     /* 태그 배경 */
     ctx.fillStyle = i === 0
-      ? 'rgba(212,175,55,0.25)'
-      : 'rgba(255,255,255,0.10)';
-    roundRect(ctx, tx, tagY, tw, 36, 18);
+      ? 'rgba(212,175,55,0.22)'
+      : 'rgba(255,255,255,0.08)';
+    roundRect(ctx, tx, tagY, tw, 60, 30);
     ctx.fill();
     /* 태그 테두리 */
     ctx.strokeStyle = i === 0
-      ? 'rgba(212,175,55,0.6)'
+      ? 'rgba(212,175,55,0.55)'
       : 'rgba(255,255,255,0.15)';
-    ctx.lineWidth = 1;
-    roundRect(ctx, tx, tagY, tw, 36, 18);
+    ctx.lineWidth = 1.5;
+    roundRect(ctx, tx, tagY, tw, 60, 30);
     ctx.stroke();
     /* 태그 텍스트 */
-    ctx.fillStyle = i === 0 ? '#D4AF37' : 'rgba(255,255,255,0.8)';
-    ctx.fillText(label, tx + 16, tagY + 24);
-    tx += tw + 10;
+    ctx.fillStyle = i === 0 ? '#D4AF37' : 'rgba(255,255,255,0.75)';
+    ctx.fillText(label, tx + 26, tagY + 40);
+    tx += tw + 16;
   });
 
-  /* ── 구분선 ── */
+  /* ── 하단 구분선 ── */
   ctx.strokeStyle = 'rgba(255,255,255,0.08)';
   ctx.lineWidth = 1;
   ctx.beginPath();
-  ctx.moveTo(48, H - 110); ctx.lineTo(W - 48, H - 110);
+  ctx.moveTo(68, H - 80); ctx.lineTo(W - 68, H - 80);
   ctx.stroke();
 
-  /* ── 하단 CTA 버튼 ── */
-  const ctaGrad = ctx.createLinearGradient(48, 0, 48 + 440, 0);
-  ctaGrad.addColorStop(0, '#D4AF37');
-  ctaGrad.addColorStop(1, '#B8962A');
-  ctx.fillStyle = ctaGrad;
-  roundRect(ctx, 48, H - 94, 440, 56, 14);
-  ctx.fill();
-
-  ctx.font = '800 17px sans-serif';
-  ctx.fillStyle = '#0A3D62';
-  ctx.fillText('우리 아이도 찾아보세요 → wein.ai.kr', 68, H - 58);
+  /* ── 하단 URL (버튼 없이 텍스트만) ── */
+  ctx.font = '500 24px sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.3)';
+  ctx.fillText('wein.ai.kr — 우리 아이와 닮은 위인 찾기', 68, H - 38);
 
   /* ── 이미지 저장 or 공유 ── */
   try {
