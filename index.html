@@ -3762,6 +3762,7 @@ function copyInviteMessage() {
 function goToSurveyFromInvite() {
   /* 세션 만들 때 입력한 이름으로 응답자 타입 자동 감지 */
   const creatorName = document.getElementById('creator-name').value.trim();
+  const childName   = document.getElementById('session-child-name')?.value.trim() || '';
 
   /* 이름 기반 자동 매핑 */
   const nameMap = {
@@ -3776,10 +3777,14 @@ function goToSurveyFromInvite() {
     whoIcon  = matched.icon;
     whoLabel = matched.label;
   } else {
-    /* 매핑 안 되면 "어른"으로 기본 설정 */
     whoType  = 'adult';
     whoIcon  = 'adult';
     whoLabel = creatorName || '어른';
+  }
+
+  /* localStorage에 세션 저장 (재접속 시 배너 표시용) */
+  if (currentSessionCode && childName) {
+    saveSessionToLocal(currentSessionCode, childName, creatorName);
   }
 
   /* 아이 정보 화면으로 직행 (응답자 선택 건너뜀) */
