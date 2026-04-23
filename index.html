@@ -1704,14 +1704,18 @@ function startSurvey() {
   if (savedRound === 0) {
     /* 처음 시작 */
     round = 1;
-  } else if (savedRound < 3) {
-    /* 중간 이탈 → 이어서 */
+  } else if (savedRound < 6) {
+    /* 완료된 다음 미사용 round부터 — 자연스럽게 이어서 */
     round = savedRound + 1;
-    showToast(savedRound + '바퀴까지 완료됐어요. ' + round + '바퀴부터 이어갈게요 ✨');
+    const roundLabel = {
+      2:'2바퀴', 3:'3바퀴', 4:'4바퀴 (새로운 질문)',
+      5:'5바퀴 (새로운 질문)', 6:'마지막 바퀴 (새로운 질문)'
+    }[round] || (round + '바퀴');
+    showToast(savedRound + '바퀴까지 완료됐어요. ' + roundLabel + '부터 이어갈게요 ✨');
   } else {
-    /* 3바퀴 완주 후 재진입 → 보너스 4바퀴 */
-    round = 4;
-    showToast('3바퀴 완주! 새로운 문항 조합으로 보너스 바퀴를 시작해요 🎉');
+    /* 6바퀴 모두 완료 → 1바퀴부터 순환 */
+    round = 1;
+    showToast('모든 바퀴를 완주했어요! 처음 질문으로 다시 시작해요 🔄');
   }
 
   currentQ = 0; answers = {};
@@ -1859,15 +1863,15 @@ function calcMid() {
   /* badgeMap/subMap → 아래 badgeMapFull/subMapFull로 통합 */
   const badgeMapFull = {
     1: '✅ 1바퀴 완료!', 2: '✅ 2바퀴 완료!', 3: '🎉 1회차 완주!',
-    4: '✅ 4바퀴 완료!', 5: '✅ 5바퀴 완료!', 6: '🏆 2회차 완주!',
+    4: '✅ 4바퀴 완료!', 5: '✅ 5바퀴 완료!', 6: '🏆 6바퀴 모두 완주!',
   };
   const subMapFull = {
     1: '1바퀴(12문항) 기준이에요. 3바퀴까지 풀면 더 정확해져요.',
     2: '2바퀴(24문항) 기준이에요. 1바퀴 더 풀면 완주예요!',
     3: '36문항 완주! 가장 정확한 분석이에요.',
-    4: '2회차 4바퀴(선택의 순간에) 완료! 계속하면 더 깊어져요.',
-    5: '2회차 5바퀴(혼자 있을 때) 완료! 마지막 바퀴만 남았어요.',
-    6: '2회차 6바퀴까지 완주! 모든 바퀴를 마쳤어요 🏆',
+    4: '새로운 상황의 4바퀴 완료! 계속하면 더 깊어져요.',
+    5: '5바퀴 완료! 마지막 바퀴만 남았어요.',
+    6: '6바퀴까지 모두 완주했어요! 🏆',
   };
   const el_badge = document.getElementById('mid-badge');
   const el_sub   = document.getElementById('mid-sub');
@@ -1893,7 +1897,7 @@ function calcMid() {
   const moreBtnTitle = document.getElementById('more-btn-title');
   const moreBtnSub   = document.getElementById('more-btn-sub');
   const nextRound = round + 1;
-  const nextLabel = {2:'2바퀴',3:'완주하기',4:'2회차 4바퀴',5:'2회차 5바퀴',6:'2회차 완주'}[nextRound] || (nextRound + '바퀴');
+  const nextLabel = {2:'2바퀴',3:'완주하기',4:'4바퀴',5:'5바퀴',6:'마지막 바퀴'}[nextRound] || (nextRound + '바퀴');
   if (moreBtnTitle) moreBtnTitle.textContent = '➕ ' + nextLabel + ' 계속하기';
   if (moreBtnSub)   moreBtnSub.innerHTML = round < 3
     ? '12문항 더 풀면 훨씬 정확해져요.<br><strong style="color:var(--forest);">지금보다 2배 더 정확한 위인 매칭!</strong>'
@@ -1923,12 +1927,11 @@ function updateContinueBtn() {
     btn.onclick = null;
     btn.style.opacity = '0.7';
     btn.style.cursor = 'default';
-  } else if (done >= 3) {
-    /* 1회차 완주 → 2회차: 4바퀴부터 새 문항 */
+  } else if (done >= 3 && done < 6) {
+    /* 4~6바퀴 미완료 → 같은 방식으로 이어서 */
     const nextRound = done + 1;
-    const roundNames = {4:'선택의 순간에', 5:'혼자 있을 때', 6:'마지막 바퀴'};
-    btn.textContent = `➕ 2회차 ${nextRound}바퀴 · ${roundNames[nextRound] || ''} 시작`;
-    btn.style.background = 'var(--forest)';
+    btn.textContent = '➕ 1바퀴 더해서 더 정확한 결과 얻기';
+    btn.style.background = 'var(--navy)';
     btn.style.opacity = '1';
     btn.style.cursor = 'pointer';
     btn.onclick = () => { round = nextRound; currentQ = 0; answers = {}; loadQ(); goTo('s-survey'); };
@@ -2591,19 +2594,23 @@ function restartSurvey() {
   if (currentSessionCode) clearSessionFromLocal(currentSessionCode);
   currentSessionId = null; currentSessionCode = null;
   if (sessionUnsubscribe) { sessionUnsubscribe(); sessionUnsubscribe = null; }
-  try {
-    const name = document.getElementById('child-name').value.trim() || 'noname';
-    ['엄마','아빠','어른','나'].forEach(label => {
-      localStorage.removeItem('wiin_round_' + name + '_' + label);
-      localStorage.removeItem('wiin_ans_'   + name + '_' + label);
-    });
-  } catch(e) {}
+  /* round 기록은 유지 — 다음 시작 시 미사용 round 자동 감지 */
   document.querySelectorAll('.who-card').forEach(c => c.classList.remove('selected'));
   document.querySelectorAll('.age-card').forEach(c => c.classList.remove('selected'));
   document.getElementById('btn-who').classList.remove('on');
   document.getElementById('btn-info').classList.remove('on');
   document.getElementById('child-name').value = '';
   goTo('s-start');
+}
+
+/* 다음 시작 round 계산 — 완료된 round 다음부터, 6 넘으면 1로 순환 */
+function getNextStartRound(name, label) {
+  try {
+    const key = 'wiin_round_' + (name||'noname') + '_' + (label||whoLabel);
+    const done = parseInt(localStorage.getItem(key) || '0');
+    if (done >= 6) return 1;          /* 6바퀴 모두 완료 → 1바퀴부터 순환 */
+    return Math.max(1, done + 1);     /* 완료된 다음 바퀴부터 */
+  } catch(e) { return 1; }
 }
 
 /* 다른 응답자 추가 (같은 아이, 다른 사람) */
