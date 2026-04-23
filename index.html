@@ -389,6 +389,16 @@ input[type=range]#score-range:active::-webkit-slider-thumb { transform:scale(1.1
 .viral-btn-sub:active { transform:scale(0.98); background:rgba(255,255,255,0.18); }
 .viral-hint { font-size:10px; color:rgba(255,255,255,0.35); }
 
+/* 세션 배너 버튼 — 전역 btn 스타일 오버라이드 */
+#prev-result-banner button {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+#prev-result-banner {
+  pointer-events: auto !important;
+}
+
 /* 하단 */
 .bottom-action { padding:14px 20px 36px; display:flex; gap:10px; }
 .btn { flex:1; padding:14px 12px; border-radius:var(--r-md); font-size:13px; font-weight:700; border:none; cursor:pointer; transition:all 0.18s; letter-spacing:-0.2px; }
@@ -1802,105 +1812,185 @@ function updateContinueBtn() {
   }
 }
 
-/* 결과 카드 이미지 생성 (Canvas) — 수정 5 */
+/* 결과 카드 이미지 생성 (Canvas) */
 function copyResultCard() {
   const childName = document.getElementById('child-name').value.trim() || '우리 아이';
   const pf        = namePostfix(childName);
   const figure    = sessions[0]?.figure?.name || '위인';
-  const top3text  = sessions[0]?.top3?.slice(0,3).map(t => t.type).join(' · ') || '';
+  const quote     = sessions[0]?.figure?.quote || '';
+  const top3arr   = sessions[0]?.top3?.slice(0,3) || [];
   const cnt       = sessions.length;
 
-  /* Canvas로 카드 생성 */
+  const W = 900, H = 560;
   const canvas = document.createElement('canvas');
-  canvas.width = 800; canvas.height = 480;
+  canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d');
 
-  /* 배경 그라데이션 */
-  const grad = ctx.createLinearGradient(0, 0, 800, 480);
-  grad.addColorStop(0, '#0A3D62');
-  grad.addColorStop(1, '#154360');
-  ctx.fillStyle = grad;
-  ctx.roundRect(0, 0, 800, 480, 24);
+  /* ── 배경 그라데이션 ── */
+  const bg = ctx.createLinearGradient(0, 0, W, H);
+  bg.addColorStop(0,   '#0A3D62');
+  bg.addColorStop(0.5, '#154360');
+  bg.addColorStop(1,   '#0D2137');
+  ctx.fillStyle = bg;
+  roundRect(ctx, 0, 0, W, H, 28);
   ctx.fill();
 
-  /* 골드 액센트 라인 */
-  ctx.strokeStyle = '#D4AF37';
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  ctx.moveTo(40, 60); ctx.lineTo(760, 60);
-  ctx.stroke();
+  /* ── 배경 원 장식 ── */
+  ctx.save();
+  ctx.globalAlpha = 0.06;
+  ctx.fillStyle = '#D4AF37';
+  ctx.beginPath(); ctx.arc(W - 80, 80, 200, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(60, H - 60, 150, 0, Math.PI * 2); ctx.fill();
+  ctx.restore();
 
-  /* wein 로고 */
-  ctx.font = '700 16px sans-serif';
-  ctx.fillStyle = 'rgba(255,255,255,0.4)';
-  ctx.fillText('wein.ai.kr', 48, 44);
+  /* ── 상단 골드 라인 ── */
+  const goldGrad = ctx.createLinearGradient(40, 0, W - 40, 0);
+  goldGrad.addColorStop(0,   'rgba(212,175,55,0)');
+  goldGrad.addColorStop(0.3, '#D4AF37');
+  goldGrad.addColorStop(0.7, '#D4AF37');
+  goldGrad.addColorStop(1,   'rgba(212,175,55,0)');
+  ctx.strokeStyle = goldGrad;
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(40, 72); ctx.lineTo(W - 40, 72); ctx.stroke();
 
-  /* 위인 이름 */
-  ctx.font = '900 52px sans-serif';
+  /* ── wein 로고 ── */
+  ctx.font = '600 14px "Apple SD Gothic Neo", sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.35)';
+  ctx.fillText('✨ wein.ai.kr', 48, 52);
+
+  /* ── 참여 인원 뱃지 ── */
+  const badgeText = `${cnt}명 참여`;
+  ctx.font = '700 13px sans-serif';
+  const bw = ctx.measureText(badgeText).width + 24;
+  ctx.fillStyle = 'rgba(255,255,255,0.1)';
+  roundRect(ctx, W - 48 - bw, 36, bw, 28, 14);
+  ctx.fill();
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.fillText(badgeText, W - 48 - bw + 12, 55);
+
+  /* ── 위인 이름 ── */
+  ctx.font = `900 ${figure.length > 8 ? 44 : 52}px "Apple SD Gothic Neo", sans-serif`;
   ctx.fillStyle = '#D4AF37';
   ctx.fillText(figure, 48, 160);
 
-  /* 아이 이름 */
-  ctx.font = '700 22px sans-serif';
-  ctx.fillStyle = 'rgba(255,255,255,0.7)';
-  ctx.fillText(childName + pf + '와 닮은 위인', 48, 200);
+  /* ── 아이 이름 라인 ── */
+  ctx.font = '500 20px sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.55)';
+  ctx.fillText(`${childName}${pf}와 닮은 위인`, 48, 198);
 
-  /* 성향 태그들 */
-  const tags = (sessions[0]?.top3?.slice(0,3) || []);
+  /* ── 인용구 ── */
+  if (quote) {
+    ctx.font = 'italic 500 16px sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    const maxW = W - 100;
+    wrapText(ctx, `"${quote}"`, 48, 236, maxW, 24);
+  }
+
+  /* ── 성향 태그들 ── */
+  const tagY = quote ? 296 : 240;
   let tx = 48;
-  tags.forEach(t => {
-    const label = t.type;
-    const w = ctx.measureText(label).width + 32;
-    ctx.fillStyle = 'rgba(255,255,255,0.12)';
-    ctx.roundRect(tx, 220, w, 36, 18);
-    ctx.fill();
+  top3arr.forEach((t, i) => {
+    const label = t.type || t;
     ctx.font = '700 15px sans-serif';
-    ctx.fillStyle = 'white';
-    ctx.fillText(label, tx + 16, 244);
-    tx += w + 10;
+    const tw = ctx.measureText(label).width + 32;
+    /* 태그 배경 */
+    ctx.fillStyle = i === 0
+      ? 'rgba(212,175,55,0.25)'
+      : 'rgba(255,255,255,0.10)';
+    roundRect(ctx, tx, tagY, tw, 36, 18);
+    ctx.fill();
+    /* 태그 테두리 */
+    ctx.strokeStyle = i === 0
+      ? 'rgba(212,175,55,0.6)'
+      : 'rgba(255,255,255,0.15)';
+    ctx.lineWidth = 1;
+    roundRect(ctx, tx, tagY, tw, 36, 18);
+    ctx.stroke();
+    /* 태그 텍스트 */
+    ctx.fillStyle = i === 0 ? '#D4AF37' : 'rgba(255,255,255,0.8)';
+    ctx.fillText(label, tx + 16, tagY + 24);
+    tx += tw + 10;
   });
 
-  /* 구분선 */
-  ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+  /* ── 구분선 ── */
+  ctx.strokeStyle = 'rgba(255,255,255,0.08)';
   ctx.lineWidth = 1;
   ctx.beginPath();
-  ctx.moveTo(48, 290); ctx.lineTo(752, 290);
+  ctx.moveTo(48, H - 110); ctx.lineTo(W - 48, H - 110);
   ctx.stroke();
 
-  /* 참여 정보 */
-  ctx.font = '400 16px sans-serif';
-  ctx.fillStyle = 'rgba(255,255,255,0.5)';
-  ctx.fillText(`${cnt}명이 함께 발견한 결과`, 48, 330);
-
-  /* 하단 CTA */
-  ctx.fillStyle = '#D4AF37';
-  ctx.roundRect(48, 380, 400, 60, 12);
+  /* ── 하단 CTA 버튼 ── */
+  const ctaGrad = ctx.createLinearGradient(48, 0, 48 + 440, 0);
+  ctaGrad.addColorStop(0, '#D4AF37');
+  ctaGrad.addColorStop(1, '#B8962A');
+  ctx.fillStyle = ctaGrad;
+  roundRect(ctx, 48, H - 94, 440, 56, 14);
   ctx.fill();
-  ctx.font = '800 18px sans-serif';
-  ctx.fillStyle = '#0A3D62';
-  ctx.fillText('우리 아이도 찾아보세요 → wein.ai.kr', 68, 417);
 
-  /* 이미지로 변환하여 다운로드 */
+  ctx.font = '800 17px sans-serif';
+  ctx.fillStyle = '#0A3D62';
+  ctx.fillText('우리 아이도 찾아보세요 → wein.ai.kr', 68, H - 58);
+
+  /* ── 이미지 저장 or 공유 ── */
   try {
-    canvas.toBlob(blob => {
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `wein_${figure}_결과카드.png`;
-      a.click();
-      URL.revokeObjectURL(url);
-      showToast('결과 카드가 저장됐어요! 📸 카톡에 이미지로 공유해보세요');
-    });
+    if (navigator.share && navigator.canShare) {
+      canvas.toBlob(async blob => {
+        const file = new File([blob], `wein_${figure}_결과카드.png`, { type: 'image/png' });
+        try {
+          await navigator.share({ files: [file], title: `${childName}${pf}의 위인 결과`, text: `wein.ai.kr — ${figure}` });
+          showToast('결과 카드 공유 완료! 🎉');
+        } catch(e) {
+          downloadCanvas(canvas, figure);
+        }
+      }, 'image/png');
+    } else {
+      downloadCanvas(canvas, figure);
+    }
   } catch(e) {
-    /* Canvas 지원 안 되면 텍스트로 폴백 */
-    const msg =
-      `🏆 ${childName}${pf} 위인 성향 결과\n\n` +
-      `닮은 위인: ${figure}\n강점 성향: ${top3text}\n참여 인원: ${cnt}명\n\n` +
-      `📌 우리 아이도 찾아보세요\nhttps://wein.ai.kr`;
-    copyToClipboard(msg);
-    showToast('결과 카드가 복사됐어요! 💌');
+    downloadCanvas(canvas, figure);
   }
 }
+
+function downloadCanvas(canvas, figure) {
+  canvas.toBlob(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `wein_${figure}_결과카드.png`;
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('결과 카드 이미지가 저장됐어요! 📸 카톡에 이미지로 공유해보세요');
+  }, 'image/png');
+}
+
+/* Canvas 유틸 */
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+function wrapText(ctx, text, x, y, maxW, lineH) {
+  const words = text.split('');
+  let line = '', lineY = y;
+  for (let i = 0; i < words.length; i++) {
+    const test = line + words[i];
+    if (ctx.measureText(test).width > maxW && line) {
+      ctx.fillText(line, x, lineY);
+      line = words[i]; lineY += lineH;
+    } else { line = test; }
+  }
+  ctx.fillText(line, x, lineY);
+}
+
+
 
 
 function saveCompletedRound(name, r) {
@@ -2740,29 +2830,6 @@ function copyAppLink() {
 
   copyToClipboard(msg);
   showToast('앱 소개 메시지가 복사됐어요! 카톡·문자에 붙여넣기 하세요 🌟');
-}
-
-/* 결과 카드 복사 — "우리 아이 결과 카드 보내기" */
-function copyResultCard() {
-  const childName = document.getElementById('child-name').value.trim() || '우리 아이';
-  const pf        = namePostfix(childName);
-  const figure    = sessions[0]?.figure?.name || '위인';
-  const top3      = sessions[0]?.top3?.slice(0,3).map(t => t.type).join(' · ') || '';
-  const cnt       = sessions.length;
-
-  const msg =
-    `🏆 ${childName}${pf} 위인 성향 결과\n\n` +
-    `닮은 위인: ${figure}\n` +
-    `강점 성향: ${top3}\n` +
-    `참여 인원: ${cnt}명\n\n` +
-    `─────────────────\n` +
-    `📌 우리 아이도 찾아보세요\n` +
-    `https://wein.ai.kr\n` +
-    `─────────────────\n` +
-    `*wein — 우리 아이 성향 매칭 앱`;
-
-  copyToClipboard(msg);
-  showToast('결과 카드가 복사됐어요! 💌 붙여넣기해서 공유해보세요');
 }
 
 /* ══════════════════════════════
@@ -3730,7 +3797,8 @@ async function restoreSessionFromFirebase(code) {
     const sessionSnap = await getDoc(doc(db, 'sessions', code));
     if (!sessionSnap.exists()) {
       showToast('세션이 만료됐거나 존재하지 않아요.');
-      clearSessionFromLocal();
+      clearSessionFromLocal(code); /* 해당 코드만 삭제 */
+      checkPreviousSession();      /* 배너 갱신 */
       return;
     }
     const sessionData = sessionSnap.data();
@@ -3861,6 +3929,20 @@ async function checkPreviousSession() {
     return;
   }
 
+  const RESTORE_BTN_STYLE = `
+    flex:1;padding:10px;
+    background:var(--accent);color:var(--charcoal);
+    border:none;border-radius:8px;font-size:13px;font-weight:800;
+    cursor:pointer !important;opacity:1 !important;
+    pointer-events:auto !important;`;
+
+  const DELETE_BTN_STYLE = `
+    padding:10px 14px;
+    background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.60);
+    border:none;border-radius:8px;font-size:12px;
+    cursor:pointer !important;opacity:1 !important;
+    pointer-events:auto !important;`;
+
   const cards = validSessions.map(s => `
     <div style="background:rgba(255,255,255,0.10);border:1px solid rgba(255,255,255,0.15);
                 border-radius:10px;padding:12px 14px;margin-bottom:8px;">
@@ -3878,14 +3960,14 @@ async function checkPreviousSession() {
         </span>
       </div>
       <div style="display:flex;gap:6px;">
-        <button onclick="restoreSessionFromFirebase('${s.code}')"
-          style="flex:1;padding:8px;background:var(--accent);color:var(--charcoal);
-                 border:none;border-radius:8px;font-size:12px;font-weight:800;cursor:pointer;">
+        <button type="button"
+          onclick="restoreSessionFromFirebase('${s.code}')"
+          style="${RESTORE_BTN_STYLE}">
           결과 이어보기 →
         </button>
-        <button onclick="deleteSessionCard('${s.code}')"
-          style="padding:8px 12px;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.50);
-                 border:none;border-radius:8px;font-size:11px;cursor:pointer;">
+        <button type="button"
+          onclick="deleteSessionCard('${s.code}')"
+          style="${DELETE_BTN_STYLE}">
           삭제
         </button>
       </div>
