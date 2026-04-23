@@ -394,6 +394,11 @@ input[type=range]#score-range:active::-webkit-slider-thumb { transform:scale(1.1
   opacity: 1 !important;
   pointer-events: auto !important;
   cursor: pointer !important;
+  display: inline-block !important;
+}
+#prev-result-banner button:active {
+  transform: scale(0.97);
+  opacity: 0.85 !important;
 }
 #prev-result-banner {
   pointer-events: auto !important;
@@ -3931,17 +3936,18 @@ async function checkPreviousSession() {
 
   const RESTORE_BTN_STYLE = `
     flex:1;padding:10px;
-    background:var(--accent);color:var(--charcoal);
-    border:none;border-radius:8px;font-size:13px;font-weight:800;
-    cursor:pointer !important;opacity:1 !important;
-    pointer-events:auto !important;`;
+    background:var(--accent);color:#0A3D62;
+    border:2px solid var(--accent);border-radius:8px;
+    font-size:13px;font-weight:800;
+    cursor:pointer;opacity:1;pointer-events:auto;`;
 
   const DELETE_BTN_STYLE = `
-    padding:10px 14px;
-    background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.60);
-    border:none;border-radius:8px;font-size:12px;
-    cursor:pointer !important;opacity:1 !important;
-    pointer-events:auto !important;`;
+    padding:10px 16px;
+    background:rgba(255,255,255,0.15);
+    color:rgba(255,255,255,0.90);
+    border:1.5px solid rgba(255,255,255,0.35);
+    border-radius:8px;font-size:12px;font-weight:700;
+    cursor:pointer;opacity:1;pointer-events:auto;`;
 
   const cards = validSessions.map(s => `
     <div style="background:rgba(255,255,255,0.10);border:1px solid rgba(255,255,255,0.15);
