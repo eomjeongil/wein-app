@@ -3931,59 +3931,63 @@ async function checkPreviousSession() {
     return;
   }
 
-  const RESTORE_BTN_STYLE = `
-    flex:1;padding:10px;
-    background:var(--accent);color:#0A3D62;
-    border:2px solid var(--accent);border-radius:8px;
-    font-size:13px;font-weight:800;
-    cursor:pointer;opacity:1;pointer-events:auto;`;
+  /* DOM 직접 생성 방식으로 버튼 이벤트 확실히 연결 */
+  const wrapper = document.createElement('div');
+  wrapper.style.marginBottom = '16px';
 
-  const DELETE_BTN_STYLE = `
-    padding:10px 16px;
-    background:rgba(255,255,255,0.15);
-    color:rgba(255,255,255,0.90);
-    border:1.5px solid rgba(255,255,255,0.35);
-    border-radius:8px;font-size:12px;font-weight:700;
-    cursor:pointer;opacity:1;pointer-events:auto;`;
+  const header = document.createElement('div');
+  header.style.cssText = 'font-size:10px;color:rgba(255,255,255,0.50);font-weight:600;letter-spacing:0.4px;margin-bottom:8px;';
+  header.textContent = `진행 중인 세션 (${validSessions.length}/${MAX_SESSIONS})`;
+  wrapper.appendChild(header);
 
-  const cards = validSessions.map(s => `
-    <div style="background:rgba(255,255,255,0.10);border:1px solid rgba(255,255,255,0.15);
-                border-radius:10px;padding:12px 14px;margin-bottom:8px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-        <div>
-          <span style="font-size:13px;font-weight:800;color:white;">${s.childName}${pf(s.childName)} 세션</span>
-          <span style="font-size:10px;color:rgba(255,255,255,0.45);margin-left:6px;">D-${daysLeft(s)}</span>
-        </div>
-        <span style="font-size:10px;color:rgba(255,255,255,0.40);font-weight:600;">코드: ${s.code}</span>
-      </div>
-      <div style="font-size:11px;color:rgba(255,255,255,0.55);margin-bottom:10px;">
-        ${s.myName}으로 참여 중
-        <span style="margin-left:6px;color:var(--accent);font-weight:700;">
-          ${s.doneCount > 0 ? `✅ ${s.doneCount}명 완료` : '⏳ 참여 대기 중'}
-        </span>
-      </div>
-      <div style="display:flex;gap:6px;">
-        <button type="button"
-          onclick="restoreSessionFromFirebase('${s.code}')"
-          style="${RESTORE_BTN_STYLE}">
-          결과 이어보기 →
-        </button>
-        <button type="button"
-          onclick="deleteSessionCard('${s.code}')"
-          style="${DELETE_BTN_STYLE}">
-          삭제
-        </button>
-      </div>
-    </div>`).join('');
+  validSessions.forEach(s => {
+    /* 카드 컨테이너 */
+    const card = document.createElement('div');
+    card.style.cssText = 'background:rgba(255,255,255,0.10);border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:12px 14px;margin-bottom:8px;';
 
-  banner.innerHTML = `
-    <div style="margin-bottom:16px;">
-      <div style="font-size:10px;color:rgba(255,255,255,0.50);font-weight:600;
-                  letter-spacing:0.4px;margin-bottom:8px;">
-        진행 중인 세션 (${validSessions.length}/${MAX_SESSIONS})
+    /* 상단 정보 */
+    const infoRow = document.createElement('div');
+    infoRow.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;';
+    infoRow.innerHTML = `
+      <div>
+        <span style="font-size:13px;font-weight:800;color:white;">${s.childName}${pf(s.childName)} 세션</span>
+        <span style="font-size:10px;color:rgba(255,255,255,0.45);margin-left:6px;">D-${daysLeft(s)}</span>
       </div>
-      ${cards}
-    </div>`;
+      <span style="font-size:10px;color:rgba(255,255,255,0.40);font-weight:600;">코드: ${s.code}</span>`;
+    card.appendChild(infoRow);
+
+    /* 참여 정보 */
+    const subRow = document.createElement('div');
+    subRow.style.cssText = 'font-size:11px;color:rgba(255,255,255,0.55);margin-bottom:10px;';
+    subRow.innerHTML = `${s.myName}으로 참여 중 <span style="margin-left:6px;color:var(--accent);font-weight:700;">${s.doneCount > 0 ? '✅ ' + s.doneCount + '명 완료' : '⏳ 참여 대기 중'}</span>`;
+    card.appendChild(subRow);
+
+    /* 버튼 행 */
+    const btnRow = document.createElement('div');
+    btnRow.style.cssText = 'display:flex;gap:6px;';
+
+    /* 결과 이어보기 버튼 */
+    const restoreBtn = document.createElement('button');
+    restoreBtn.type = 'button';
+    restoreBtn.textContent = '결과 이어보기 →';
+    restoreBtn.style.cssText = 'flex:1;padding:10px;background:#D4AF37;color:#0A3D62;border:2px solid #D4AF37;border-radius:8px;font-size:13px;font-weight:800;cursor:pointer;opacity:1;';
+    restoreBtn.addEventListener('click', () => restoreSessionFromFirebase(s.code));
+    btnRow.appendChild(restoreBtn);
+
+    /* 삭제 버튼 */
+    const deleteBtn = document.createElement('button');
+    deleteBtn.type = 'button';
+    deleteBtn.textContent = '삭제';
+    deleteBtn.style.cssText = 'padding:10px 16px;background:rgba(255,255,255,0.15);color:rgba(255,255,255,0.90);border:1.5px solid rgba(255,255,255,0.35);border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;opacity:1;';
+    deleteBtn.addEventListener('click', () => deleteSessionCard(s.code));
+    btnRow.appendChild(deleteBtn);
+
+    card.appendChild(btnRow);
+    wrapper.appendChild(card);
+  });
+
+  banner.innerHTML = '';
+  banner.appendChild(wrapper);
   banner.style.display = 'block';
 }
 
