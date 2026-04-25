@@ -249,6 +249,21 @@ input[type=range]#score-range:active::-webkit-slider-thumb { transform:scale(1.1
 .trait-row { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px; }
 .trait-chip { padding:4px 11px; background:rgba(255,255,255,0.16); border:1px solid rgba(255,255,255,0.20); border-radius:20px; font-size:11px; font-weight:600; color:rgba(255,255,255,0.90); backdrop-filter:blur(8px); }
 .trait-chip.primary { background:rgba(255,255,255,0.92); color:var(--charcoal); border-color:transparent; }
+
+/* ── 성향 순위 표시 (이름 아래) ── */
+.rank-traits { display:flex; flex-direction:column; gap:5px; margin:10px 0 14px; }
+.rank-trait-item { display:flex; align-items:center; gap:8px; }
+.rank-badge { width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:900; flex-shrink:0; }
+.rank-badge.r1 { background:var(--accent); color:#0A3D62; }
+.rank-badge.r2 { background:rgba(255,255,255,0.75); color:#2D3436; }
+.rank-badge.r3 { background:rgba(255,255,255,0.35); color:white; }
+.rank-trait-name { font-size:13px; font-weight:800; color:white; letter-spacing:-.2px; }
+.rank-trait-bar-wrap { flex:1; height:4px; background:rgba(255,255,255,0.15); border-radius:2px; overflow:hidden; }
+.rank-trait-bar { height:100%; border-radius:2px; transition:width .4s ease; }
+.rank-bar-r1 { background:var(--accent); }
+.rank-bar-r2 { background:rgba(255,255,255,0.6); }
+.rank-bar-r3 { background:rgba(255,255,255,0.35); }
+.rank-score { font-size:10px; font-weight:700; color:rgba(255,255,255,0.55); min-width:24px; text-align:right; }
 .common-banner { display:flex; align-items:center; gap:8px; padding:9px 12px; background:rgba(255,255,255,0.14); border:1px solid rgba(255,255,255,0.18); border-radius:var(--r-sm); font-size:12px; color:rgba(255,255,255,0.88); line-height:1.4; }
 .common-banner.hide { display:none; }
 .common-dot { width:6px; height:6px; border-radius:50%; background:#FFD700; flex-shrink:0; }
@@ -508,7 +523,7 @@ input[type=range]#score-range:active::-webkit-slider-thumb { transform:scale(1.1
           <div class="step-num">2</div>
           <div>
             12문항씩 3바퀴 — 총 36문항이 완주
-            <div class="step-hint">12문항만 해도 결과를 볼 수 있어요.<br>1바퀴 후 결과를 보고 나중에 다시 하면<br>2바퀴부터 이어서 시작돼요.<br>36문항을 완주할수록 결과가 더 정확해져요.</div>
+            <div class="step-hint">12문항만 해도 결과를 볼 수 있어요.<br>바퀴를 더 할수록 더 정확해져요.<br>다시 시작하면 새로운 질문으로 진행해요.<br>36문항(3바퀴)이 완주 기준이에요.</div>
           </div>
         </div>
         <div class="step-item"><div class="step-num">3</div>닮은 위인과 성향 결과 확인</div>
@@ -731,7 +746,7 @@ input[type=range]#score-range:active::-webkit-slider-thumb { transform:scale(1.1
   <div class="choice-cards">
     <div class="choice-card choice-result" onclick="showResult()">
       <div class="c-title">🎯 지금 결과 보기</div>
-      <div class="c-sub c-sub-dark">닮은 위인을 바로 확인해요. 나중에 이어서 더 풀 수 있어요.</div>
+      <div class="c-sub c-sub-dark">닮은 위인을 바로 확인해요. 나중에 다시 하면 새로운 질문이 나와요.</div>
     </div>
     <div class="choice-card choice-more" onclick="continueQ()" style="border:2px solid var(--accent);position:relative;">
       <div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--accent);color:var(--charcoal);font-size:10px;font-weight:800;padding:2px 10px;border-radius:10px;white-space:nowrap;">✨ 더 정확한 결과</div>
@@ -784,6 +799,17 @@ input[type=range]#score-range:active::-webkit-slider-thumb { transform:scale(1.1
     <div class="chart-legend" id="chart-legend"></div>
   </div>
   <div class="divider"></div>
+
+  <!-- 참여자용 앱 소개 배너 (방장에게는 숨김) -->
+  <div id="guest-share-banner" style="display:none;margin:0 20px 8px;">
+    <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:16px 18px;text-align:center;">
+      <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:8px;">내 아이도 찾아보고 싶다면?</div>
+      <button onclick="copyToClipboard('https://wein.ai.kr'); showToast('링크가 복사됐어요! 📋');"
+        style="width:100%;padding:12px;background:rgba(255,255,255,0.12);color:white;border:1.5px solid rgba(255,255,255,0.25);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;">
+        🌟 wein.ai.kr — 무료로 시작하기
+      </button>
+    </div>
+  </div>
 
   <!-- 성장 나침반 -->
   <div class="compass-section">
@@ -1553,6 +1579,7 @@ const BADGE_CLASSES = ['b-gold','b-sand','b-navy','b-pink'];
    전역 상태
 ══════════════════════════════ */
 let whoType = null, whoLabel = '', whoIcon = '';
+let isSessionCreator = false; /* 방장 여부 — 성장 나침반/쿠팡 섹션 표시 제어 */
 let ageGroup = null, ageSelected = false;
 let currentQ = 0, answers = {}, round = 1;
 let sessions = []; // {label, icon, scores{}}
@@ -1751,24 +1778,22 @@ function startSurvey() {
      3바퀴(정상 완주): 보너스 4바퀴 안내
      4바퀴 이상(보너스 완주): 또 보너스 4바퀴
   ─────────────────────────────────────────── */
+  /* 이어서 하기 제거 — 항상 완료된 다음 바퀴부터 새로 시작 */
   if (savedRound === 0) {
-    /* 처음 시작 */
     round = 1;
   } else if (savedRound < 6) {
-    /* 완료된 다음 미사용 round부터 — 자연스럽게 이어서 */
     round = savedRound + 1;
     const roundLabel = {
       2:'2바퀴', 3:'3바퀴', 4:'4바퀴 (새로운 질문)',
       5:'5바퀴 (새로운 질문)', 6:'마지막 바퀴 (새로운 질문)'
     }[round] || (round + '바퀴');
-    showToast(savedRound + '바퀴까지 완료됐어요. ' + roundLabel + '부터 이어갈게요 ✨');
+    showToast(savedRound + '바퀴 완료 기록이 있어요. ' + roundLabel + '부터 시작해요 ✨');
   } else {
-    /* 6바퀴 모두 완료 → 1바퀴부터 순환 */
     round = 1;
     showToast('모든 바퀴를 완주했어요! 처음 질문으로 다시 시작해요 🔄');
   }
 
-  currentQ = 0; answers = {};
+  currentQ = 0; answers = {}; /* 항상 새로 시작 — 중간 저장 없음 */
   loadQ(); goTo('s-survey');
 }
 
@@ -2108,13 +2133,24 @@ function copyResultCard() {
   ctx.strokeStyle = 'rgba(255,255,255,0.08)';
   ctx.lineWidth = 1;
   ctx.beginPath();
-  ctx.moveTo(68, H - 80); ctx.lineTo(W - 68, H - 80);
+  ctx.moveTo(68, H - 100); ctx.lineTo(W - 68, H - 100);
   ctx.stroke();
 
-  /* ── 하단 URL (버튼 없이 텍스트만) ── */
-  ctx.font = '500 24px sans-serif';
+  /* ── 하단 URL + 방장용 쿠팡 추천 링크 ── */
+  ctx.font = '500 22px sans-serif';
   ctx.fillStyle = 'rgba(255,255,255,0.3)';
-  ctx.fillText('wein.ai.kr — 우리 아이와 닮은 위인 찾기', 68, H - 38);
+  ctx.fillText('wein.ai.kr — 우리 아이와 닮은 위인 찾기', 68, H - 62);
+
+  /* 방장인 경우 강점 성향 쿠팡 검색 링크 텍스트 추가 */
+  if (isSessionCreator && top3arr.length > 0) {
+    const topType = top3arr[0]?.type || '';
+    const partnerUrl = PARTNER_SEARCH_LINKS[topType]?.['도서'] || '';
+    if (partnerUrl) {
+      ctx.font = '600 20px sans-serif';
+      ctx.fillStyle = '#D4AF37';
+      ctx.fillText(`📚 ${topType} 관련 도서 → ${partnerUrl}`, 68, H - 28);
+    }
+  }
 
   /* ── 이미지 저장 or 공유 ── */
   try {
@@ -2122,7 +2158,10 @@ function copyResultCard() {
       canvas.toBlob(async blob => {
         const file = new File([blob], `wein_${figure}_결과카드.png`, { type: 'image/png' });
         try {
-          await navigator.share({ files: [file], title: `${childName}${pf}의 위인 결과`, text: `wein.ai.kr — ${figure}` });
+          const shareText = isSessionCreator && top3arr[0]?.type
+            ? `wein.ai.kr — ${figure}\n📚 ${top3arr[0].type} 추천 도서: ${PARTNER_SEARCH_LINKS[top3arr[0].type]?.['도서'] || ''}`
+            : `wein.ai.kr — ${figure}`;
+          await navigator.share({ files: [file], title: `${childName}${pf}의 위인 결과`, text: shareText });
           showToast('결과 카드 공유 완료! 🎉');
         } catch(e) {
           downloadCanvas(canvas, figure);
@@ -2178,34 +2217,30 @@ function wrapText(ctx, text, x, y, maxW, lineH) {
 
 
 
+function _roundKey(name) {
+  /* 세션 코드 포함 — 세션이 달라지면 바퀴 기록 초기화 */
+  const code = currentSessionCode || currentSessionId || 'nosession';
+  return 'wiin_round_' + code + '_' + (name||'noname') + '_' + whoLabel;
+}
 function saveCompletedRound(name, r) {
   try {
-    const key = 'wiin_round_' + (name||'noname') + '_' + whoLabel;
+    const key = _roundKey(name);
     const prev = parseInt(localStorage.getItem(key) || '0');
     if (r > prev) localStorage.setItem(key, r);
   } catch(e) {}
 }
 function loadCompletedRound(name) {
   try {
-    const key = 'wiin_round_' + (name||'noname') + '_' + whoLabel;
+    const key = _roundKey(name);
     return parseInt(localStorage.getItem(key) || '0');
   } catch(e) { return 0; }
 }
 function saveRoundAnswers(name) {
-  try {
-    const key = 'wiin_ans_' + (name||'noname') + '_' + whoLabel;
-    const prev = JSON.parse(localStorage.getItem(key) || '{}');
-    Object.entries(answers).forEach(([idx, val]) => {
-      prev[round + '_' + idx] = val;
-    });
-    localStorage.setItem(key, JSON.stringify(prev));
-  } catch(e) {}
+  /* 이어서 하기 제거 — 중간 답변 저장 안 함 */
 }
 function loadAllAnswers(name) {
-  try {
-    const key = 'wiin_ans_' + (name||'noname') + '_' + whoLabel;
-    return JSON.parse(localStorage.getItem(key) || '{}');
-  } catch(e) { return {}; }
+  /* 이어서 하기 제거 — 이전 답변 복원 안 함, 현재 바퀴 answers만 사용 */
+  return {};
 }
 
 /* ══════════════════════════════
@@ -2216,9 +2251,8 @@ function calcScores() {
   TYPES.forEach(t => { scores[t] = 0; counts[t] = 0; });
 
   const childName = document.getElementById('child-name').value.trim();
-  /* 저장된 이전 바퀴 + 현재 바퀴 답변 합산 */
-  const saved  = loadAllAnswers(childName);
-  /* 현재 바퀴 답변을 saved에 오버라이드 */
+  /* 현재 바퀴 답변만 사용 (이어서 하기 제거) */
+  const saved = {};
   Object.entries(answers).forEach(([idx, val]) => {
     saved[round + '_' + idx] = val;
   });
@@ -2319,7 +2353,14 @@ async function loadAllSessionResults(code) {
       if (r.status !== 'done' || !r.scores) return;
       /* 이미 있으면 skip, 없으면 추가 */
       if (sessions.find(s => s.label === r.label)) return;
-      const fig = FIGURES.find(f => f.name === r.figureName)
+      /* figureId → figureName → top3 재계산 순으로 정확히 복원 */
+      const fig = FIGURES.find(f => f.id === r.figureId)
+               || FIGURES.find(f => f.name === r.figureName)
+               || (() => {
+                    /* 저장된 top3로 재매칭 — 가장 정확한 폴백 */
+                    const t3 = (r.top3||[]).map(t => ({type:t, score:r.scores[t]||0}));
+                    return t3.length > 0 ? matchFigure(t3) : null;
+                  })()
                || FIGURES.find(f => f.primary === r.figurePrimary)
                || FIGURES[0];
       sessions.push({
@@ -2360,8 +2401,18 @@ function buildResult(name, scores, figure) {
   /* 레이더 차트 */
   buildChart(sessions.map(s => s.scores));
 
-  /* 성장 나침반 + 쿠팡파트너스 */
-  buildCompass(scores);
+  /* 성장 나침반 + 쿠팡파트너스 — 방장에게만 표시 */
+  const compassEl = document.querySelector('.compass-section');
+  const viralEl   = document.querySelector('.viral-section');
+  const contBtn   = document.getElementById('btn-continue-round');
+  if (compassEl) compassEl.style.display = isSessionCreator ? 'block' : 'none';
+  if (viralEl)   viralEl.style.display   = isSessionCreator ? 'block' : 'none';
+  if (contBtn)   contBtn.style.display   = isSessionCreator ? 'block' : 'none';
+  if (isSessionCreator) buildCompass(scores);
+
+  /* 참여자용 — 간단한 앱 소개 버튼 표시 */
+  const guestBannerEl = document.getElementById('guest-share-banner');
+  if (guestBannerEl) guestBannerEl.style.display = isSessionCreator ? 'none' : 'block';
 
   /* localStorage 저장 */
   saveResult(name, figure);
@@ -2377,7 +2428,7 @@ function buildTabs() {
   if (sessions.length > 1) {
     tg.innerHTML += `<div class="tab active" onclick="switchTab('common',this)">
       <span class="tab-icon">🌟</span>
-      <span class="tab-lbl">공통</span>
+      <span class="tab-lbl">최종 종합</span>
     </div>`;
   }
   sessions.forEach((s, i) => {
@@ -2419,11 +2470,11 @@ function showCard(key) {
       bannerText = '세 사람이 본 모습이 달라요. 이건 아이가 다양한 얼굴을 가졌다는 뜻이에요.';
     } else {
       tagText = commonResult.strong
-        ? '🌟 세 사람이 모두 본 중심'
-        : '🌟 세 시선이 가장 가까운 곳';
+        ? '🌟 최종 종합 결과'
+        : '🌟 종합하여 찾은 결과';
       bannerText = commonResult.strong
-        ? '모두가 공통으로 느낀 가장 강한 성향이에요.'
-        : '범위를 넓혀 찾은 공통 성향이에요. 비슷한 결이 있어요.';
+        ? '모두가 함께 발견한 가장 강한 성향이에요.'
+        : '시선을 모아 찾은 종합 성향이에요. 비슷한 결이 있어요.';
     }
   } else {
     const idx = typeof key === 'number' ? key : 0;
@@ -2435,6 +2486,29 @@ function showCard(key) {
     tagText = miniAvatar + sess.label + pf + '이 본 결과';
     bannerText = '';
   }
+
+  /* 성향 순위 데이터 — 공통탭: 평균 top3, 개인탭: 해당 세션 top3 */
+  const rankTop3 = (key === 'common' && sessions.length > 1)
+    ? (() => {
+        const allSc = {};
+        TYPES.forEach(t => { allSc[t] = sessions.reduce((s,ss)=>s+(ss.scores[t]||0),0)/sessions.length; });
+        return getTop3(allSc);
+      })()
+    : (sessions[typeof key==='number' ? key : 0]?.top3 || []);
+
+  const maxSc = rankTop3[0]?.score || 5;
+  const rankHtml = rankTop3.slice(0,3).map((t,i) => {
+    const barPct = Math.round((t.score / maxSc) * 100);
+    const cls = ['r1','r2','r3'][i];
+    return `<div class="rank-trait-item">
+      <div class="rank-badge ${cls}">${i+1}</div>
+      <div class="rank-trait-name">${t.type}</div>
+      <div class="rank-trait-bar-wrap">
+        <div class="rank-trait-bar rank-bar-${cls}" style="width:${barPct}%"></div>
+      </div>
+      <div class="rank-score">${Math.round(t.score*10)/10}</div>
+    </div>`;
+  }).join('');
 
   /* 배경 스타일: img 필드 있으면 이미지, 없으면 그라디언트 폴백 */
   const bgStyle = f.img
@@ -2459,6 +2533,7 @@ function showCard(key) {
         <div class="card-tag">${tagText}</div>
         <div class="card-name-ko">${f.name}</div>
         <div class="card-name-en">${f.en}</div>
+        <div class="rank-traits">${rankHtml}</div>
       </div>
       <div class="card-bottom">
         <div class="card-quote">${f.quote.replace(/\n/g,'<br>')}</div>
@@ -2656,10 +2731,11 @@ function restartSurvey() {
 /* 다음 시작 round 계산 — 완료된 round 다음부터, 6 넘으면 1로 순환 */
 function getNextStartRound(name, label) {
   try {
-    const key = 'wiin_round_' + (name||'noname') + '_' + (label||whoLabel);
+    const code = currentSessionCode || currentSessionId || 'nosession';
+    const key = 'wiin_round_' + code + '_' + (name||'noname') + '_' + (label||whoLabel);
     const done = parseInt(localStorage.getItem(key) || '0');
-    if (done >= 6) return 1;          /* 6바퀴 모두 완료 → 1바퀴부터 순환 */
-    return Math.max(1, done + 1);     /* 완료된 다음 바퀴부터 */
+    if (done >= 6) return 1;
+    return Math.max(1, done + 1);
   } catch(e) { return 1; }
 }
 
@@ -3018,12 +3094,13 @@ function copyAppLink() {
   const figure    = sessions[0]?.figure?.name || '위인';
   const top1      = sessions[0]?.top3[0]?.type || '';
 
+  /* 앱 알리기 — 코드 없는 순수 링크 (세션 참여 아님) */
   const msg =
     `✨ 우리 아이와 닮은 위인이 "${figure}"래요!\n` +
     `(강점 성향: ${top1})\n\n` +
     `우리 아이는 어떤 위인을 닮았을까요? 🤔\n` +
     `가족·선생님이 함께 참여할수록 더 정확해져요!\n\n` +
-    `👇 무료로 찾아보세요\n` +
+    `👇 무료로 찾아보세요 (코드 없이 새로 시작)\n` +
     `https://wein.ai.kr`;
 
   copyToClipboard(msg);
@@ -3561,6 +3638,26 @@ function generateCode(childName) {
 async function createSession() {
   const btn = document.getElementById('btn-create-session');
 
+  /* ── 새 세션 시작 전 이전 바퀴 기록 확인 안내 ── */
+  const childNameInput = document.getElementById('session-child-name')?.value.trim();
+  const creatorInput   = document.getElementById('creator-name')?.value.trim();
+  if (childNameInput && creatorInput) {
+    /* 이전 세션과 무관하게 새 세션은 항상 1바퀴부터 시작 (key에 세션코드 포함되므로 자동) */
+    /* 단, localStorage에 과도한 잔여 key가 있을 수 있으므로 오래된 것 정리 */
+    try {
+      const keysToRemove = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        /* 90일 이상 된 wiin_ 키 정리 (현재 세션 코드가 없는 오래된 키) */
+        if (k && k.startsWith('wiin_') && !k.includes(currentSessionCode || '__NONE__')) {
+          keysToRemove.push(k);
+        }
+      }
+      /* 최대 20개까지만 정리 (성능 보호) */
+      keysToRemove.slice(0, 20).forEach(k => localStorage.removeItem(k));
+    } catch(e) {}
+  }
+
   /* 버튼 로딩 상태 */
   const setBtnLoading = (loading) => {
     if (!btn) return;
@@ -3627,6 +3724,7 @@ async function createSession() {
 
     currentSessionId   = code;
     currentSessionCode = code;
+    isSessionCreator   = true; /* 세션 만든 사람 = 방장 */
 
     /* 아이 이름을 앱 전역에 반영 */
     document.getElementById('child-name').value = childName;
@@ -3724,6 +3822,7 @@ async function joinSession() {
       status: 'pending', joinedAt: serverTimestamp(),
     });
     respondentDocId = name;
+    isSessionCreator   = false; /* 참여자 = 방장 아님 */
 
     /* 이름으로 어른/아이 자동 감지 */
     const detected = detectWhoType(name);
@@ -3784,7 +3883,13 @@ function onSessionUpdate(respondents) {
             icon:   r.icon || 'adult',
             scores: r.scores,
             top3:   r.top3 || [],
-            figure: FIGURES.find(f => f.name === r.figureName) || sessions[0]?.figure,
+            figure: FIGURES.find(f => f.id === r.figureId)
+                 || FIGURES.find(f => f.name === r.figureName)
+                 || (() => {
+                      const t3 = (r.top3||[]).map(t=>({type:t,score:r.scores[t]||0}));
+                      return t3.length > 0 ? matchFigure(t3) : null;
+                    })()
+                 || sessions[0]?.figure,
           });
         }
       });
@@ -3812,6 +3917,7 @@ async function saveResultToFirebase(figure, scores, top3) {
       scores,
       top3:       top3.map(t => t.type),
       figureName: figure.name,
+      figureId:   figure.id,        /* id로 정확히 복원 */
       figurePrimary: figure.primary,
       status:     'done',
       completedAt: fs.serverTimestamp(),
@@ -4070,7 +4176,12 @@ async function restoreSessionFromFirebase(code) {
     buildTabs();
     buildNarrative(name, sessions[0].scores);
     buildChart(sessions.map(s => s.scores));
-    buildCompass(sessions[0].scores);
+    /* 성장 나침반 — 방장만 표시 */
+    const cEl = document.querySelector('.compass-section');
+    const vEl = document.querySelector('.viral-section');
+    if (cEl) cEl.style.display = isSessionCreator ? 'block' : 'none';
+    if (vEl) vEl.style.display = isSessionCreator ? 'block' : 'none';
+    if (isSessionCreator) buildCompass(sessions[0].scores);
 
     goTo('s-result');
     /* 상단으로 스크롤 */
@@ -4083,6 +4194,11 @@ async function restoreSessionFromFirebase(code) {
     });
     /* 실시간 리스너 시작 (이후 참여자 자동 추가) */
     startSessionListener(code);
+
+    /* 복원 시 방장 여부 재확인 */
+    const myName = loadSessions().find(s => s.code === code)?.myName || '';
+    const sessionCreatedBy = sessionSnap.data()?.createdBy || '';
+    isSessionCreator = (myName && myName === sessionCreatedBy);
 
     showToast(sessions.length + '명의 결과를 불러왔어요 ✨');
 
@@ -4225,11 +4341,41 @@ function checkUrlCode() {
     const code   = params.get('code');
     if (!code) return;
 
-    /* 세션 화면의 코드 입력란에 자동 삽입 */
+    /* URL에서 코드 파라미터 제거 (뒤로가기 시 중복 방지) */
+    const cleanUrl = window.location.pathname;
+    window.history.replaceState({}, '', cleanUrl);
+
+    /* ── 방법 A: 본인 세션 감지 ── */
+    const mySessions = loadSessions();
+    const isMySession = mySessions.some(s => s.code === code.toUpperCase());
+
+    if (isMySession) {
+      /* 내가 만든 세션 → 초대 화면으로 안내 */
+      const myS = mySessions.find(s => s.code === code.toUpperCase());
+      const childName = myS?.childName || '우리 아이';
+
+      /* 세션 복원 후 초대 화면으로 */
+      currentSessionCode = code.toUpperCase();
+      currentSessionId   = code.toUpperCase();
+
+      const doRestore = () => {
+        showToast(`내가 만든 ${childName} 세션이에요! 초대 화면으로 이동해요 🏠`);
+        /* 초대 화면 표시 */
+        restoreSessionFromFirebase(code.toUpperCase());
+      };
+
+      if (window._db) {
+        doRestore();
+      } else {
+        window.addEventListener('firebase-ready', doRestore, { once: true });
+      }
+      return;
+    }
+
+    /* 참여자 — 세션 화면으로 이동 후 코드 자동 입력 */
     goTo('s-session');
     switchSessionMode('join');
 
-    /* Firebase 준비 후 코드 자동 입력 */
     const fillCode = () => {
       const input = document.getElementById('join-code-input');
       if (input) {
@@ -4244,10 +4390,6 @@ function checkUrlCode() {
     } else {
       window.addEventListener('firebase-ready', fillCode, { once: true });
     }
-
-    /* URL에서 코드 파라미터 제거 (뒤로가기 시 중복 방지) */
-    const cleanUrl = window.location.pathname;
-    window.history.replaceState({}, '', cleanUrl);
 
   } catch(e) { /* URLSearchParams 미지원 환경 무시 */ }
 }
